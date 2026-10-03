@@ -16,12 +16,12 @@ Last updated: 3 Oct 2026.
 | # | Milestone | Status | Evidence |
 |---|---|---|---|
 | M1 | Data truth | **Done.** Gate 1 is GO | `docs/decisions/2026-10-03-gate1.md` |
-| M2 | Core twin and the reveal | **Closing.** First run NO-GO; inputs fixed and blend added; held-out test run pending | `docs/decisions/2026-10-03-gate2-run1.md`, `results/gate2/` |
+| M2 | Core twin and the reveal | **Done.** Gate 2 is GO on the 20 held-out test patients (22.5 vs 24.2 mg/dL at k = 5, better in 90 %, p = 3.1e-05) | `docs/decisions/2026-10-03-gate2-final.md`, `results/gate2/cgmacros-test/` |
 | M3 | Accuracy and fusion | Not started. Reordered below by which limit each item reduces | |
 | M4 | Product | Not started. Live mode added (4.8) | |
 | M5 | Ship | Not started | |
 
-Plan 1 (Tasks 1 to 10) is complete except the final Gate 2 decision record and the merge to `main`.
+Plan 1 (Tasks 1 to 10) is complete and merged to `main`. Milestone 3 needs its own task-level plan.
 
 ### Decisions and changes since this roadmap was written
 

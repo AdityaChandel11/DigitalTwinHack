@@ -1,0 +1,74 @@
+{
+  "summaries": [
+    {
+      "k_days": 3,
+      "n_patients": 20,
+      "n_failed": 0,
+      "twin_rmse": 24.46433059443806,
+      "day_rmse": 27.15594904239833,
+      "mean_rmse": 24.60370215141878,
+      "median_diff": -3.332313773543678,
+      "frac_twin_better": 1.0,
+      "wilcoxon_p": 9.5367431640625e-07,
+      "twin_mard": 15.226834371418168,
+      "twin_tir_err": 5.231036841009782,
+      "day_tir_err": 4.487303380809379,
+      "cov80": 0.8627804858742497,
+      "floor_rmse": 38.612918211355776
+    },
+    {
+      "k_days": 5,
+      "n_patients": 20,
+      "n_failed": 0,
+      "twin_rmse": 22.54280628402985,
+      "day_rmse": 24.24819210934949,
+      "mean_rmse": 24.151952330784848,
+      "median_diff": -1.4842938111277313,
+      "frac_twin_better": 0.9,
+      "wilcoxon_p": 3.147125244140625e-05,
+      "twin_mard": 14.557424022131944,
+      "twin_tir_err": 4.712805717657858,
+      "day_tir_err": 3.3989088193866976,
+      "cov80": 0.8319900048381624,
+      "floor_rmse": 38.815373764365276
+    },
+    {
+      "k_days": 7,
+      "n_patients": 19,
+      "n_failed": 0,
+      "twin_rmse": 21.89018300324915,
+      "day_rmse": 23.928267391261212,
+      "mean_rmse": 24.075343432270426,
+      "median_diff": -1.1807727069806617,
+      "frac_twin_better": 0.8947368421052632,
+      "wilcoxon_p": 6.29425048828125e-05,
+      "twin_mard": 13.278207795280137,
+      "twin_tir_err": 2.0338983050847474,
+      "day_tir_err": 4.691358024691354,
+      "cov80": 0.8881557575894036,
+      "floor_rmse": 37.77858529444049
+    }
+  ],
+  "primary": {
+    "k_days": 5,
+    "n_patients": 20,
+    "n_failed": 0,
+    "twin_rmse": 22.54280628402985,
+    "day_rmse": 24.24819210934949,
+    "mean_rmse": 24.151952330784848,
+    "median_diff": -1.4842938111277313,
+    "frac_twin_better": 0.9,
+    "wilcoxon_p": 3.147125244140625e-05,
+    "twin_mard": 14.557424022131944,
+    "twin_tir_err": 4.712805717657858,
+    "day_tir_err": 3.3989088193866976,
+    "cov80": 0.8319900048381624,
+    "floor_rmse": 38.815373764365276
+  },
+  "verdict": {
+    "p1_beats_average_day": true,
+    "p2_tir_within_bar": true,
+    "p3_band_calibrated": true,
+    "go": true
+  }
+}
