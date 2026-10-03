@@ -18,6 +18,8 @@ meals, a fitness band and occasional fingersticks, and tells the doctor when it 
 - **Before each task, say which model and effort to use**, using the table in README.md (Developer guide).
   Default to the cheapest model that is safe; escalate after one failed attempt. Say when to switch.
 - Keep reports short: what changed, what was verified, what is next.
+- **Keep the plan current.** When a step finishes or a decision is made, update the Status section of the
+  roadmap and, for a gate, write `docs/decisions/<date>-<topic>.md`. Docs and code change in the same commit.
 - The user's time is the scarcest resource. Never leave a long command running without saying so.
 
 ## The one claim
@@ -76,22 +78,28 @@ src/chhaya/
     download.py    fetch + checksum + unpack
     cgmacros.py    loader -> Recording   (45 people; Libre + Dexcom, Fitbit, meal macros)
     shanghai.py    loader -> Recording   (100 T2D; Libre, fingersticks, diet text, drugs, labs)
+    files.py       file search that ignores macOS archive debris
     audit.py       dataset counts, Gate 1
   twin/
     model.py       the ODE: E-DES core + circadian + exercise, in JAX
     inputs.py      Recording -> Inputs arrays
     priors.py      population prior; record-informed prior (static data enters here)
     fit.py         MAP calibration + Laplace ensemble
+    clock.py       per-patient offset between the meal log and the sensor clock
   eval/
     metrics.py     RMSE, MARD, TIR/TAR/TBR error, GMI error, band coverage
-    baselines.py   mean; the patient's own average day (the bar to beat)
-    reveal.py      the hide-and-reveal experiment for one recording
-    gate2.py       cohort run, pre-registered verdict, report
+    baselines.py   mean; the patient's own average day (the bar to beat, and half of the blend)
+    reveal.py      the hide-and-reveal experiment; estimate = blend of physiology and average day
+    gate2.py       cohort run (--split dev|test, --jobs), pre-registered verdict, report
 ```
 
 Data flows one way: **loader → `Recording` → `build_inputs` → `fit_twin` → `simulate_ensemble` →
 metrics**. Loaders know file formats; nothing downstream does. The dashboard (later) reads only
 pre-computed artifacts — nothing is fitted live in a demo.
+
+**The estimate is a blend.** Half physiology (knows what was eaten today), half the patient's own average
+day (knows the habits the meal log misses). Their errors are only partly correlated, so the blend beats
+both. `RevealConfig` holds the switches; its defaults are the configuration chosen on dev patients.
 
 **Fusion is Bayesian, not concatenation.** The health record sets the prior over the twin's seven
 personal parameters; sensor data is the likelihood. That sentence is the answer to the brief's "fusion of

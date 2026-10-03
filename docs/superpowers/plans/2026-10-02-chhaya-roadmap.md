@@ -9,6 +9,40 @@ Milestones 3–5 are specified here by deliverable, interface and acceptance tes
 deliberate: Gate 2 decides which headline we are building, and writing task-level code for the losing
 branch would be wasted. Their plans are written the day each one starts.
 
+## Status (update this table whenever a milestone step finishes)
+
+Last updated: 3 Oct 2026.
+
+| # | Milestone | Status | Evidence |
+|---|---|---|---|
+| M1 | Data truth | **Done.** Gate 1 is GO | `docs/decisions/2026-10-03-gate1.md` |
+| M2 | Core twin and the reveal | **Closing.** First run NO-GO; inputs fixed and blend added; held-out test run pending | `docs/decisions/2026-10-03-gate2-run1.md`, `results/gate2/` |
+| M3 | Accuracy and fusion | Not started. Reordered below by which limit each item reduces | |
+| M4 | Product | Not started. Live mode added (4.8) | |
+| M5 | Ship | Not started | |
+
+Plan 1 (Tasks 1 to 10) is complete except the final Gate 2 decision record and the merge to `main`.
+
+### Decisions and changes since this roadmap was written
+
+- Project renamed to **Chhaya**. Team SynapseX, IIT Kanpur, solo. `docs/WAR_ROOM.md` is public.
+- CGMacros meal inputs were wrong in two ways (unit of `Amount Consumed` in 8 files; meal clock an hour
+  early in 4). Both are fixed by general rules.
+- The estimate is now an **equal-weight blend of the physiology and the patient's own average day**. The
+  physiology knows what was eaten today; the average day knows the habits the meal log misses. Chosen on
+  development patients. This replaces the planned habit model.
+- Tried on development patients and **not adopted**: robust calibration loss, a looser basal-glucose prior,
+  a time-of-day residual profile. None helped.
+- After the first Gate 2 run, every claim is made on the **20 held-out test patients only** (Amendment 1).
+- 65 of 109 Shanghai recordings are on insulin, so insulin as a model input is promoted (3.3).
+- CGMacros lows are mostly sensor artefacts, so any overnight-low work uses Shanghai only.
+
+### The two limits, and what we do about each
+
+- **Sensor noise cannot be removed.** Two sensors on the same person disagree by about 39 mg/dL RMSE. We
+  report it as the floor, and report the clinical summaries (time in range, GMI) where the twin is strong.
+- **Unlogged meals and day-to-day drift can be reduced.** That is the purpose of M3, in the order below.
+
 ## What wins this
 
 Judging is on "technical implementation and real-world healthcare impact". No rubric is published. The
@@ -43,8 +77,8 @@ own average day, time-in-range within 10 points), fixed in `docs/PREREGISTRATION
 | Dates | Milestone | Ends with |
 |---|---|---|
 | Fri 2 – Sun 4 Oct | **M1 Data truth** (Plan 1, Tasks 1–9) | **Gate 1** |
-| Mon 5 – Thu 8 Oct | **M2 Core twin and the reveal** (Plan 1, Task 10 + iteration on dev patients) | **Gate 2** |
-| Fri 9 – Mon 12 Oct | **M3 Accuracy and fusion** | Results tables final |
+| Sat 3 Oct (planned 5 – 8 Oct) | **M2 Core twin and the reveal** (Plan 1, Task 10 + iteration on dev patients) | **Gate 2** |
+| Sun 4 – Mon 12 Oct | **M3 Accuracy and fusion** | Results tables final |
 | Sun 11 – Thu 15 Oct | **M4 Product** (overlaps M3; different person) | **Feature freeze, 15 Oct** |
 | Fri 16 – Mon 19 Oct | **M5 Ship** | Clean-clone run passes |
 | Tue 20 Oct, 12:00 | Submit | 7 hours of slack |
@@ -80,24 +114,26 @@ day, p < 0.05) and P2 (time-in-range within 10 points).
   where the record changes the answer). Milestones 3–5 keep their shape; the reveal becomes a secondary
   figure reported as-is.
 
-## M3 — Accuracy and fusion (9–12 Oct)
+## M3 — Accuracy and fusion (4–12 Oct)
 
-Each item is one task with a test cycle. Order is by value; cut from the bottom.
+Each item is one task with a test cycle, chosen on development patients and claimed on test patients.
+Ordered by expected gain against the reducible limit; cut from the bottom.
 
-| # | Deliverable | Interface | Accepted when |
-|---|---|---|---|
-| 3.1 | **Shanghai food table.** Map each distinct diet string (from `results/audit/shanghai_food_strings.csv`) to carb, protein, fat and fibre grams | `data/reference/shanghai_foods.csv` (`text, carb_g, protein_g, fat_g, fibre_g, source`); `shanghai.attach_macros(recs, table)` | ≥90 % of meal rows get macros; 50 random rows hand-checked against a food-composition table; unmapped rows are listed, not guessed |
-| 3.2 | **Record → prior, learned.** Ridge regression from record fields (age, BMI, HbA1c, HOMA-IR, fasting C-peptide, duration, eGFR) to fitted `z`, on dev patients | `priors.fit_record_map(fits, statics) -> RecordMap`; `record_prior(static, record_map)` | The **sensor-days-saved** curve exists: RMSE vs k with and without the record, on test patients. Reported whichever way it comes out |
-| 3.3 | **Fingerstick assimilation.** Ensemble Kalman update of state and parameters at each fingerstick | `twin/assimilate.py::run_sensor_off(fit, inp, sticks_t, sticks_mgdl) -> Ensemble` | Error-vs-fingersticks curve from 0 through 2–3 a **week** (the Indian reality) to 4 a day; the band tightens at each stick; no future stick influences an earlier estimate (tested) |
-| 3.4 | **Band recalibration.** One inflation factor per horizon, conformal, from dev patients | `eval/calibrate.py::conformal_scale(dev_reveals) -> float` | 80 % band covers 75–85 % on test patients |
-| 3.5 | **Hybrid corrector.** Gradient-boosted model on the twin's residual using time of day, meal and activity features — no CGM — trained leave-patient-out | `twin/hybrid.py::fit_corrector`, `apply_corrector` | Ablation ladder table: mean → average day → twin → twin + record → twin + fingersticks → hybrid. Kept only if it helps on test patients |
-| 3.6 | **Adverse-event prediction.** From the ensemble: P(>180 mg/dL within 2 h of a meal) and P(<70 overnight), sensor-off and sensor-on | `eval/events.py::event_probs`, `score_events` | AUROC, PR-AUC, Brier, reliability diagram, median lead time; a sensor-on LightGBM forecaster and persistence as the baseline table |
-| 3.7 | **Drug terms.** Sulfonylurea (secretion gain, lengthened by low eGFR), metformin (hepatic output), basal insulin (input to plasma insulin). Recordings on pump or IV insulin are excluded and counted | `model.Inputs` gains `drug_secretion`, `drug_hepatic`, `insulin_rate` arrays | Sign and size tests against literature ranges; Shanghai before/after dose changes used as the only real check, labelled as weak |
-| 3.8 | **Habit model.** Usual meal times and sizes learned in the calibration window, so the twin runs on "ate as usual" | `twin/habits.py::learn_habits`, `habitual_meals` | Reveal re-run with habitual meals replacing logs; the loss in accuracy is reported |
-| 3.9 | **Staleness detector.** CUSUM on standardised fingerstick surprises; names the parameter that moved | `twin/staleness.py::staleness(surprises) -> StaleFlag` | Fires on a synthetic 30 % drop in insulin sensitivity within 6 fingersticks; false-alarm rate on unchanged patients reported. Shanghai's 7 repeat-recording patients as the one real test |
+| # | Deliverable | Limit it reduces | Interface | Accepted when |
+|---|---|---|---|---|
+| 3.1 | **Shanghai food table.** Parse the one-food-per-line English diet text into foods and grams; map each food to carb, protein, fat, fibre | Unlocks every Shanghai result (real fingersticks, drugs, labs) | `data/reference/shanghai_foods.csv` (`food, carb_g_per_100g, protein, fat, fibre, source`); `shanghai.attach_macros(recs, table)` | At least 90 % of meal rows get macros; 50 random rows hand-checked; unmapped foods listed, not guessed |
+| 3.2 | **Fingerstick assimilation.** Ensemble Kalman update of state and parameters at each fingerstick | Unlogged meals and drift: the biggest lever | `twin/assimilate.py::run_sensor_off(fit, inp, sticks_t, sticks_mgdl) -> Ensemble` | Error-vs-fingersticks curve from 0 through 2 to 3 a week to 4 a day; the band tightens at each stick; no future stick changes an earlier estimate (tested) |
+| 3.3 | **Insulin as a model input.** Parse dose text; pen injections enter plasma insulin through an absorption curve per insulin type. Pump and IV recordings are excluded and counted | 65 of 109 Shanghai recordings currently unusable | `model.Inputs.insulin_rate`; `shanghai.parse_doses` | A pre-registration amendment is committed first; sign and size tests against literature; reveal re-run on the insulin cohort |
+| 3.4 | **Cross-patient corrector.** Gradient-boosted model on the blend's residual from time since meal, macros, heart rate, time of day; no CGM; trained leave-patient-out | Systematic errors the physiology repeats across people | `twin/corrector.py::fit_corrector`, `apply_corrector` | Ablation ladder: mean, average day, physiology, blend, blend + corrector. Kept only if it helps on test patients |
+| 3.5 | **Record to prior, learned.** Ridge map from record fields to fitted parameters on development patients, including the lab-versus-Libre offset (about 20 %) | Sensor days needed to calibrate | `priors.fit_record_map`, `record_prior(static, record_map)` | The sensor-days-saved curve: RMSE vs k with and without the record, on test patients, reported whichever way it comes out |
+| 3.6 | **Meal timing and absorption shape.** The physiology peaks 15 to 30 minutes late and its tail is too long | Timing error after every meal | constants in `model.Fixed`, chosen on development patients | Meal-aligned response on development patients peaks within 15 minutes of the observed peak |
+| 3.7 | **Adverse-event prediction** (the brief's required output). From the ensemble: P(above 180 mg/dL within 2 h of a meal) and P(below 70 overnight), sensor-off and sensor-on | — | `eval/events.py::event_probs`, `score_events` | AUROC, PR-AUC, Brier, reliability diagram, median lead time; a sensor-on LightGBM forecaster and persistence as the baseline table |
+| 3.8 | **Band recalibration.** One conformal factor from development patients | Band is slightly wide (86 to 92 % for a nominal 80 %) | `eval/calibrate.py::conformal_scale` | 80 % band covers 75 to 85 % on test patients |
+| 3.9 | **Staleness detector.** CUSUM on standardised fingerstick surprises; names the parameter that moved | Twin going out of date silently | `twin/staleness.py::staleness(surprises) -> StaleFlag` | Fires on a synthetic 30 % drop in insulin sensitivity within 6 fingersticks; false-alarm rate reported; Shanghai repeat-recording patients as the one real test |
+| 3.10 | **Oral drug terms.** Sulfonylurea (secretion, lengthened by low eGFR), metformin (hepatic output) | What-if realism | `model.Inputs.drug_secretion`, `drug_hepatic` | Sign and size tests; labelled as simulation |
 
-The "prediction model they are asking for" in the brief is 3.6. It is built on the twin, so it arrives
-with a sensor-off column nobody else has, plus the conventional sensor-on column for comparison.
+Already done, earlier than planned: the habit model (the average-day half of the blend carries habitual
+meals) and the two-sensor noise floor (reported by every reveal run).
 
 ## M4 — Product (11–15 Oct)
 
@@ -110,6 +146,7 @@ with a sensor-off column nobody else has, plus the conventional sensor-on column
 | 4.5 | **Page 4 — Evidence.** The results tables and figures from M2–M3, limitations, data provenance | Every figure matches `results/` byte for byte |
 | 4.6 | **The record as FHIR-shaped JSON** (Patient, Condition, Observation with LOINC codes, MedicationStatement) for each patient, plus one fully synthetic demo patient, "Mrs. R." | Labelled synthetic on screen. A genetic-marker field exists in the schema, is synthetic, and is switched off in every validation run |
 | 4.7 | **Figures.** Reveal (hero), error vs calibration days, error vs fingersticks, sensor-days saved, two-sensor noise floor, reliability diagram | Each regenerated by one script from `results/` |
+| 4.8 | **Live mode.** The judge edits a meal, adds a walk, or enters a fingerstick and the twin recomputes on screen; a synthetic patient runs forward in time past the end of her sensor, with the band widening until a fingerstick tightens it | Each interaction responds in under 2 seconds from pre-computed parameters; the synthetic patient is labelled synthetic; nothing is re-fitted live |
 
 Streamlit and Plotly, one process. No separate API server and no Docker: fewer things to break in a
 recorded demo, and Docker is not installed. Run `healthcare-reviewer` on every page before freeze.
