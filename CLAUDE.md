@@ -5,6 +5,7 @@ digital twin that keeps estimating a patient's glucose **after the CGM sensor co
 meals, a fitness band and occasional fingersticks, and tells the doctor when it has gone stale.
 
 - **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
+- **Where we are and what is next: [docs/PROGRESS.md](docs/PROGRESS.md). Read it first.**
 - **Submission closes 20 Oct 2026, 19:00 IST.** We submit by 12:00 that day. Feature freeze is 15 Oct.
 - **Why this concept, and what everyone else is building:** [docs/WAR_ROOM.md](docs/WAR_ROOM.md) (read Phase 6).
 - **What to build, in order, with gates:** [docs/superpowers/plans/2026-10-02-chhaya-roadmap.md](docs/superpowers/plans/2026-10-02-chhaya-roadmap.md).
