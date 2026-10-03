@@ -2,6 +2,7 @@
 
 Column names below are taken from the dataset's own data dictionaries.
 """
+
 from __future__ import annotations
 
 import re
@@ -11,6 +12,7 @@ import numpy as np
 import pandas as pd
 
 from chhaya.config import RAW_DIR
+from chhaya.data.files import find
 from chhaya.data.schema import ACTIVITY_COLS, CGM_COLS, MEAL_COLS, Recording, empty
 from chhaya.units import INCH_TO_M, LB_TO_KG
 
@@ -24,9 +26,11 @@ def _strip(df: pd.DataFrame) -> pd.DataFrame:
 
 def load_bio(root: Path) -> pd.DataFrame:
     """Demographics and labs, indexed by participant number."""
-    path = next(iter(sorted(root.rglob("bio.csv"))), None)
+    path = next(iter(find(root, "bio.csv")), None)
     if path is None:
-        raise FileNotFoundError(f"bio.csv not found under {root}; run python -m chhaya.data.download cgmacros")
+        raise FileNotFoundError(
+            f"bio.csv not found under {root}; run python -m chhaya.data.download cgmacros"
+        )
     bio = _strip(pd.read_csv(path))
     id_col = next((c for c in bio.columns if re.search(r"subject|participant|^id$", c, re.I)), bio.columns[0])
     return bio.set_index(bio[id_col].astype(int))
@@ -44,7 +48,9 @@ def _num(row: pd.Series | None, prefix: str) -> float:
 
 def _static(row: pd.Series | None) -> dict:
     hba1c = _num(row, "A1c")
-    group = None if np.isnan(hba1c) else "healthy" if hba1c < 5.7 else "prediabetes" if hba1c <= 6.4 else "t2d"
+    group = (
+        None if np.isnan(hba1c) else "healthy" if hba1c < 5.7 else "prediabetes" if hba1c <= 6.4 else "t2d"
+    )
     sex = None if row is None else next((str(v) for c, v in row.items() if str(c).lower() == "gender"), None)
     return {
         "age": _num(row, "Age"),
@@ -68,7 +74,11 @@ def _thin(df: pd.DataFrame, col: str, step: int) -> pd.DataFrame:
     d = df.loc[df[col].notna(), ["t_min", col]]
     d = d[(d[col] >= 20) & (d[col] <= 600)]
     d = d.groupby(d["t_min"] // step, sort=True).first()
-    return d.rename(columns={col: "glucose_mgdl"}).astype({"t_min": int, "glucose_mgdl": float}).reset_index(drop=True)
+    return (
+        d.rename(columns={col: "glucose_mgdl"})
+        .astype({"t_min": int, "glucose_mgdl": float})
+        .reset_index(drop=True)
+    )
 
 
 def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | None:
@@ -91,7 +101,9 @@ def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | Non
         return None
 
     m = df[df["Meal Type"].notna() & df["Carbs"].notna()] if "Meal Type" in df.columns else df.iloc[:0]
-    frac = (pd.to_numeric(m.get("Amount Consumed"), errors="coerce").fillna(100.0).clip(0.0, 100.0) / 100.0).to_numpy()
+    frac = (
+        pd.to_numeric(m.get("Amount Consumed"), errors="coerce").fillna(100.0).clip(0.0, 100.0) / 100.0
+    ).to_numpy()
     meals = pd.DataFrame(
         {
             "t_min": m["t_min"].to_numpy(dtype=float),
@@ -134,11 +146,13 @@ def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | Non
 def load_all(root: Path = RAW_DIR / "cgmacros") -> list[Recording]:
     bio = load_bio(root)
     recs = []
-    for path in sorted(root.rglob("CGMacros-*.csv")):
+    for path in find(root, "CGMacros-*.csv"):
         number = int(re.search(r"(\d+)", path.stem).group(1))
         rec = load_recording(path, bio.loc[number] if number in bio.index else None)
         if rec is not None:
             recs.append(rec)
     if not recs:
-        raise FileNotFoundError(f"no CGMacros-*.csv under {root}; run python -m chhaya.data.download cgmacros")
+        raise FileNotFoundError(
+            f"no CGMacros-*.csv under {root}; run python -m chhaya.data.download cgmacros"
+        )
     return recs

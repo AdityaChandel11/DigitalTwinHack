@@ -2,6 +2,7 @@
 
 Usage: python -m chhaya.data.audit
 """
+
 from __future__ import annotations
 
 import json
@@ -64,8 +65,14 @@ def audit(recs: list[Recording]) -> pd.DataFrame:
 
 def gate1(shanghai: pd.DataFrame) -> dict:
     """GO when enough Shanghai recordings are long enough and have meals logged."""
-    usable = shanghai[(shanghai["days"] >= GATE1_MIN_DAYS) & (shanghai["meals_per_day"] >= GATE1_MIN_MEALS_PER_DAY)]
-    return {"usable_recordings": int(len(usable)), "required": GATE1_MIN_RECORDINGS, "go": bool(len(usable) >= GATE1_MIN_RECORDINGS)}
+    usable = shanghai[
+        (shanghai["days"] >= GATE1_MIN_DAYS) & (shanghai["meals_per_day"] >= GATE1_MIN_MEALS_PER_DAY)
+    ]
+    return {
+        "usable_recordings": int(len(usable)),
+        "required": GATE1_MIN_RECORDINGS,
+        "go": bool(len(usable) >= GATE1_MIN_RECORDINGS),
+    }
 
 
 def main(out_dir: Path = RESULTS_DIR / "audit") -> None:
@@ -92,7 +99,9 @@ def main(out_dir: Path = RESULTS_DIR / "audit") -> None:
         if name == "shanghai":
             summary["gate1"] = gate1(df)
             foods = shanghai.food_strings(recs)
-            foods.rename_axis("text").reset_index(name="count").to_csv(out_dir / "shanghai_food_strings.csv", index=False)
+            foods.rename_axis("text").reset_index(name="count").to_csv(
+                out_dir / "shanghai_food_strings.csv", index=False
+            )
             summary[name]["distinct_diet_entries"] = int(len(foods))
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
