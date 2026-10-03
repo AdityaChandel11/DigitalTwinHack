@@ -76,3 +76,7 @@ def test_blend_recovers_a_daily_habit_the_log_misses():
     assert np.allclose(out.twin, 0.5 * out.ode + 0.5 * out.day)
     alone = run_reveal(no_dinner_logged, k_days=4, n_members=20, cfg=RevealConfig(blend=1.0))
     assert np.array_equal(alone.twin, alone.ode)
+
+
+def test_default_configuration_is_the_one_chosen_on_development_patients():
+    assert RevealConfig() == RevealConfig(meal_clock=True, blend=0.5, loss="linear", f_scale=1.0)

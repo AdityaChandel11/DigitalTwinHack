@@ -24,7 +24,7 @@ class RevealConfig(NamedTuple):
 
     meal_clock: bool = True  # estimate the offset between the meal log and the sensor clock
     blend: float = 0.5  # weight on the physiology, the rest on the average day; 1.0 = physiology only
-    loss: str = "soft_l1"  # calibration loss; "linear" is plain least squares
+    loss: str = "linear"  # plain least squares; "soft_l1" was tried on dev patients and did not help
     f_scale: float = 1.0  # residual size (mmol/L) beyond which the robust loss takes over
 
 
