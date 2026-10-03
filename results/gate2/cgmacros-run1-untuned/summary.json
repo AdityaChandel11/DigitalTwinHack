@@ -1,0 +1,74 @@
+{
+  "summaries": [
+    {
+      "k_days": 3,
+      "n_patients": 45,
+      "n_failed": 0,
+      "twin_rmse": 22.874970249906248,
+      "day_rmse": 25.771822081117563,
+      "mean_rmse": 23.72920507752232,
+      "median_diff": -1.4603878817865947,
+      "frac_twin_better": 0.7333333333333333,
+      "wilcoxon_p": 0.0012617452501331172,
+      "twin_mard": 14.910227825402284,
+      "twin_tir_err": 6.657018813314032,
+      "day_tir_err": 5.429864253393674,
+      "cov80": 0.8819038128109025,
+      "floor_rmse": 39.373687560878864
+    },
+    {
+      "k_days": 5,
+      "n_patients": 45,
+      "n_failed": 0,
+      "twin_rmse": 23.087687587974525,
+      "day_rmse": 23.094893310648626,
+      "mean_rmse": 23.265219244387115,
+      "median_diff": 0.30043413161601507,
+      "frac_twin_better": 0.4888888888888889,
+      "wilcoxon_p": 0.783439878190876,
+      "twin_mard": 15.648692573976708,
+      "twin_tir_err": 4.958677685950406,
+      "day_tir_err": 4.268292682926827,
+      "cov80": 0.8757046368601858,
+      "floor_rmse": 39.543030844177316
+    },
+    {
+      "k_days": 7,
+      "n_patients": 44,
+      "n_failed": 0,
+      "twin_rmse": 22.203295367817162,
+      "day_rmse": 21.99611787257145,
+      "mean_rmse": 22.612360498236118,
+      "median_diff": 0.7632882152475169,
+      "frac_twin_better": 0.4090909090909091,
+      "wilcoxon_p": 0.9705139410901324,
+      "twin_mard": 14.274560863795866,
+      "twin_tir_err": 3.267025089605731,
+      "day_tir_err": 4.534231200897871,
+      "cov80": 0.89502839785429,
+      "floor_rmse": 38.885294707720305
+    }
+  ],
+  "primary": {
+    "k_days": 5,
+    "n_patients": 45,
+    "n_failed": 0,
+    "twin_rmse": 23.087687587974525,
+    "day_rmse": 23.094893310648626,
+    "mean_rmse": 23.265219244387115,
+    "median_diff": 0.30043413161601507,
+    "frac_twin_better": 0.4888888888888889,
+    "wilcoxon_p": 0.783439878190876,
+    "twin_mard": 15.648692573976708,
+    "twin_tir_err": 4.958677685950406,
+    "day_tir_err": 4.268292682926827,
+    "cov80": 0.8757046368601858,
+    "floor_rmse": 39.543030844177316
+  },
+  "verdict": {
+    "p1_beats_average_day": false,
+    "p2_tir_within_bar": true,
+    "p3_band_calibrated": true,
+    "go": false
+  }
+}

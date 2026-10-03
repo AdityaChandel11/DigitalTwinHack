@@ -51,3 +51,17 @@ only** (`chhaya.config.is_dev_patient`) and its effect is claimed on **test pati
 ## Amendments
 
 None.
+
+### Amendment 1, 3 Oct 2026
+
+The first run (defaults of commit `1c9f754`, every participant) is recorded in
+`docs/decisions/2026-10-03-gate2-run1.md`: NO-GO at k = 5 (P1 failed, P2 and P3 passed). It stands as run.
+
+Two input defects in the CGMacros loader were found afterwards (the unit of `Amount Consumed`, and meal clocks
+one hour early in four files). Finding them involved inspecting meal columns and a model-free lag statistic
+for all 45 files. They will be fixed by general rules, and the model will be changed as listed in that
+decision record, using development patients only.
+
+Because all of this follows a look at the first results, **every later claim against P1 to P3 is made on the
+20 test patients only** (`is_dev_patient` false), with the same bars and the same primary k = 5. Results on
+all 45 participants are reported alongside, labelled as not confirmatory.

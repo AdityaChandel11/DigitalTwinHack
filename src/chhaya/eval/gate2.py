@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import argparse
 import json
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
 from pathlib import Path
 
 import numpy as np
@@ -23,27 +25,41 @@ TIR_BAR = 10.0  # percentage points
 COVERAGE_BAND = (0.70, 0.90)
 
 
-def run_cohort(recs: list[Recording], k_list: list[int], n_members: int = 200) -> pd.DataFrame:
-    """One row per (recording, k). Failed fits are kept as rows with an `error` so nothing vanishes silently."""
+def _rows_for(rec: Recording, k_list: list[int], n_members: int) -> list[dict]:
+    """All (recording, k) rows for one recording. Top-level so worker processes can import it."""
+    base = {
+        "rec_id": rec.rec_id,
+        "patient_id": rec.patient_id,
+        "dataset": rec.dataset,
+        "group": rec.static.get("group"),
+        "dev": is_dev_patient(rec.patient_id),
+    }
     rows = []
-    for rec in recs:
-        base = {
-            "rec_id": rec.rec_id,
-            "patient_id": rec.patient_id,
-            "dataset": rec.dataset,
-            "group": rec.static.get("group"),
-            "dev": is_dev_patient(rec.patient_id),
-        }
-        for k in k_list:
-            try:
-                out = run_reveal(rec, k, n_members=n_members)
-            except (RuntimeError, ValueError) as err:
-                rows.append({**base, "k_days": k, "error": str(err)})
-                continue
-            if out is not None:
-                rows.append({**base, "k_days": k, "error": None, **out.metrics})
-            print(f"{rec.rec_id} k={k}: {'skipped' if out is None else round(out.metrics['twin_rmse'], 1)}")
-    return pd.DataFrame(rows)
+    for k in k_list:
+        try:
+            out = run_reveal(rec, k, n_members=n_members)
+        except (RuntimeError, ValueError) as err:
+            rows.append({**base, "k_days": k, "error": str(err)})
+            continue
+        if out is not None:
+            rows.append({**base, "k_days": k, "error": None, **out.metrics})
+        shown = "skipped" if out is None else round(out.metrics["twin_rmse"], 1)
+        print(f"{rec.rec_id} k={k}: {shown}", flush=True)
+    return rows
+
+
+def run_cohort(recs: list[Recording], k_list: list[int], n_members: int = 200, jobs: int = 1) -> pd.DataFrame:
+    """One row per (recording, k). Failed fits are kept as rows with an `error` so nothing vanishes silently.
+
+    `jobs` only spreads recordings over processes; every fit is seeded, so the rows do not depend on it.
+    """
+    work = partial(_rows_for, k_list=k_list, n_members=n_members)
+    if jobs > 1:
+        with ProcessPoolExecutor(jobs) as pool:
+            per_rec = list(pool.map(work, recs))
+    else:
+        per_rec = [work(rec) for rec in recs]
+    return pd.DataFrame([row for rows in per_rec for row in rows])
 
 
 def summarise(df: pd.DataFrame, k: int = PRIMARY_K) -> dict:
@@ -125,9 +141,10 @@ def main() -> None:
     ap.add_argument("--k", type=int, nargs="+", default=[3, 5, 7])
     ap.add_argument("--limit", type=int, default=None, help="only the first N recordings (smoke run)")
     ap.add_argument("--members", type=int, default=200)
+    ap.add_argument("--jobs", type=int, default=1, help="worker processes; results do not depend on it")
     args = ap.parse_args()
     recs = load(args.dataset)[: args.limit]
-    df = run_cohort(recs, args.k, args.members)
+    df = run_cohort(recs, args.k, args.members, args.jobs)
     result = write_report(df, args.k, RESULTS_DIR / "gate2" / args.dataset)
     print(json.dumps(result["primary"], indent=2))
     print(json.dumps(result["verdict"], indent=2))
