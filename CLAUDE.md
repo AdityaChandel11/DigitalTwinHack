@@ -144,16 +144,19 @@ loader; its diet text is English, one food per line; 65 of 109 Shanghai recordin
 files vary (11 of 45 lack METs; the loader derives them from activity calories); its healthy group spends
 22.8 % of time below 70 mg/dL, so its lows are mostly sensor artefacts. Gate 1 is GO.
 
-**Gate 2 is GO** (3 Oct 2026, `docs/decisions/2026-10-03-gate2-final.md`): on 20 held-out CGMacros patients at
-5 calibration days, Chhaya 22.5 vs average day 24.2 mg/dL RMSE, better in 90 %, p = 3.1e-05; time-in-range error
-4.7 points; 80 % band covers 83 %. The effect is consistent but modest, and the blend (not the physiology
-alone) is what wins. Quote these numbers only with that context.
+**Gate 2 is GO as registered** (3 Oct 2026, `docs/decisions/2026-10-03-gate2-final.md`), **and the break test
+(`docs/decisions/2026-10-03-break-test.md`) says what that means**: on 20 held-out CGMacros patients, 5 days after the
+sensor comes off, Chhaya is 1.5 mg/dL (7 %) closer to the hidden sensor than the patient's average day (22.5 vs
+24.2, p = 3e-05) but only about 0.4 mg/dL closer than a physiology-free control (p = 0.03). The gain comes from the
+meal log, lasts about five days, and activity adds nothing measurable. Time-in-range is not a strength. Quote only
+the sentence in the "claim to quote" section of the break-test record. A corrected re-run (Amendment 2) is pending.
 
 Not yet verified — treat as hypotheses until `chhaya.data.audit` has run on the real files:
 
 - How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
 - Whether the Shanghai recordings are inpatient (2.4 fingersticks a day suggests so); exogenous insulin is not
   modelled yet.
+- The corrected Gate 2 re-run after Amendment 2 (sensor limits, METs, meal fixes).
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
 - Sensor-off accuracy on medicated or insulin-treated T2D, and with fingersticks. Milestone 3 measures it.

@@ -108,3 +108,15 @@ gate is decided, and a weak comparator. This amendment was committed before any 
 **Consequence for Gate 2.** The test split is re-run once with these corrections and both runs are reported
 side by side: the registered run of commit `a57227f` and the corrected run. No setting of the estimator
 (blend weight, loss, priors) is changed.
+
+**Addendum to Amendment 2 (3 Oct 2026, still before any re-run).** Two further input corrections, found by
+inspecting the files after the first fixes were committed:
+
+10. *Sensor limits.* The Libre writes `LO` and `HI` as exactly 40 and 400 mg/dL. Readings at or beyond the
+    limits are now dropped. They made up 43 % of participant 015's trace, 36 % of 007's and 12 % of 032's
+    (16 of 45 files have some); test patients 007 and 048 are affected.
+11. *Impossible macronutrients* (fibre above total carbohydrate; fat worth more than 1.5 times the meal's
+    stated calories) are treated as missing.
+
+No corrected run has been executed. When it is, the registered results of commit `a57227f` stay in
+`results/gate2/cgmacros-*-registered/` and the corrected run is reported beside them.

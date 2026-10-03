@@ -1,0 +1,205 @@
+
+====================================================================================================
+0. RUN HEALTH: 94 tasks, 0 crashed; main 45, shifted-window 45, leak 4
+====================================================================================================
+
+====================================================================================================
+1. DETERMINISM: does a separate run reproduce the committed per-patient metrics exactly?
+====================================================================================================
+largest absolute difference across 45 patients x 8 metrics: 0  -> IDENTICAL
+my re-simulation of the physiology vs the pipeline's: max 8.5e-14 mg/dL; band rebuilt from samples: max 0 mg/dL
+
+====================================================================================================
+2. LEAKAGE AND CAUSALITY ON REAL PATIENTS
+====================================================================================================
+cgmacros-002 (dev): hidden readings of both sensors scrambled -> estimate, band, fit, clock offset unchanged: True (scramble reached the scored truth: True); recording cut 1.5 days after the split -> estimate moves 0 mg/dL, band moves up to 18.39 mg/dL; control (one calibration reading +80) moves the estimate 4.20 mg/dL
+cgmacros-003 (dev): hidden readings of both sensors scrambled -> estimate, band, fit, clock offset unchanged: True (scramble reached the scored truth: True); recording cut 1.5 days after the split -> estimate moves 0 mg/dL, band moves up to 29.97 mg/dL; control (one calibration reading +80) moves the estimate 4.11 mg/dL
+cgmacros-001 (test): hidden readings of both sensors scrambled -> estimate, band, fit, clock offset unchanged: True (scramble reached the scored truth: True); recording cut 1.5 days after the split -> estimate moves 0 mg/dL, band moves up to 15.23 mg/dL; control (one calibration reading +80) moves the estimate 4.33 mg/dL
+cgmacros-005 (test): hidden readings of both sensors scrambled -> estimate, band, fit, clock offset unchanged: True (scramble reached the scored truth: True); recording cut 1.5 days after the split -> estimate moves 0 mg/dL, band moves up to 29.85 mg/dL; control (one calibration reading +80) moves the estimate 4.14 mg/dL
+
+====================================================================================================
+3. MEAL WINDOW: does the 6-slot window drop meals in real patients?
+====================================================================================================
+rec split       group  meals  max_12h  max_5h  max_effect_mgdl
+004   dev     healthy     62        8       7             7.46
+043   dev prediabetes     64        8       5             1.23
+031   dev     healthy     54        8       7             0.94
+015   dev     healthy     52        8       5             0.23
+patients affected: 4 | on the test side: 0
+
+====================================================================================================
+4. THE TWO PHYSICAL SENSORS: how far apart are they where BOTH actually recorded?
+====================================================================================================
+             frac_overlap  bias    sd  floor_matched  floor_committed
+group                                                                
+healthy               1.0 -34.3  12.4           37.1             47.5
+prediabetes           0.8 -30.6  12.6           35.2             37.4
+t2d                   0.9 -31.6  14.6           35.6             39.8
+all patients, median: overlap 94% | Libre minus Dexcom -32.4 mg/dL | SD of difference 13.4 | RMSE where both recorded 35.2 | figure in the committed results 39.5
+patients whose second sensor covers less than 90% of the hidden window: 22 of 45
+
+====================================================================================================
+5. IS THE BASELINE FAIR, AND DOES THE MEAL LOG MATTER?  Stronger baselines and placebo inputs, k = 5
+====================================================================================================
+
+HELD-OUT TEST PATIENTS: n = 20   (RMSE mg/dL; minus_chhaya > 0 means worse than Chhaya)
+                          estimator  median   mean  vs_day_better  minus_chhaya  chhaya_better_in  p_two_sided
+average day (30 min, as registered)  24.248 28.067           0.00         1.484              0.90        0.000
+           average day, 15-min bins  24.693 28.169           0.15         1.452              0.90        0.000
+           average day, 60-min bins  24.077 27.913           0.80         1.554              0.80        0.000
+          average day, 120-min bins  23.507 27.737           0.65         1.696              0.85        0.000
+                         median day  24.693 29.201           0.20         3.631              0.90        0.000
+               smoothed average day  23.880 27.642           1.00         1.285              0.80        0.001
+                     yesterday only  28.020 31.556           0.25         4.539              0.85        0.000
+                               mean  24.152 28.747           0.50         2.034              0.90        0.001
+    shrunk day 0.75 day + 0.25 mean  23.202 27.048           1.00         1.129              0.80        0.007
+      shrunk day 0.5 day + 0.5 mean  22.550 26.824           0.85         0.389              0.70        0.030
+    shrunk day 0.25 day + 0.75 mean  22.505 27.411           0.70         0.967              0.90        0.002
+ shrunk smoothed day 0.5 + 0.5 mean  22.475 26.784           0.85         0.275              0.70        0.053
+                   physiology alone  23.456 27.609           0.60         1.490              0.90        0.001
+  CHHAYA (0.5 physiology + 0.5 day)  22.543 25.876           0.90         0.000              0.00          NaN
+         0.25 physiology + 0.75 day  23.020 26.501           1.00         0.446              0.65        0.015
+         0.75 physiology + 0.25 day  22.527 26.259           0.65         0.320              0.65        0.076
+   three-way: physiology, day, mean  21.535 26.109           0.85         0.098              0.65        0.245
+          PLACEBO no meal log + day  24.787 28.563           0.45         1.977              0.90        0.000
+       PLACEBO meals 6 h late + day  23.236 28.012           0.45         1.436              0.90        0.000
+    habitual meals (replayed) + day  23.404 27.803           0.60         1.205              0.95        0.000
+         PLACEBO band at rest + day  22.330 25.822           0.80        -0.032              0.35        0.452
+
+DEVELOPMENT PATIENTS: n = 25   (RMSE mg/dL; minus_chhaya > 0 means worse than Chhaya)
+                          estimator  median   mean  vs_day_better  minus_chhaya  chhaya_better_in  p_two_sided
+average day (30 min, as registered)  22.108 23.720           0.00         1.312              0.88        0.000
+           average day, 15-min bins  22.095 23.777           0.20         1.363              0.92        0.000
+           average day, 60-min bins  22.108 23.631           0.80         1.337              0.88        0.000
+          average day, 120-min bins  21.085 23.574           0.64         1.237              0.84        0.000
+                         median day  22.642 24.513           0.20         1.880              0.92        0.000
+               smoothed average day  21.907 23.328           1.00         0.947              0.84        0.000
+                     yesterday only  24.770 28.699           0.12         6.229              0.92        0.000
+                               mean  23.265 25.491           0.28         2.450              0.92        0.000
+    shrunk day 0.75 day + 0.25 mean  21.400 22.994           0.96         0.747              0.80        0.003
+      shrunk day 0.5 day + 0.5 mean  21.229 23.069           0.80         0.714              0.88        0.000
+    shrunk day 0.25 day + 0.75 mean  22.026 23.933           0.52         1.521              0.88        0.000
+ shrunk smoothed day 0.5 + 0.5 mean  21.160 23.051           0.84         0.672              0.84        0.001
+                   physiology alone  19.963 24.360           0.52         1.262              0.88        0.000
+  CHHAYA (0.5 physiology + 0.5 day)  18.542 21.930           0.88         0.000              0.00          NaN
+         0.25 physiology + 0.75 day  20.052 22.294           1.00         0.421              0.64        0.085
+         0.75 physiology + 0.25 day  18.601 22.659           0.64         0.420              0.68        0.017
+   three-way: physiology, day, mean  19.353 22.209           0.92         0.083              0.60        0.141
+          PLACEBO no meal log + day  20.716 24.337           0.48         2.102              0.80        0.000
+       PLACEBO meals 6 h late + day  22.578 24.788           0.28         1.704              1.00        0.000
+    habitual meals (replayed) + day  22.115 23.744           0.44         1.002              0.92        0.000
+         PLACEBO band at rest + day  20.005 22.550           0.80         0.022              0.52        0.191
+
+====================================================================================================
+6. BLEND WEIGHT: is 0.5 a knife edge?  (test patients; chosen on dev)
+====================================================================================================
+test w=0.000: 24.25 (0%) | w=0.125: 23.50 (100%) | w=0.250: 23.02 (100%) | w=0.375: 22.70 (95%) | w=0.500: 22.54 (90%) | w=0.625: 22.15 (80%) | w=0.750: 22.53 (65%) | w=0.875: 23.14 (60%) | w=1.000: 23.46 (60%)
+dev w=0.000: 22.11 (0%) | w=0.125: 21.18 (100%) | w=0.250: 20.05 (100%) | w=0.375: 19.16 (96%) | w=0.500: 18.54 (88%) | w=0.625: 18.44 (76%) | w=0.750: 18.60 (64%) | w=0.875: 19.56 (56%) | w=1.000: 19.96 (52%)
+
+====================================================================================================
+7. JUDGED BY THE OTHER SENSOR: scored against the Dexcom, never used for calibration
+====================================================================================================
+test: n=20 | Chhaya 26.9 vs average day 27.3 vs mean 27.3 (physiology alone 27.0) | Chhaya better in 90% | one-sided p = 1.8e-05 | correlation with Dexcom: Chhaya 0.41, day 0.27
+dev: n=25 | Chhaya 23.4 vs average day 25.3 vs mean 24.0 (physiology alone 24.4) | Chhaya better in 84% | one-sided p = 1.9e-05 | correlation with Dexcom: Chhaya 0.43, day 0.30
+
+====================================================================================================
+8. ROBUSTNESS OF P1 ON TEST PATIENTS: subsets, other statistics, uncertainty
+====================================================================================================
+  all test patients                                          n=20 median diff -1.48  better in  90%  Wilcoxon p=3.1e-05  sign-test p=0.0002
+  excluding patients whose meal clock was moved 45+ min      n=16 median diff -1.30  better in  88%  Wilcoxon p=0.00029  sign-test p=0.0021
+  excluding files with the fraction convention               n=15 median diff -1.19  better in  87%  Wilcoxon p=0.001  sign-test p=0.0037
+  excluding files with derived METs                          n=15 median diff -1.57  better in 100%  Wilcoxon p=3.1e-05  sign-test p=3.1e-05
+  leaving out the healthy group                              n=14 median diff -1.48  better in  86%  Wilcoxon p=0.002  sign-test p=0.0065
+  only the healthy group                                     n= 6 median diff -2.13  better in 100%  Wilcoxon p=0.016  sign-test p=0.016
+  leaving out the prediabetes group                          n=13 median diff -1.40  better in  92%  Wilcoxon p=0.00061  sign-test p=0.0017
+  only the prediabetes group                                 n= 7 median diff -1.57  better in  86%  Wilcoxon p=0.023  sign-test p=0.062
+  leaving out the t2d group                                  n=13 median diff -1.57  better in  92%  Wilcoxon p=0.00037  sign-test p=0.0017
+  only the t2d group                                         n= 7 median diff -1.40  better in  86%  Wilcoxon p=0.039  sign-test p=0.062
+  leave-one-patient-out: worst one-sided p = 6.3e-05
+  same test on MAE instead of RMSE: median diff -1.29, better in 85%, p = 0.00084
+  median difference -1.48 mg/dL, 95% bootstrap CI [-3.49, -0.79]
+  mean relative change in RMSE -7.2%, 95% bootstrap CI [-9.9%, -4.5%]
+  RMSE as a fraction of the SD of the hidden glucose (test, median): Chhaya 0.97, average day 1.04, mean 1.02
+
+====================================================================================================
+9. DOES THE ADVANTAGE LAST?  Chhaya minus average-day RMSE by day since the sensor came off (all 45)
+====================================================================================================
+     patients  chhaya  average_day  mean_baseline  median_diff  better
+day                                                                   
+0          44   19.14        21.27          21.13        -2.59    0.84
+1          44   22.17        24.67          24.47        -1.42    0.75
+2          43   18.94        20.57          20.62        -1.91    0.93
+3          43   19.41        21.13          24.69        -0.72    0.63
+4          43   20.04        21.11          22.80        -2.82    0.81
+5          23   24.44        23.07          24.34         0.93    0.48
+6          10   25.54        26.37          25.01        -0.83    0.60
+7           2   29.27        29.61          28.94        -0.34    0.50
+8           1   25.62        29.69          23.27        -4.07    1.00
+9           1   25.29        26.83          27.75        -1.54    1.00
+10          1   17.85        19.61          19.85        -1.76    1.00
+11          1   15.28        20.00          14.09        -4.72    1.00
+12          1   15.36        18.21          16.47        -2.85    1.00
+13          1   14.36        18.77          14.79        -4.42    1.00
+
+====================================================================================================
+10. DOES IT RESPOND TO WHAT WAS EATEN?  Advantage on hidden days by how unusual the day's carbohydrate was
+====================================================================================================
+             days  atypicality  chhaya_gain  physiology_gain
+tercile                                                     
+typical day    86         0.09         2.20             1.25
+middle         86         0.30         2.70             0.84
+unusual day    86         0.84         1.42            -1.43
+correlation between how unusual the day was and Chhaya's gain over the average day: r = 0.02 (n = 258 patient-days)
+
+====================================================================================================
+10b. HIDDEN DAYS WITH AND WITHOUT A MEAL LOG: the study protocol ended before some sensors did
+====================================================================================================
+test
+                 patient_days  patients  chhaya  physiology  shrunk_control  average_day  vs_day  vs_shrunk  better_than_shrunk  physiology_vs_shrunk
+logged                                                                                                                                               
+1-2 meals                  25        14   21.94       23.46           21.56        22.59   -0.85       0.30                0.36                  3.38
+3+ meals                   79        18   21.67       23.24           24.32        25.95   -2.41      -1.61                0.86                 -1.27
+no meals logged             9         8   25.25       30.05           22.89        25.74   -0.49       1.58                0.11                  3.47
+dev
+                 patient_days  patients  chhaya  physiology  shrunk_control  average_day  vs_day  vs_shrunk  better_than_shrunk  physiology_vs_shrunk
+logged                                                                                                                                               
+1-2 meals                  19        12   24.85       25.31           24.47        27.04   -0.49      -0.01                0.53                  0.92
+3+ meals                  109        24   16.94       17.84           17.93        18.97   -1.65      -1.24                0.77                 -0.80
+no meals logged            17        12   27.24       31.97           24.78        25.14    0.15       0.67                0.35                  4.65
+test, only hidden days with 2+ logged meals: n=20 patients | Chhaya 22.3, shrunk control 22.5, average day 24.2, physiology 23.3 | Chhaya vs control: median -1.58, better in 75%, one-sided p = 0.0047 | physiology alone vs control: median -0.92, p = 0.55
+dev, only hidden days with 2+ logged meals: n=25 patients | Chhaya 18.3, shrunk control 19.5, average day 19.7, physiology 19.1 | Chhaya vs control: median -1.29, better in 88%, one-sided p = 1.6e-05 | physiology alone vs control: median -0.19, p = 0.55
+
+====================================================================================================
+11. MEAL BY MEAL: does the predicted 2-hour rise track the observed rise in the hidden window?
+====================================================================================================
+test physiology: per-patient r 0.27 (n=20), pooled r 0.38 (341 meals) | Chhaya: per-patient r 0.17 (n=20), pooled r 0.42 (341 meals) | average day: per-patient r 0.07 (n=20), pooled r 0.36 (341 meals) | placebo: no meal log: per-patient r -0.25 (n=20), pooled r 0.05 (341 meals)
+dev physiology: per-patient r 0.39 (n=25), pooled r 0.46 (459 meals) | Chhaya: per-patient r 0.34 (n=25), pooled r 0.53 (459 meals) | average day: per-patient r 0.16 (n=25), pooled r 0.45 (459 meals) | placebo: no meal log: per-patient r -0.14 (n=25), pooled r 0.04 (459 meals)
+
+====================================================================================================
+12. THE CLINICAL SUMMARY: can it estimate time in range, and does it beat 'same as the sensor fortnight'?
+====================================================================================================
+median absolute error (TIR/TBR/TAR in percentage points, GMI in % units):
+      point  predictive  day_point  day_predictive  carry_forward  tbr_pred  tbr_carry  tar_pred  tar_carry  gmi_twin  gmi_carry
+dev                                                                                                                             
+test   4.71       17.14       3.40           13.38           4.89     13.76       1.17      2.30       0.89      0.11       0.14
+dev    5.56       12.25       5.34            8.93           3.23      9.46       2.54      1.21       0.21      0.11       0.13
+by group, all patients:
+             tir_true  point  predictive  day_point  day_predictive  carry_forward
+group                                                                             
+healthy          89.7    6.2        17.7        6.7            19.8           11.6
+prediabetes      96.3    3.7        12.7        3.6            10.2            2.4
+t2d              81.7    6.3        12.2        5.3             8.2            2.8
+test patients: Chhaya predictive TIR better than carry-forward in 10% (p = 0.00013, two-sided)
+
+====================================================================================================
+13. A DIFFERENT CALIBRATION WINDOW: drop day 1 of every recording, then calibrate on the next 5 days
+====================================================================================================
+usable recordings: 44 of 45
+  test: n=19 Chhaya 22.0 vs average day 25.1 | median diff -1.66 | better in 84% | one-sided p = 0.00039 | TIR error 2.3 | band covers 82%
+  dev: n=25 Chhaya 18.3 vs average day 21.7 | median diff -1.22 | better in 84% | one-sided p = 6.2e-06 | TIR error 5.3 | band covers 85%
+
+====================================================================================================
+14. IS THE HIDDEN 'TRUTH' REAL DATA?  Straight-line stretches in the Libre trace (a sign of filled-in gaps)
+====================================================================================================
+patients with a perfectly straight stretch of 2 h or more: 6 of 45; worst: [{'rec': '015', 'longest_h': 15.2, 'pct': 33.0}, {'rec': '032', 'longest_h': 9.0, 'pct': 8.4}, {'rec': '007', 'longest_h': 8.8, 'pct': 29.8}, {'rec': '048', 'longest_h': 5.0, 'pct': 3.2}]
+median share of readings inside straight stretches: 0.00%

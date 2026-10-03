@@ -259,3 +259,30 @@ def test_fraction_file_dominated_by_item_counts_is_still_read_as_fractions(root)
     ]  # amounts are now 0.5, 4 and 3: mostly item counts, yet still the fraction convention
     assert rec.static["amount_consumed_unit"] == "fraction"
     assert rec.meals["carb_g"].tolist() == [30.0, 80.0, 50.0]
+
+
+def test_readings_at_the_sensor_limits_are_not_measurements(root):
+    # The Libre writes "LO" as exactly 40 and "HI" as 400. Hours at 40 in a healthy person is a sensor fault.
+    def stuck(d):
+        d.loc[600:959, "Libre GL"] = 40.0
+        d.loc[1200, "Libre GL"] = 400.0
+        return d
+
+    _edit(root, 1, stuck)
+    cgm = load_all(root)[0].cgm
+    assert len(cgm) == 192 - 24  # six hours of 15-minute slots are gone; the single HI minute costs nothing
+    assert cgm["glucose_mgdl"].min() > 40.0 and cgm["glucose_mgdl"].max() < 400.0
+
+
+def test_impossible_macro_values_are_treated_as_missing(root):
+    def typos(d):
+        d.loc[60, "Fiber"] = 480.0  # more fibre than carbohydrate (60 g)
+        d.loc[360, "Fat"] = 400.0  # 3,600 kcal of fat in a 700 kcal lunch
+        return d
+
+    _edit(root, 1, typos)
+    rec = load_all(root)[0]
+    assert np.isnan(rec.meals["fibre_g"].iloc[0]) and rec.meals["fibre_g"].iloc[1] == 9.0
+    assert np.isnan(rec.meals["fat_g"].iloc[1]) and rec.meals["fat_g"].iloc[0] == 5.0
+    inp, _, _ = build_inputs(rec)
+    assert float(inp.meal_slow.max()) < 2.0  # absorption is no longer slowed tenfold by a typo

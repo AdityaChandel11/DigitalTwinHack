@@ -17,6 +17,7 @@ from chhaya.data.schema import ACTIVITY_COLS, CGM_COLS, MEAL_COLS, Recording, em
 from chhaya.units import INCH_TO_M, LB_TO_KG
 
 MIN_PRIMARY_READINGS = 96  # one day of 15-minute readings
+SENSOR_RANGE = (40.0, 400.0)  # mg/dL; the files write LO and HI as these limits, so they are not measurements
 
 
 def _strip(df: pd.DataFrame) -> pd.DataFrame:
@@ -99,7 +100,9 @@ def _thin(df: pd.DataFrame, col: str, step: int) -> pd.DataFrame:
     if col is None:
         return empty(CGM_COLS)
     d = pd.DataFrame({"t_min": df["t_min"], col: _numeric(df, col)}).dropna(subset=[col])
-    d = d[(d[col] >= 20) & (d[col] <= 600)]
+    # Censored readings are dropped: the true value is only known to lie beyond the limit, and long runs at
+    # the floor (over a third of the trace in two healthy participants) are sensor faults, not glucose.
+    d = d[(d[col] > SENSOR_RANGE[0]) & (d[col] < SENSOR_RANGE[1])]
     d = d.groupby(d["t_min"] // step, sort=True).first()
     return (
         d.rename(columns={col: "glucose_mgdl"})
@@ -155,13 +158,25 @@ def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | Non
         grams = pd.to_numeric(m[col], errors="coerce").fillna(0.0) if col else pd.Series(0.0, index=m.index)
         return grams.to_numpy(dtype=float) * frac
 
+    carbs, fat, fibre = macro("Carbs"), macro("Fat"), macro("Fiber")
+    kcal_col = _pick(df, "Calories")
+    meal_kcal = (
+        pd.to_numeric(m[kcal_col], errors="coerce").to_numpy(dtype=float) * frac
+        if kcal_col
+        else np.full(len(m), np.nan)
+    )
+    # Values that cannot be true are treated as missing rather than believed: fibre above total carbohydrate
+    # (one file has fibre up to 2,830 g) and fat worth more than 1.5 times the meal's stated calories.
+    fibre = np.where(fibre > carbs, np.nan, fibre)
+    fat = np.where(9.0 * fat > 1.5 * meal_kcal, np.nan, fat)
+
     meals = pd.DataFrame(
         {
             "t_min": m["t_min"].to_numpy(dtype=float),
-            "carb_g": macro("Carbs"),
+            "carb_g": carbs,
             "protein_g": macro("Protein"),
-            "fat_g": macro("Fat"),
-            "fibre_g": macro("Fiber"),
+            "fat_g": fat,
+            "fibre_g": fibre,
             "label": _meal_label(m[meal_col]) if meal_col else np.array([], dtype=object),
         },
         columns=MEAL_COLS,

@@ -1,6 +1,6 @@
 """Break test, analysis stage: attack the Gate 2 claim with the arrays captured by capture.py.
 
-Usage: python analyse.py capture.pkl <repo root with committed results>
+Usage: python analyse.py capture.pkl <repo root with committed results> [results folder suffix]
 """
 
 import pickle
@@ -21,6 +21,7 @@ pd.set_option("display.max_columns", 40)
 K, SPLIT = 5, 5 * 1440
 res = pickle.load(open(sys.argv[1], "rb"))
 repo = sys.argv[2]
+suffix = sys.argv[3] if len(sys.argv) > 3 else ""  # e.g. "-registered" for the run of commit a57227f
 errors = [r for r in res if "error" in r]
 main = [r for r in res if r["kind"] == "main" and "error" not in r and not r.get("skipped")]
 shift = [r for r in res if r["kind"] == "shift1" and "error" not in r]
@@ -51,7 +52,7 @@ for r in errors:
 section("1. DETERMINISM: does a separate run reproduce the committed per-patient metrics exactly?")
 committed = pd.concat(
     [
-        pd.read_csv(f"{repo}/results/gate2/cgmacros-{s}/metrics.csv", float_precision="round_trip")
+        pd.read_csv(f"{repo}/results/gate2/cgmacros-{s}{suffix}/metrics.csv", float_precision="round_trip")
         for s in ("dev", "test")
     ]
 )

@@ -16,8 +16,8 @@ Last updated: 3 Oct 2026.
 | # | Milestone | Status | Evidence |
 |---|---|---|---|
 | M1 | Data truth | **Done.** Gate 1 is GO | `docs/decisions/2026-10-03-gate1.md` |
-| M2 | Core twin and the reveal | **Done.** Gate 2 is GO on the 20 held-out test patients (22.5 vs 24.2 mg/dL at k = 5, better in 90 %, p = 3.1e-05) | `docs/decisions/2026-10-03-gate2-final.md`, `results/gate2/cgmacros-test/` |
-| M3 | Accuracy and fusion | Not started. Reordered below by which limit each item reduces | |
+| M2 | Core twin and the reveal | **Done, with a corrected re-run pending** (break test found input defects; Amendment 2). Gate 2 is GO on the 20 held-out test patients (22.5 vs 24.2 mg/dL at k = 5, better in 90 %, p = 3.1e-05) | `docs/decisions/2026-10-03-gate2-final.md`, `results/gate2/cgmacros-test-registered/` |
+| M3 | Accuracy and fusion | Not started. **Primary comparator is now the physiology-free control** (Amendment 2); do not start until the corrected re-run is reported. Reordered below by which limit each item reduces | |
 | M4 | Product | Not started. Live mode added (4.8) | |
 | M5 | Ship | Not started | |
 
