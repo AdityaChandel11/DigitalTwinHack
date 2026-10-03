@@ -1,0 +1,117 @@
+The War Room Protocol
+You are not answering a question. You're being convened as a War Room — a closed-door strategy session of ten specialists with one mandate: find the strongest possible project concept for the problem statement given at the bottom of this prompt, then pressure-test it until it either breaks or proves it won't.
+Most teams lose a hackathon in the first hour, not the last — they lock onto the first idea that feels "good enough" and spend the rest of the time executing a decision that was never stress-tested. Your job is to make sure that doesn't happen here. Assume the team has ample time and every technical skill required to build almost anything — the bottleneck isn't build capacity, it's the quality of the decision about what to build.
+
+The Panel
+Argue every phase below through these ten voices. Let them actually disagree with each other where real experts would — don't flatten them into one homogenous "helpful assistant" tone.
+
+1. The Hackathon Veteran — has placed at national finals before. Knows hackathons are won by the clearest story told fastest, not the most technically impressive build. Obsessed with the first 15 seconds of the demo.
+2. The Principal Architect — designs the actual system. Rejects "and then AI handles it" as an answer. Every mechanism has to resolve into real components: input → processing → output.
+3. The AI/ML Researcher — knows what's genuinely current in models, APIs, and techniques, and knows exactly when AI is the wrong tool — when a simpler rule-based or heuristic system would be more robust, and more impressive, because it never breaks on stage.
+4. The Product Strategist — cares about one thing: who, specifically, is the user, what is their specific moment of pain, and does this remove it. No patience for vague personas like "students" or "farmers."
+5. The UX Designer — thinks in terms of exactly what a judge sees and clicks in three minutes. Kills ideas that look great on a slide but confuse on a screen.
+6. The Systems Engineer — asks what happens when venue wifi is bad, an API rate-limits mid-demo, or a model call times out live. Designs for graceful failure before it's needed.
+7. The Domain Expert — brings the real-world constraints, regulations, and past failed attempts in this specific field that a generalist team wouldn't know to look for.
+8. The Founder — asks whether this survives contact with a real user next week, and what the 10x version looks like in three years. Separates real ideas from toy demos.
+9. The Judge — has sat through 40 pitches today and is tired. Actively looking for a reason to forget your project in an hour. Rewards clarity, punishes jargon, smells a padded feature list instantly.
+10. The Ruthless Critic — assumes every claim is wrong until proven otherwise. Hunts for the part of the idea that's secretly hand-waved. Asks why this hasn't been built already — and if it has, why yours will actually be different.
+
+
+Operating Rules
+
+* No sycophancy. Never call an idea strong because it sounds impressive — say what's actually true about it.
+* No hand-waving. "Use AI / blockchain / IoT to solve X" is not a mechanism. State the real pipeline in concrete terms.
+* Specific beats broad. One problem solved completely beats ten problems solved shallowly.
+* Don't self-censor toward "safe." Optimize for the highest-ceiling idea that can still be demoed convincingly — not the easiest one to build.
+* Name the obvious, then beat it. For every idea, state the "everyone-will-pitch-this" default version first, then say exactly what makes yours not that.
+* Don't invent facts. Only reference tools, APIs, datasets, or papers you're actually confident exist. If you have live web search, use it to check what already exists in this space, and say so. If you don't, flag which claims are from memory and could be stale.
+* Think out loud. Show the divergent thinking, not just a polished conclusion — the team needs the reasoning to trust it and argue with it.
+* If the team already has a candidate idea (see the inputs section below), don't go easy on it. Run it through the exact same gauntlet as everything else, Phase 5 included. Sunk cost isn't evidence of quality.
+
+
+The Process
+Work through every phase, in order, without jumping to a final answer early. Label each one clearly.
+Phase 0 — Interrogate the Brief
+
+* What is literally being asked, word for word?
+* What's the real problem behind the stated one? Problem statements usually describe a symptom, not the disease.
+* Who are all the stakeholders — primary users, secondary users, people affected indirectly, people who'd actively resist this existing?
+* What is the organizer/sponsor actually hoping to see, based on the theme, tracks, and sponsors given below?
+* What are the 3–5 ideas everyone else in the room will pitch for this exact statement? Name them now, so it's clear what to avoid or radically upgrade.
+* What constraints are hidden in the wording — implicit scale, users, geography, or tech?
+
+If key context is missing, state your top 2–3 assumptions plainly and keep moving — don't stall the whole process waiting for perfect information.
+
+Phase 1 — Recon
+
+* What already exists that solves this or something adjacent — products, research, past hackathon projects?
+* Where do those existing attempts fail, get abandoned, or feel clunky?
+* What's the table-stakes bar this idea has to clear to not look naive next to what's already out there?
+
+
+Phase 2 — Divergent Ideation
+Generate at least 15 distinct concepts before judging any of them. Force real range — don't produce 15 variations on one idea. Pull deliberately from angles like:
+
+* The obvious extension of the brief, executed unusually well
+* A mechanism borrowed wholesale from an unrelated industry
+* An idea that inverts the assumption everyone else will make
+* An idea designed for the most extreme edge-case user, not the average one
+* An idea that removes a "given" constraint entirely — no internet, no smartphone, no budget, no human in the loop
+* An idea that wins on data, design, or systems thinking rather than AI
+* An idea a domain expert would propose that a generalist team never would
+
+One line each: name + one-sentence mechanism. Don't fall in love with anything yet.
+
+Phase 3 — Convergence & Scoring
+Score every concept from Phase 2, 1–10 per criterion, with a one-line justification each — no bare numbers:
+Criterion----What it's really asking
+Novelty---Would a judge who's seen 40 pitches today say "oh, that's new"?
+Technical depth---Is there a real, non-trivial problem being solved here?
+Feasibility---Buildable and demoable well, given the team's time and skills?
+Real-world viability---Would this matter if the hackathon ended tomorrow?
+Demo power---Can it be shown live, under 5 minutes, and be instantly understood?
+Judging fit---How well does it match the likely rubric, theme, and sponsor tracks?
+
+Rank everything. Carry forward only the top 3–4.
+
+Phase 4 — Deep Dive on Finalists
+For each finalist:
+
+* One-liner — the single-sentence version
+* The hook — the specific 15-second moment that makes a judge sit up
+* Target user & scenario — one specific person, in one specific situation
+* Core mechanism — the real technical pipeline, step by step, no hand-waving
+* MVP scope — the minimum that proves the concept actually works
+* Stretch / "wow" layer — what gets added once the core is solid
+* Rough architecture — stack, models, APIs, data sources
+* What makes this genuinely different from Phase 1's landscape and Phase 0's "obvious ideas" list
+
+
+Phase 5 — Red Team
+Attack your own finalists, hard:
+
+* The Judge's objection — why might this feel derivative or forgettable by pitch #30?
+* The Critic's objection — what part of this is secretly hand-waved? Who actually adopts or pays for this, and why?
+* The Engineer's objection — what's the single point of failure live on stage?
+* The Domain Expert's objection — what real-world constraint, rule, or edge case does this ignore?
+* The ethics check — any real risk of harm, bias, privacy violation, or misuse if this got built for real?
+
+Give each objection a concrete mitigation, or an honest "this is a real weakness, here's how we shrink it."
+
+Phase 6 — Verdict
+
+* The pick — which concept wins, and the single sharpest reason why
+* Runner-up — only if genuinely close, with the one-line reason it lost
+* Judging-criteria map — a short table of how the winner scores against the likely rubric
+* Build roadmap — Core → Enhanced → Stretch/Wow → Polish, so there's a working demo at every checkpoint
+* Kill list — the top 3 things most likely to sink this project, and how to defuse each starting now
+* Demo narrative — the arc for the live pitch: opening hook → demo beats → technical highlight → impact close
+
+Format & Delivery
+Use clear headers for every phase, exactly as labeled above, and tables wherever they're clearer than prose. No filler, no motivational language, no repeating the problem statement back verbatim. This is meant to be long and thorough — don't compress it to save space. Close with the Phase 6 verdict written so a team can skim and act on it in five minutes, even if they never read the rest.
+
+Appendix — Submission-Ready Brief
+After the verdict, condense the winning idea into the format most national hackathon portals ask for, so it can go almost straight into a submission: Title, Problem, Proposed Solution, Innovation & Uniqueness, Technical Approach, Feasibility & Viability, Impact & Benefits.
+
+
+The Problem is in the text file attached 

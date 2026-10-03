@@ -1,0 +1,183 @@
+# Chhaya — project guide for Claude
+
+Chhaya (Hindi for "shadow") is our entry to the Happiest Health **Digital Twin Challenge 2026**: a Type 2 diabetes
+digital twin that keeps estimating a patient's glucose **after the CGM sensor comes off**, from logged
+meals, a fitness band and occasional fingersticks, and tells the doctor when it has gone stale.
+
+- **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
+- **Submission closes 20 Oct 2026, 19:00 IST.** We submit by 12:00 that day. Feature freeze is 15 Oct.
+- **Why this concept, and what everyone else is building:** [docs/WAR_ROOM.md](docs/WAR_ROOM.md) (read Phase 6).
+- **What to build, in order, with gates:** [docs/superpowers/plans/2026-10-02-chhaya-roadmap.md](docs/superpowers/plans/2026-10-02-chhaya-roadmap.md).
+- **Task-level plan currently being executed:** [docs/superpowers/plans/2026-10-02-chhaya-plan-1-core-twin.md](docs/superpowers/plans/2026-10-02-chhaya-plan-1-core-twin.md).
+- **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
+
+## Working agreement (solo project: Claude is the teammate)
+
+- Act as a teammate, not an order-taker: propose, push back with reasons, and make the call on routine
+  trade-offs. Ask only when a choice is irreversible or genuinely the user's.
+- **Before each task, say which model and effort to use**, using the table in README.md (Developer guide).
+  Default to the cheapest model that is safe; escalate after one failed attempt. Say when to switch.
+- Keep reports short: what changed, what was verified, what is next.
+- The user's time is the scarcest resource. Never leave a long command running without saying so.
+
+## The one claim
+
+> Calibrate on k days of sensor data, hide the rest, estimate the hidden days without the sensor, then
+> reveal the real trace on top.
+
+Everything in the repo exists to make that experiment true, measurable and demoable. Sensor-on spike
+forecasting is a **baseline table**, never the headline — at least four competing entries are already
+"GlucoTwin" classifiers. Do not name anything Gluco* or Glyco*.
+
+## Rules that are not negotiable
+
+These are what separate us from entries that validate a model on their own simulator. Breaking one
+silently is worse than a bad number.
+
+1. **No leakage.** In the hidden window the twin may use meals, band data and (later) fingersticks — never
+   CGM. Every evaluation asserts that scored timestamps lie after the calibration split.
+2. **Split by patient, never by row.** `chhaya.config.is_dev_patient()` is the only split. Population
+   settings (priors, slow-down coefficients, band recalibration, any learned corrector) are tuned on dev
+   patients and reported on test patients.
+3. **Pass bars are written before the run.** They live in `docs/PREREGISTRATION.md`. Changing a bar after
+   seeing a result means adding a dated amendment that says so, not editing the number.
+4. **Report what happened.** A failed fit is a row with an `error`, not a dropped patient. A result that
+   misses its bar is published with the bar. Where a plain baseline beats the twin, say so.
+5. **Never draw an estimate without its uncertainty band**, and label it "estimated". No dose
+   recommendations anywhere — only simulations of options the doctor entered.
+6. **Datasets are never committed or redistributed.** CGMacros is CC BY-NC-SA. They are fetched by
+   `python -m chhaya.data.download` into `data/` (git-ignored). Only derived aggregates go in `results/`.
+7. **Synthetic is labelled synthetic** — in code, in files, on screen. The demo patient "Mrs. R." and any
+   genetic-marker field are synthetic; neither open dataset has genotypes.
+8. **A number goes on a slide only if a command in this repo regenerates it.** Facts tagged `[memory]` in
+   the War Room doc must be re-checked before they are quoted.
+
+## Commands
+
+```bash
+uv sync                                         # create the environment from pyproject.toml
+uv run pytest -q                                # full suite, ~30 s; twin fits are marked `slow`
+uv run pytest -q -m "not slow"                  # seconds
+uv run ruff check src tests && uv run ruff format src tests
+uv run python -m chhaya.data.download shanghai cgmacros   # 3.7 MB + 627 MB, checksum-verified
+uv run python -m chhaya.data.audit              # Gate 1 -> results/audit/
+uv run python -m chhaya.eval.gate2 --dataset cgmacros --k 3 5 7   # Gate 2 -> results/gate2/
+uv run python -m chhaya.eval.gate2 --dataset cgmacros --limit 5   # smoke run
+```
+
+## Architecture
+
+```
+src/chhaya/
+  config.py        paths (CHHAYA_DATA_DIR), SEED, is_dev_patient()
+  units.py         mg/dL <-> mmol/L, GMI, HbA1c and insulin unit conversions
+  data/
+    schema.py      Recording — the only type that crosses module boundaries
+    download.py    fetch + checksum + unpack
+    cgmacros.py    loader -> Recording   (45 people; Libre + Dexcom, Fitbit, meal macros)
+    shanghai.py    loader -> Recording   (100 T2D; Libre, fingersticks, diet text, drugs, labs)
+    audit.py       dataset counts, Gate 1
+  twin/
+    model.py       the ODE: E-DES core + circadian + exercise, in JAX
+    inputs.py      Recording -> Inputs arrays
+    priors.py      population prior; record-informed prior (static data enters here)
+    fit.py         MAP calibration + Laplace ensemble
+  eval/
+    metrics.py     RMSE, MARD, TIR/TAR/TBR error, GMI error, band coverage
+    baselines.py   mean; the patient's own average day (the bar to beat)
+    reveal.py      the hide-and-reveal experiment for one recording
+    gate2.py       cohort run, pre-registered verdict, report
+```
+
+Data flows one way: **loader → `Recording` → `build_inputs` → `fit_twin` → `simulate_ensemble` →
+metrics**. Loaders know file formats; nothing downstream does. The dashboard (later) reads only
+pre-computed artifacts — nothing is fitted live in a demo.
+
+**Fusion is Bayesian, not concatenation.** The health record sets the prior over the twin's seven
+personal parameters; sensor data is the likelihood. That sentence is the answer to the brief's "fusion of
+two data streams" and to "why is this a twin and not a classifier".
+
+## Conventions
+
+- **Units.** Storage, metrics and anything a human reads: **mg/dL**. Inside the ODE: **mmol/L**, mU/L,
+  minutes, mg of gut glucose. Convert only through `chhaya.units`. `Recording.validate()` rejects glucose
+  outside 20–600 mg/dL, which catches an unconverted mmol/L column.
+- **Time.** `t_min` = integer minutes since `Recording.start`. The ODE steps at 1 minute (RK4). Clock
+  time of day is `start.hour*60 + start.minute + t_min`.
+- **Parameters.** The twin's personal vector `z` has 7 unconstrained entries, order fixed by
+  `model.THETA_NAMES`: absorption rate, insulin-mediated fraction of basal disposal, beta-cell
+  responsiveness, basal glucose, dawn amplitude, exercise sensitivity, meal-logging bias. `unpack()`
+  maps `z` to physical values. Fasting insulin `ib` comes from the record and is not fitted.
+- **JAX.** `jax_enable_x64` is switched on in `model.py`; import that module before creating arrays.
+  Keep `simulate` pure. A new array *shape* triggers a recompile (≈0.3 s) — fine per patient, not per step.
+- **Determinism.** Seeds come from `config.SEED`. A function that samples takes a `seed` argument.
+- **Tests.** Test-first. Synthetic recordings come from `tests/conftest.py::make_recording`, which runs
+  the twin with known parameters — so recovery tests have ground truth. Real-data tests are marked
+  `data` and skipped by default. Assert on behaviour a clinician or judge would care about, with numbers.
+- **Style.** `ruff format` (110 cols) and `ruff check` must be clean. Comments explain why, not what.
+
+## What is verified, and what is not yet
+
+Verified on 2 Oct 2026 against the sources:
+
+- **CGMacros column names** (from its data dictionary): `Timestamp, Libre GL, Dexcom GL, HR,
+  Calories (Activity), Mets, Meal Type, Calories, Carbs, Protein, Fat, Fiber, Amount Consumed,
+  Image Path`. `Mets` is stored ×10. Body weight is in pounds, height in inches. There is **no sleep
+  column and no medication data**; sleep must be derived from HR/METs and labelled as derived.
+- **ShanghaiT2DM**: 100 patients, 109 recordings of 3–14 days, Libre every 15 min, mean TIR 77.7 %.
+  Diet is **free text of weighed foods** (Chinese and English) — it needs a food-to-macros table before
+  the twin can use it. HbA1c is in mmol/mol. It has **no wearable activity data**.
+- **Model equations and constants**: the published E-DES reference implementation.
+- **The prototype**: the core in Plan 1 was run before the plan was written — steady state exact,
+  parameter recovery on synthetic data, 67 tests green, 200-member ensemble over 10 days in about 3 s.
+
+Not yet verified — treat as hypotheses until `chhaya.data.audit` has run on the real files:
+
+- The exact header spelling in the Shanghai workbooks (the loader matches by pattern and reports the
+  headers it found when it cannot).
+- Whether `Amount Consumed` sits on the meal row in CGMacros, and how many snacks go unlogged.
+- How many Shanghai recordings are inpatient and on insulin (exogenous insulin is not modelled yet).
+- Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
+  dev patients.
+- **Sensor-off accuracy on real patients. Nobody knows this number yet.** Gate 2 measures it.
+
+Known model gaps: no counter-regulation (deep hypoglycaemia dynamics are not trustworthy), no drug
+kinetics, no exogenous insulin, one absorption curve per meal.
+
+## Environment gotchas (Windows)
+
+- The working tree is inside OneDrive, which is signed out on this machine (dormant), so no sync workaround is
+  needed. The git directory is at `C:/dev/DigitalTwinHack.git` (`.git` is a pointer file). Datasets go to
+  `./data` (git-ignored); override with `CHHAYA_DATA_DIR` if needed.
+- **Always pass `encoding="utf-8"`** when reading or writing text. The default is cp1252 and it corrupts
+  the Chinese diet text and column headers.
+- Python 3.13, `uv` 0.12. **Docker is not installed** — do not plan around it.
+- In the Bash tool, long heredocs containing apostrophes fail to parse. Write files with the Write tool.
+
+## Skills and agents to reach for
+
+| When | Use |
+|---|---|
+| Any new feature or behaviour change | `superpowers:brainstorming`, then `superpowers:writing-plans` |
+| Writing code | `superpowers:test-driven-development` |
+| A test fails or a number looks wrong | `superpowers:systematic-debugging` |
+| Before saying "done", "passes" or "fixed" | `superpowers:verification-before-completion` |
+| Experiment design, leakage, "is this result real?" | `scientific-critical-thinking`, `statistical-analysis` |
+| Baselines, splits, evaluation, reproducibility | `mle-workflow`, `scikit-learn`; `shap` for the baseline forecaster |
+| First look at a new file or column | `exploratory-data-analysis` |
+| Figures for README, deck, video | `scientific-visualization`, `dataviz` |
+| README, limitations, method write-up | `scientific-writing` |
+| The deck | `pptx-deck:create-deck` |
+| After any change under `src/` | `python-reviewer` agent |
+| After any change to model, fitting or evaluation | `mle-reviewer` agent |
+| After anything clinical or patient-facing (dashboard copy, alerts, thresholds) | `healthcare-reviewer` agent |
+
+`pymc`, `statsmodels`, `aeon`, `polars` and `pyhealth` are installed but not on the critical path; use
+them only if a task in the plan calls for it.
+
+## Decisions
+
+- Decided: project name **Chhaya**; team **SynapseX**, IIT Kanpur; `docs/WAR_ROOM.md` is public.
+- Not committed (kept local): `.claude/`, `.agents/`, `skills-lock.json`.
+- Still open: questions for the organisers (top 10 or top 5 after Phase 1; is "minimum 20-minute video"
+  correct; is there a scoring rubric).

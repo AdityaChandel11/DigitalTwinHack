@@ -1,0 +1,9 @@
+# datasets are never committed: CGMacros is CC BY-NC-SA and must be fetched by the user
+/data/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.env
+results/**/*.npz
