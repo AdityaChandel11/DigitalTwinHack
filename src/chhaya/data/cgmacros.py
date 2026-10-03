@@ -119,7 +119,12 @@ def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | Non
         m = df[df[meal_col].notna() & df[carb_col].notna()]
     # A file with no Amount Consumed column means the whole meal was eaten.
     eaten = pd.to_numeric(m[eaten_col], errors="coerce") if eaten_col else pd.Series(np.nan, index=m.index)
-    frac = (eaten.fillna(100.0).clip(0.0, 100.0) / 100.0).to_numpy()
+    # Two conventions exist: percent (100 = whole meal) in most files, fraction (1.0 = whole) in 9 of 45.
+    # Values above a whole meal count the items on the plate (their calories and glucose rise match
+    # ordinary meals), so they mean "all of it", not a multiplier.
+    whole = 1.0 if eaten.notna().any() and eaten.median() <= 1.5 else 100.0
+    static["amount_consumed_unit"] = "fraction" if whole == 1.0 else "percent"
+    frac = (eaten.fillna(whole).clip(0.0, whole) / whole).to_numpy()
 
     def macro(name: str) -> np.ndarray:
         col = _pick(df, name)

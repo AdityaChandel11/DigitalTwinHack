@@ -29,3 +29,22 @@ def average_day_baseline(cal_tod, cal_g, test_tod, bin_min: int = 30) -> np.ndar
         known = centres[have]
         profile = np.interp(centres, known, profile[have], period=n_bins)
     return profile[(np.asarray(test_tod, dtype=int) % 1440) // bin_min]
+
+
+def lodo_average_day(day, tod, g, bin_min: int = 30) -> np.ndarray:
+    """For every reading, the average-day value built from the *other* days.
+
+    This is what the average-day baseline would have said about a day it had not seen, which gives an
+    honest noise scale inside the calibration window. With a single day it falls back to that day.
+    """
+    day = np.asarray(day)
+    tod = np.asarray(tod, dtype=int)
+    g = np.asarray(g, dtype=float)
+    days = np.unique(day)
+    if days.size < 2:
+        return average_day_baseline(tod, g, tod, bin_min)
+    out = np.empty_like(g)
+    for d in days:
+        held = day == d
+        out[held] = average_day_baseline(tod[~held], g[~held], tod[held], bin_min)
+    return out

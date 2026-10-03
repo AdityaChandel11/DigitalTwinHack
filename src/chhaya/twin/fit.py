@@ -39,8 +39,14 @@ def fit_twin(
     fx: Fixed = Fixed(),
     n_starts: int = 6,
     seed: int = 0,
+    loss: str = "linear",
+    f_scale: float = 1.0,
 ) -> TwinFit:
-    """Fit z by bounded least squares from several prior draws; keep the lowest-cost solution."""
+    """Fit z by bounded least squares from several prior draws; keep the lowest-cost solution.
+
+    `loss` goes to SciPy: "soft_l1" stops glucose rises with no logged meal from dragging the
+    parameters; `f_scale` (in units of SIGMA_OBS) is the residual size beyond which it takes over.
+    """
     if len(obs_idx) < 24:
         raise ValueError(f"need at least 24 CGM readings to calibrate, got {len(obs_idx)}")
     idx = jnp.asarray(obs_idx)
@@ -68,6 +74,8 @@ def fit_twin(
             method="trf",
             x_scale="jac",
             max_nfev=80,
+            loss=loss,
+            f_scale=f_scale,
         )
         if np.all(np.isfinite(sol.fun)) and (best is None or sol.cost < best.cost):
             best = sol

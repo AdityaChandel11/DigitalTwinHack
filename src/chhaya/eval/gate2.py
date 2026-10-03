@@ -141,11 +141,16 @@ def main() -> None:
     ap.add_argument("--k", type=int, nargs="+", default=[3, 5, 7])
     ap.add_argument("--limit", type=int, default=None, help="only the first N recordings (smoke run)")
     ap.add_argument("--members", type=int, default=200)
+    ap.add_argument("--split", choices=["all", "dev", "test"], default="all", help="which patients")
     ap.add_argument("--jobs", type=int, default=1, help="worker processes; results do not depend on it")
     args = ap.parse_args()
-    recs = load(args.dataset)[: args.limit]
+    recs = load(args.dataset)
+    if args.split != "all":
+        recs = [r for r in recs if is_dev_patient(r.patient_id) == (args.split == "dev")]
+    recs = recs[: args.limit]
     df = run_cohort(recs, args.k, args.members, args.jobs)
-    result = write_report(df, args.k, RESULTS_DIR / "gate2" / args.dataset)
+    suffix = "" if args.split == "all" else f"-{args.split}"
+    result = write_report(df, args.k, RESULTS_DIR / "gate2" / f"{args.dataset}{suffix}")
     print(json.dumps(result["primary"], indent=2))
     print(json.dumps(result["verdict"], indent=2))
     if np.isnan(result["primary"].get("wilcoxon_p", np.nan)):

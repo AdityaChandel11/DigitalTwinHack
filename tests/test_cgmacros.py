@@ -56,6 +56,22 @@ def _write_participant(root, number: int, days: int = 2, libre: bool = True, var
     ]
     df.loc[400:430, "METs"] = 45.0
     df.loc[400:430, "Calories (Activity)"] = ex_kcal
+    if variant == "fraction":
+        # 9 of 45 real files write 1.0 for a whole meal; values above 1 count the items on the plate
+        df.loc[60, "Amount Consumed"] = 0.5
+        df.loc[360, "Amount Consumed"] = 1.0
+        df.loc[700, ["Meal Type", "Calories", "Carbs", "Protein", "Fat", "Fiber", "Amount Consumed"]] = [
+            "dinner",
+            500,
+            50,
+            20,
+            15,
+            4,
+            3.0,
+        ]
+    if variant == "counts":
+        df.loc[60, "Amount Consumed"] = 100.0
+        df.loc[360, "Amount Consumed"] = 400.0
     if sparse:
         df = df.drop(columns=["METs", "Amount Consumed"])
     else:
@@ -70,17 +86,19 @@ def root(tmp_path):
     _write_participant(tmp_path, 1)
     _write_participant(tmp_path, 2, libre=False)
     _write_participant(tmp_path, 3, variant="sparse")
+    _write_participant(tmp_path, 4, variant="fraction")
+    _write_participant(tmp_path, 5, variant="counts")
     pd.DataFrame(
         {
-            "subject": [1, 2, 3],
-            "Age": [50, 61, 44],
-            "Gender": ["F", "M", "F"],
-            "BMI": [31.0, 27.0, 33.0],
-            "Body weight ": [200.0, 180.0, 200.0],
-            "Height ": [65, 70, 64],
-            "A1c PDL (Lab)": [7.1, 5.4, 6.9],
-            "Fasting GLU - PDL (Lab)": [140, 92, 131],
-            "Insulin ": [18.0, 6.0, 15.0],
+            "subject": [1, 2, 3, 4, 5],
+            "Age": [50, 61, 44, 39, 52],
+            "Gender": ["F", "M", "F", "M", "F"],
+            "BMI": [31.0, 27.0, 33.0, 29.0, 30.0],
+            "Body weight ": [200.0, 180.0, 200.0, 200.0, 200.0],
+            "Height ": [65, 70, 64, 68, 66],
+            "A1c PDL (Lab)": [7.1, 5.4, 6.9, 6.0, 5.2],
+            "Fasting GLU - PDL (Lab)": [140, 92, 131, 104, 90],
+            "Insulin ": [18.0, 6.0, 15.0, 9.0, 5.0],
         }
     ).to_csv(tmp_path / "bio.csv", index=False)
     return tmp_path
@@ -88,7 +106,7 @@ def root(tmp_path):
 
 def test_bio_headers_are_stripped_and_indexed_by_participant(root):
     bio = load_bio(root)
-    assert "Body weight" in bio.columns and list(bio.index) == [1, 2, 3]
+    assert "Body weight" in bio.columns and list(bio.index) == [1, 2, 3, 4, 5]
 
 
 def test_participant_becomes_a_valid_recording(root):
@@ -152,3 +170,14 @@ def test_meal_labels_are_normalised_across_files(root):
 
 def test_unnamed_index_column_is_ignored(root):
     assert len(load_all(root)[2].cgm) == 2 * 96
+
+
+def test_amount_consumed_on_a_fraction_scale_is_not_read_as_percent(root):
+    # 0.5 is half the breakfast, 1.0 the whole lunch, and 3.0 counts three items on the dinner plate
+    rec = load_all(root)[3]
+    assert rec.meals["carb_g"].tolist() == [30.0, 80.0, 50.0]
+    assert rec.static["amount_consumed_unit"] == "fraction"
+
+
+def test_amount_consumed_above_a_whole_meal_is_an_item_count_not_a_multiplier(root):
+    assert load_all(root)[4].meals["carb_g"].tolist() == [60.0, 80.0]

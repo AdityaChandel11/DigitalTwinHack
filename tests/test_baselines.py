@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from chhaya.eval.baselines import average_day_baseline, mean_baseline
+from chhaya.eval.baselines import average_day_baseline, lodo_average_day, mean_baseline
 
 
 def test_mean_baseline():
@@ -30,3 +30,19 @@ def test_average_day_handles_clock_times_past_midnight():
 def test_average_day_needs_calibration_data():
     with pytest.raises(ValueError):
         average_day_baseline(np.array([], dtype=int), np.array([]), np.array([0]))
+
+
+def test_left_out_day_prediction_never_sees_its_own_day():
+    t = np.arange(0, 3 * 1440, 15)
+    day = t // 1440
+    g = np.where(day == 1, 300.0, 100.0)  # the middle day is wildly different
+    pred = lodo_average_day(day, t, g)
+    assert pred.shape == g.shape
+    assert np.allclose(pred[day == 1], 100.0)  # predicted from the two ordinary days only
+    assert np.allclose(pred[day == 0], 200.0)  # the mean of an ordinary and the odd day
+
+
+def test_left_out_day_prediction_with_a_single_day_falls_back_to_that_day():
+    t = np.arange(0, 1440, 15)
+    g = 100.0 + t / 20.0
+    assert np.allclose(lodo_average_day(t // 1440, t, g, bin_min=15), g)
