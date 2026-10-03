@@ -35,14 +35,16 @@ def lodo_average_day(day, tod, g, bin_min: int = 30) -> np.ndarray:
     """For every reading, the average-day value built from the *other* days.
 
     This is what the average-day baseline would have said about a day it had not seen, which gives an
-    honest noise scale inside the calibration window. With a single day it falls back to that day.
+    honest noise scale inside the calibration window. With a single day there is no other day, so the
+    prediction is that day's mean: returning its own curve would report zero error and make the
+    uncertainty band far too narrow.
     """
     day = np.asarray(day)
     tod = np.asarray(tod, dtype=int)
     g = np.asarray(g, dtype=float)
     days = np.unique(day)
     if days.size < 2:
-        return average_day_baseline(tod, g, tod, bin_min)
+        return np.full(g.shape, float(g.mean()))
     out = np.empty_like(g)
     for d in days:
         held = day == d

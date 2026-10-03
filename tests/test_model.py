@@ -2,6 +2,7 @@ import dataclasses
 
 import jax.numpy as jnp
 import numpy as np
+import pandas as pd
 
 from chhaya.twin.inputs import build_inputs
 from chhaya.twin.model import Fixed, default_z, meal_window, simulate_ensemble, simulate_jit, unpack
@@ -78,3 +79,23 @@ def test_meal_window_lists_recent_meals_only():
 def test_meal_window_with_no_meals():
     win = meal_window([], n_steps=10)
     assert win.shape == (10, 6) and (win == 0).all()
+
+
+def test_meal_window_grows_so_that_no_recent_meal_is_dropped():
+    burst = [600.0 + 10.0 * i for i in range(12)]  # twelve items logged within two hours
+    win = meal_window(burst, n_steps=1500)
+    assert win.shape[1] >= 12
+    assert set(range(12)) <= set(win[800].tolist())  # all twelve are still being absorbed at minute 800
+    assert meal_window([100.0, 400.0], n_steps=1500).shape[1] == 6  # an ordinary log keeps the small window
+
+
+def test_every_item_of_a_busy_meal_log_reaches_the_simulation(rec):
+    burst = pd.concat(
+        [rec.meals.iloc[:1].assign(t_min=600.0 + 10.0 * i, carb_g=20.0) for i in range(12)], ignore_index=True
+    )
+    inp, _, _ = build_inputs(dataclasses.replace(rec, meals=burst))
+    z = jnp.asarray(default_z())
+    exhaustive = inp._replace(
+        meal_win=jnp.asarray(meal_window(np.asarray(inp.meal_t)[:-1], rec.n_min, width=24))
+    )
+    assert np.allclose(np.asarray(simulate_jit(z, inp).gi), np.asarray(simulate_jit(z, exhaustive).gi))

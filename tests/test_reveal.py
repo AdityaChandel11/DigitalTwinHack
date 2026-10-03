@@ -4,7 +4,7 @@ import numpy as np
 import pytest
 from conftest import make_recording
 
-from chhaya.eval.reveal import RevealConfig, run_reveal
+from chhaya.eval.reveal import RevealConfig, run_reveal, why_skipped
 
 
 @pytest.fixture(scope="module")
@@ -80,3 +80,51 @@ def test_blend_recovers_a_daily_habit_the_log_misses():
 
 def test_default_configuration_is_the_one_chosen_on_development_patients():
     assert RevealConfig() == RevealConfig(meal_clock=True, blend=0.5, loss="linear", f_scale=1.0)
+
+
+@pytest.mark.slow
+def test_noise_floor_ignores_hours_the_second_sensor_did_not_record():
+    rec = make_recording(days=6, seed=3, with_ref=True)
+    cut = 4 * 1440 + 720  # the second sensor stops half a day into the hidden window
+    short = dataclasses.replace(rec, cgm_ref=rec.cgm_ref[rec.cgm_ref["t_min"] < cut])
+    out = run_reveal(short, k_days=4, n_members=20)
+    assert (out.t_test < cut).sum() <= out.metrics["floor_n"] <= (out.t_test <= cut + 10).sum()
+    assert (
+        3.0 < out.metrics["floor_rmse"] < 20.0
+    )  # two sensors with 7 mg/dL noise each, not a flat extrapolation
+
+
+@pytest.mark.slow
+def test_band_stays_honest_with_a_single_calibration_day():
+    out = run_reveal(make_recording(days=4, seed=21), k_days=1, n_members=40)
+    assert 0.65 <= out.metrics["twin_cov80"] <= 0.99
+
+
+def test_blend_weight_must_be_a_fraction(rec):
+    for w in (-0.1, 1.7):
+        with pytest.raises(ValueError, match="blend"):
+            run_reveal(rec, k_days=4, cfg=RevealConfig(blend=w))
+
+
+def test_band_needs_at_least_two_ensemble_members(rec):
+    with pytest.raises(ValueError, match="n_members"):
+        run_reveal(rec, k_days=4, n_members=1)
+
+
+@pytest.mark.slow
+def test_reveal_carries_a_physiology_free_control_and_its_own_diagnostics(reveal):
+    # Half average day, half mean: no meals, no model. Any gain over it is what the physiology adds.
+    assert np.allclose(reveal.shrunk, 0.5 * reveal.day + 0.5 * reveal.mean)
+    m = reveal.metrics
+    assert m["shrunk_rmse"] > 0.0 and m["n_cal"] == 4 * 96 and m["cal_coverage"] == 1.0
+    assert m["fit_nfev"] > 0 and m["fit_status"] in (0.0, 1.0, 2.0, 3.0, 4.0) and 0 <= m["fit_at_bound"] <= 7
+
+
+def test_calibration_window_that_is_mostly_empty_is_skipped_with_a_reason(rec):
+    # 16 hours of sensor, then nothing until day 4: "four days of calibration" would be a fiction.
+    t = rec.cgm["t_min"]
+    sparse = dataclasses.replace(rec, cgm=rec.cgm[(t < 16 * 60) | (t >= 4 * 1440)])
+    assert "calibration window" in why_skipped(sparse, 4)
+    assert run_reveal(sparse, k_days=4) is None
+    assert why_skipped(rec, 4) is None
+    assert "hold out" in why_skipped(rec, 6)

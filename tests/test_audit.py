@@ -3,7 +3,7 @@ import dataclasses
 import numpy as np
 import pandas as pd
 
-from chhaya.data.audit import audit, gate1, low_events
+from chhaya.data.audit import audit, gate1, low_events, write_food_strings
 
 
 def test_low_event_needs_two_consecutive_readings():
@@ -28,3 +28,13 @@ def test_gate1_threshold():
     assert gate1(df) == {"usable_recordings": 59, "required": 60, "go": False}
     df.loc[59, "meals_per_day"] = 2.0
     assert gate1(df)["go"] is True
+
+
+def test_food_string_worklist_keeps_multi_line_cells_and_one_line_ending(tmp_path):
+    foods = pd.Series({"Rice 150 g\nVegetable 100 g": 3, "Noodles 200 g": 1})
+    path = tmp_path / "foods.csv"
+    write_food_strings(foods, path)
+    assert b"\r" not in path.read_bytes()  # same bytes on every platform; no phantom "modified" in git
+    back = pd.read_csv(path)
+    assert back["text"].tolist() == ["Rice 150 g\nVegetable 100 g", "Noodles 200 g"]
+    assert back["count"].tolist() == [3, 1]

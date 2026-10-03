@@ -102,19 +102,28 @@ def default_z() -> np.ndarray:
     return np.array([np.log(0.012), 0.0, np.log(0.25), np.log(7.0), -1.4, np.log(0.15), 0.0])
 
 
-def meal_window(meal_t, n_steps: int, width: int = 6, horizon_min: float = 720.0) -> np.ndarray:
-    """For each minute, indices of up to `width` most recent meals started within `horizon_min`.
+MIN_WINDOW = 6
 
-    Unused slots hold len(meal_t), the index of the zero-carb dummy the caller appends.
+
+def meal_window(meal_t, n_steps: int, width: int | None = None, horizon_min: float = 720.0) -> np.ndarray:
+    """For each minute, indices of the most recent meals started within `horizon_min`.
+
+    With `width=None` the window is as wide as the busiest stretch of the log needs (never narrower than
+    MIN_WINDOW), so no meal inside the horizon is dropped: a patient who logs a dozen items in one
+    sitting gets all of them. Unused slots hold len(meal_t), the index of the zero-carb dummy the
+    caller appends.
     """
     meal_t = np.asarray(meal_t, dtype=float)
     dummy = meal_t.size
-    win = np.full((n_steps, width), dummy, dtype=np.int32)
-    if dummy == 0:
-        return win
     order = np.argsort(meal_t, kind="stable")
     t_end = np.arange(n_steps) + 1.0
     hi = np.searchsorted(meal_t[order], t_end, side="left")  # meals with meal_t < t + 1
+    if width is None:
+        lo = np.searchsorted(meal_t[order], t_end - horizon_min, side="left")
+        width = max(MIN_WINDOW, int((hi - lo).max())) if dummy and n_steps else MIN_WINDOW
+    win = np.full((n_steps, width), dummy, dtype=np.int32)
+    if dummy == 0:
+        return win
     for j in range(width):
         k = hi - 1 - j
         idx = order[np.clip(k, 0, dummy - 1)]

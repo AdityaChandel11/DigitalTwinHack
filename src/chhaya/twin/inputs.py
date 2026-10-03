@@ -20,16 +20,23 @@ class SlowCoef(NamedTuple):
     fibre: float = 0.020
 
 
+WEIGHT_KG = (25.0, 300.0)  # a record outside this is taken to be wrong, not a person
+
+
 def _ok(v) -> bool:
     return v is not None and np.isfinite(v)
 
 
 def build_inputs(rec: Recording, slow: SlowCoef = SlowCoef()) -> tuple[Inputs, np.ndarray, np.ndarray]:
-    """Return (inputs, obs_idx, obs_mmol): model inputs plus the CGM minutes and values to fit against."""
+    """Return (inputs, obs_idx, obs_mmol): model inputs plus the CGM minutes and values to fit against.
+
+    A missing or implausible body weight or fasting insulin falls back to a reference adult, and negative
+    macronutrient values count as zero, so a bad cell in the record cannot produce NaN glucose.
+    """
     rec.validate()
     meals = rec.meals[rec.meals["carb_g"].notna() & (rec.meals["carb_g"] > 0)].sort_values("t_min")
     meal_t = meals["t_min"].to_numpy(dtype=float)
-    macros = meals[["fat_g", "protein_g", "fibre_g"]].astype(float).fillna(0.0).to_numpy()
+    macros = meals[["fat_g", "protein_g", "fibre_g"]].astype(float).fillna(0.0).clip(lower=0.0).to_numpy()
     meal_slow = 1.0 + macros @ np.array([slow.fat, slow.protein, slow.fibre])
 
     met = np.ones(rec.n_min)
@@ -48,7 +55,7 @@ def build_inputs(rec: Recording, slow: SlowCoef = SlowCoef()) -> tuple[Inputs, n
         meal_win=jnp.asarray(meal_window(meal_t, rec.n_min)),
         met=jnp.asarray(met),
         t0_min_of_day=float(rec.start.hour * 60 + rec.start.minute),
-        body_mass=float(weight) if _ok(weight) else 70.0,
+        body_mass=float(weight) if _ok(weight) and WEIGHT_KG[0] <= weight <= WEIGHT_KG[1] else 70.0,
         ib=float(np.clip(ib, 2.0, 60.0)) if _ok(ib) else 10.0,
         g0=float(obs_mmol[0]),
     )

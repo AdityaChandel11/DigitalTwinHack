@@ -75,6 +75,15 @@ def gate1(shanghai: pd.DataFrame) -> dict:
     }
 
 
+def write_food_strings(foods: pd.Series, path: Path) -> None:
+    """Write the diet-text worklist (text, count).
+
+    Diet cells hold several lines. Rows are ended with a bare newline too, so the file has one
+    line-ending convention and the same bytes on every platform.
+    """
+    foods.rename_axis("text").reset_index(name="count").to_csv(path, index=False, lineterminator="\n")
+
+
 def main(out_dir: Path = RESULTS_DIR / "audit") -> None:
     from chhaya.data import cgmacros, shanghai
 
@@ -99,9 +108,7 @@ def main(out_dir: Path = RESULTS_DIR / "audit") -> None:
         if name == "shanghai":
             summary["gate1"] = gate1(df)
             foods = shanghai.food_strings(recs)
-            foods.rename_axis("text").reset_index(name="count").to_csv(
-                out_dir / "shanghai_food_strings.csv", index=False
-            )
+            write_food_strings(foods, out_dir / "shanghai_food_strings.csv")
             summary[name]["distinct_diet_entries"] = int(len(foods))
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(summary, indent=2, ensure_ascii=False))

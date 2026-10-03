@@ -46,3 +46,10 @@ def test_record_prior_uses_fasting_glucose_when_plausible():
     for junk in (None, float("nan"), 9.0, 4000.0):
         assert record_prior({"fasting_glucose_mgdl": junk}).mu[GB] == population_prior().mu[GB]
     assert record_prior({}).mu[GB] == population_prior().mu[GB]
+
+
+@pytest.mark.slow
+def test_fit_reports_how_the_optimiser_ended(fitted):
+    assert fitted.nfev > 0
+    assert fitted.status in (0, 1, 2, 3, 4)  # SciPy: 0 means it stopped on the evaluation limit
+    assert 0 <= fitted.n_at_bound <= 7

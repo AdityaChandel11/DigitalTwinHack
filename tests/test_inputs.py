@@ -2,6 +2,7 @@ import dataclasses
 
 import jax.numpy as jnp
 import numpy as np
+import pytest
 
 from chhaya.twin.inputs import build_inputs
 from chhaya.twin.model import default_z, simulate_jit
@@ -41,3 +42,23 @@ def test_gaps_in_the_band_count_as_rest(rec):
     half = rec.activity[rec.activity["t_min"] < rec.n_min // 2]
     inp, _, _ = build_inputs(dataclasses.replace(rec, activity=half))
     assert (np.asarray(inp.met)[rec.n_min // 2 :] == 1.0).all()
+
+
+@pytest.mark.parametrize("weight", [0.0, -70.0, 12.0, 5000.0])
+def test_implausible_body_weight_falls_back_to_reference_adult(rec, weight):
+    inp, _, _ = build_inputs(dataclasses.replace(rec, static={**rec.static, "weight_kg": weight}))
+    assert inp.body_mass == 70.0
+    assert np.isfinite(np.asarray(simulate_jit(jnp.asarray(default_z()), inp).gi)).all()
+
+
+def test_plausible_extremes_of_body_weight_are_kept(rec):
+    for weight in (35.0, 180.0):
+        inp, _, _ = build_inputs(dataclasses.replace(rec, static={**rec.static, "weight_kg": weight}))
+        assert inp.body_mass == weight
+
+
+def test_negative_macros_cannot_speed_up_or_break_absorption(rec):
+    bad = rec.meals.assign(fat_g=-200.0, protein_g=-50.0, fibre_g=-10.0)
+    inp, _, _ = build_inputs(dataclasses.replace(rec, meals=bad))
+    assert (np.asarray(inp.meal_slow) == 1.0).all()
+    assert np.isfinite(np.asarray(simulate_jit(jnp.asarray(default_z()), inp).gi)).all()

@@ -21,6 +21,9 @@ class TwinFit(NamedTuple):
     sigma_res: float  # mmol/L, SD of calibration residuals
     cost: float
     n_obs: int
+    nfev: int  # function evaluations of the winning start
+    status: int  # SciPy termination code; 0 means it stopped on the evaluation limit
+    n_at_bound: int  # parameters that ended on the edge of the search box
 
 
 def _n_eff(r: np.ndarray) -> float:
@@ -88,7 +91,17 @@ def fit_twin(
     h = best.jac.T @ best.jac
     widen = max(1.0, (sigma_res / SIGMA_OBS) ** 2) * n / max(_n_eff(r_data), 1.0)
     cov = np.linalg.inv(h + 1e-9 * np.eye(h.shape[0])) * widen
-    return TwinFit(z_map=best.x, cov=cov, sigma_res=sigma_res, cost=float(best.cost), n_obs=n)
+    at_bound = int(np.sum((best.x - lo < 1e-4) | (hi - best.x < 1e-4)))
+    return TwinFit(
+        z_map=best.x,
+        cov=cov,
+        sigma_res=sigma_res,
+        cost=float(best.cost),
+        n_obs=n,
+        nfev=int(best.nfev),
+        status=int(best.status),
+        n_at_bound=at_bound,
+    )
 
 
 def draw_ensemble(fit: TwinFit, n: int = 200, seed: int = 0) -> np.ndarray:

@@ -42,7 +42,8 @@ def test_left_out_day_prediction_never_sees_its_own_day():
     assert np.allclose(pred[day == 0], 200.0)  # the mean of an ordinary and the odd day
 
 
-def test_left_out_day_prediction_with_a_single_day_falls_back_to_that_day():
+def test_left_out_day_prediction_with_a_single_day_is_that_days_mean_not_its_own_curve():
+    # Returning the day's own curve would report zero error and make the uncertainty band far too narrow.
     t = np.arange(0, 1440, 15)
     g = 100.0 + t / 20.0
-    assert np.allclose(lodo_average_day(t // 1440, t, g, bin_min=15), g)
+    assert np.allclose(lodo_average_day(t // 1440, t, g, bin_min=15), g.mean())

@@ -34,3 +34,8 @@ def test_score_rejects_mismatched_or_empty_input():
         score([100.0], [100.0, 110.0])
     with pytest.raises(ValueError):
         score([], [])
+
+
+def test_correlation_with_a_constant_estimate_is_undefined_not_rounding_noise():
+    truth = np.linspace(90.0, 180.0, 884)
+    assert np.isnan(pearson(np.full(884, 0.1 + 0.2), truth))  # np.std of this constant is 1e-17, not 0

@@ -23,7 +23,7 @@ def mard(pred, truth) -> float:
 
 def pearson(pred, truth) -> float:
     pred, truth = np.asarray(pred), np.asarray(truth)
-    if pred.size < 3 or np.std(pred) == 0.0 or np.std(truth) == 0.0:
+    if pred.size < 3 or np.ptp(pred) == 0.0 or np.ptp(truth) == 0.0:  # np.std of a constant is 1e-17, not 0
         return float("nan")
     return float(np.corrcoef(pred, truth)[0, 1])
 

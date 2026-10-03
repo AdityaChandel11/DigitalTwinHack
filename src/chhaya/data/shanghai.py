@@ -168,11 +168,15 @@ def load_all(root: Path = RAW_DIR / "shanghai") -> list[Recording]:
     if folder is None:
         raise FileNotFoundError(f"Shanghai_T2DM folder not found under {root}")
     recs = []
+    n_books = 0
     for path in (p for p in sorted(folder.glob("*.xls*")) if not is_junk(p)):
+        n_books += 1
         stem = path.stem.strip()
         rec = load_recording(path, summary.loc[stem] if stem in summary.index else None)
         if rec is not None:
             recs.append(rec)
+    if not recs:
+        raise ValueError(f"none of the {n_books} workbooks under {folder} has a usable CGM trace")
     return recs
 
 

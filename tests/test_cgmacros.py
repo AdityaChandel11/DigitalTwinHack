@@ -57,7 +57,7 @@ def _write_participant(root, number: int, days: int = 2, libre: bool = True, var
     df.loc[400:430, "METs"] = 45.0
     df.loc[400:430, "Calories (Activity)"] = ex_kcal
     if variant == "fraction":
-        # 9 of 45 real files write 1.0 for a whole meal; values above 1 count the items on the plate
+        # 8 of 45 real files write 1.0 for a whole meal; values above 1 count the items on the plate
         df.loc[60, "Amount Consumed"] = 0.5
         df.loc[360, "Amount Consumed"] = 1.0
         df.loc[700, ["Meal Type", "Calories", "Carbs", "Protein", "Fat", "Fiber", "Amount Consumed"]] = [
@@ -94,7 +94,7 @@ def root(tmp_path):
             "Age": [50, 61, 44, 39, 52],
             "Gender": ["F", "M", "F", "M", "F"],
             "BMI": [31.0, 27.0, 33.0, 29.0, 30.0],
-            "Body weight ": [200.0, 180.0, 200.0, 200.0, 200.0],
+            "Body weight ": [200.0, 180.0, 250.0, 200.0, 200.0],
             "Height ": [65, 70, 64, 68, 66],
             "A1c PDL (Lab)": [7.1, 5.4, 6.9, 6.0, 5.2],
             "Fasting GLU - PDL (Lab)": [140, 92, 131, 104, 90],
@@ -181,3 +181,81 @@ def test_amount_consumed_on_a_fraction_scale_is_not_read_as_percent(root):
 
 def test_amount_consumed_above_a_whole_meal_is_an_item_count_not_a_multiplier(root):
     assert load_all(root)[4].meals["carb_g"].tolist() == [60.0, 80.0]
+
+
+def _edit(root, number, change):
+    path = root / f"CGMacros-{number:03d}" / f"CGMacros-{number:03d}.csv"
+    change(pd.read_csv(path)).to_csv(path, index=False)
+
+
+def test_sensor_tokens_such_as_lo_and_hi_are_treated_as_missing(root):
+    def tokens(d):
+        d["Libre GL"] = d["Libre GL"].astype(object)
+        d.loc[100:130, "Libre GL"] = "LO"
+        d.loc[900:930, "Libre GL"] = "HI"
+        return d
+
+    _edit(root, 1, tokens)
+    rec = load_all(root)[0]
+    assert rec.static["primary_sensor"] == "libre" and 185 <= len(rec.cgm) < 192
+
+
+def test_sensor_column_that_is_not_numeric_is_an_error_not_a_silent_switch_of_sensor(root):
+    _edit(
+        root, 1, lambda d: d.assign(**{"Libre GL": d["Libre GL"].map(lambda v: f"{v:.1f}".replace(".", ","))})
+    )
+    with pytest.raises(ValueError, match="CGMacros-001.csv.*Libre GL.*not numeric"):
+        load_all(root)
+
+
+def test_file_without_a_timestamp_column_names_the_headers_it_found(root):
+    _edit(root, 1, lambda d: d.rename(columns={"Timestamp": "Time"}))
+    with pytest.raises(ValueError, match="CGMacros-001.csv.*no Timestamp column among .*Time"):
+        load_all(root)
+
+
+def test_empty_or_undated_participant_file_is_skipped(root):
+    _edit(root, 1, lambda d: d.iloc[:0])
+    _edit(root, 3, lambda d: d.assign(Timestamp="not a date"))
+    assert [r.rec_id for r in load_all(root)] == ["cgmacros-002", "cgmacros-004", "cgmacros-005"]
+
+
+def test_files_present_but_none_usable_is_reported_as_such(root):
+    for number in range(1, 6):
+        _edit(root, number, lambda d: d.iloc[:0])
+    with pytest.raises(ValueError, match="none of the 5 participant files"):
+        load_all(root)
+
+
+def test_zero_body_weight_in_the_record_is_treated_as_missing(root):
+    bio = pd.read_csv(root / "bio.csv")
+    bio.loc[0, "Body weight "] = 0.0
+    bio.to_csv(root / "bio.csv", index=False)
+    assert np.isnan(load_all(root)[0].static["weight_kg"])
+
+
+def test_activity_is_derived_without_needing_a_body_weight(root):
+    # Stored METs equal activity calories divided by the participant's own resting rate, in every real file
+    # that has both columns; body weight does not enter.
+    bio = pd.read_csv(root / "bio.csv")
+    bio.loc[2, "Body weight "] = np.nan
+    bio.to_csv(root / "bio.csv", index=False)
+    rec = load_all(root)[2]
+    assert rec.static["activity_source"] == "derived_from_activity_calories"
+    assert rec.activity["met"].min() == pytest.approx(1.0, abs=0.01)
+    assert rec.activity["met"].max() == pytest.approx(4.5, abs=0.01)
+
+
+def test_amount_consumed_of_zero_means_not_recorded_so_the_meal_counts_in_full(root):
+    # In the real files, glucose rises after "0 % eaten" meals just as it does after whole meals.
+    _edit(root, 1, lambda d: d.assign(**{"Amount Consumed": d["Amount Consumed"].where(d.index != 60, 0.0)}))
+    assert load_all(root)[0].meals["carb_g"].tolist() == [60.0, 80.0]
+
+
+def test_fraction_file_dominated_by_item_counts_is_still_read_as_fractions(root):
+    _edit(root, 4, lambda d: d.assign(**{"Amount Consumed": d["Amount Consumed"].where(d.index != 360, 4.0)}))
+    rec = load_all(root)[
+        3
+    ]  # amounts are now 0.5, 4 and 3: mostly item counts, yet still the fraction convention
+    assert rec.static["amount_consumed_unit"] == "fraction"
+    assert rec.meals["carb_g"].tolist() == [30.0, 80.0, 50.0]

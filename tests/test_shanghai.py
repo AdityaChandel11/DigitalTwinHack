@@ -102,3 +102,10 @@ def test_workbook_without_a_cgm_column_names_the_headers_it_found(root):
     pd.read_excel(path).rename(columns={"CGM (mg / dl)": "Glucose"}).to_excel(path, index=False)
     with pytest.raises(ValueError, match="no date/CGM column among .*Glucose"):
         load_all(root)
+
+
+def test_folder_with_no_usable_workbook_is_an_error_not_an_empty_list(root):
+    path = root / "Shanghai_T2DM" / "2001_0_20210701.xlsx"
+    pd.read_excel(path).iloc[:0].to_excel(path, index=False)
+    with pytest.raises(ValueError, match="none of the 1 workbooks"):
+        load_all(root)
