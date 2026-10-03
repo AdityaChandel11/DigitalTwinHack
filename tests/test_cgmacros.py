@@ -6,18 +6,25 @@ from chhaya.data.cgmacros import load_all, load_bio
 from chhaya.twin.inputs import build_inputs
 
 
-def _write_participant(root, number: int, days: int = 2, libre: bool = True):
-    """A file with the headers listed in DataDictionary_CGMacros-00X.csv, on a 1-minute grid."""
+def _write_participant(root, number: int, days: int = 2, libre: bool = True, variant: str = "full"):
+    """A participant file shaped like the real ones, on a 1-minute grid.
+
+    variant "full": has METs and Amount Consumed. variant "sparse": the real-world gaps seen in 11 of 45 files
+    (no METs, an Intensity category instead, no Amount Consumed, odd meal labels).
+    """
     n = days * 1440
     ts = pd.date_range("2025-03-01 07:00", periods=n, freq="min")
+    rest_kcal, ex_kcal = 1.512, 6.804  # 1.0 and 4.5 METs for a 90.72 kg participant
     df = pd.DataFrame(
         {
-            "Timestamp": ts.strftime("%m/%d/%Y %H:%M"),
+            "Unnamed: 0": np.arange(n),
+            "Timestamp": ts.strftime("%Y-%m-%d %H:%M:%S"),
             "Libre GL": 110.0 + 20.0 * np.sin(np.arange(n) / 200.0) if libre else np.nan,
             "Dexcom GL": 112.0 + 20.0 * np.sin(np.arange(n) / 200.0),
             "HR": 70.0,
-            "Calories (Activity)": 1.1,
-            "Mets": 10.0,
+            "Calories (Activity)": rest_kcal,
+            "METs": 10.0,
+            "Intensity": 0,
             "Meal Type": None,
             "Calories": np.nan,
             "Carbs": np.nan,
@@ -25,11 +32,13 @@ def _write_participant(root, number: int, days: int = 2, libre: bool = True):
             "Fat": np.nan,
             "Fiber": np.nan,
             "Amount Consumed": np.nan,
-            "Image Path": None,
+            "Image path": None,
         }
     )
+    sparse = variant == "sparse"
+    labels = ("Snacks", "snack 1") if sparse else ("Breakfast", "Lunch")
     df.loc[60, ["Meal Type", "Calories", "Carbs", "Protein", "Fat", "Fiber", "Amount Consumed"]] = [
-        "Breakfast",
+        labels[0],
         400,
         60,
         20,
@@ -37,8 +46,20 @@ def _write_participant(root, number: int, days: int = 2, libre: bool = True):
         5,
         50,
     ]
-    df.loc[360, ["Meal Type", "Calories", "Carbs", "Protein", "Fat", "Fiber"]] = ["Lunch", 700, 80, 30, 25, 9]
-    df.loc[400:430, "Mets"] = 45.0
+    df.loc[360, ["Meal Type", "Calories", "Carbs", "Protein", "Fat", "Fiber"]] = [
+        labels[1],
+        700,
+        80,
+        30,
+        25,
+        9,
+    ]
+    df.loc[400:430, "METs"] = 45.0
+    df.loc[400:430, "Calories (Activity)"] = ex_kcal
+    if sparse:
+        df = df.drop(columns=["METs", "Amount Consumed"])
+    else:
+        df = df.drop(columns=["Intensity"])
     folder = root / f"CGMacros-{number:03d}"
     folder.mkdir(parents=True)
     df.to_csv(folder / f"CGMacros-{number:03d}.csv", index=False)
@@ -48,17 +69,18 @@ def _write_participant(root, number: int, days: int = 2, libre: bool = True):
 def root(tmp_path):
     _write_participant(tmp_path, 1)
     _write_participant(tmp_path, 2, libre=False)
+    _write_participant(tmp_path, 3, variant="sparse")
     pd.DataFrame(
         {
-            "subject": [1, 2],
-            "Age": [50, 61],
-            "Gender": ["F", "M"],
-            "BMI": [31.0, 27.0],
-            "Body weight ": [200.0, 180.0],
-            "Height ": [65, 70],
-            "A1c PDL (Lab)": [7.1, 5.4],
-            "Fasting GLU - PDL (Lab)": [140, 92],
-            "Insulin ": [18.0, 6.0],
+            "subject": [1, 2, 3],
+            "Age": [50, 61, 44],
+            "Gender": ["F", "M", "F"],
+            "BMI": [31.0, 27.0, 33.0],
+            "Body weight ": [200.0, 180.0, 200.0],
+            "Height ": [65, 70, 64],
+            "A1c PDL (Lab)": [7.1, 5.4, 6.9],
+            "Fasting GLU - PDL (Lab)": [140, 92, 131],
+            "Insulin ": [18.0, 6.0, 15.0],
         }
     ).to_csv(tmp_path / "bio.csv", index=False)
     return tmp_path
@@ -66,7 +88,7 @@ def root(tmp_path):
 
 def test_bio_headers_are_stripped_and_indexed_by_participant(root):
     bio = load_bio(root)
-    assert "Body weight" in bio.columns and list(bio.index) == [1, 2]
+    assert "Body weight" in bio.columns and list(bio.index) == [1, 2, 3]
 
 
 def test_participant_becomes_a_valid_recording(root):
@@ -106,3 +128,27 @@ def test_loaded_recording_feeds_the_twin(root):
 def test_missing_download_says_what_to_run(tmp_path):
     with pytest.raises(FileNotFoundError, match="chhaya.data.download"):
         load_all(tmp_path)
+
+
+def test_file_with_mets_says_so(root):
+    assert load_all(root)[0].static["activity_source"] == "mets"
+
+
+def test_file_without_mets_derives_them_from_activity_calories(root):
+    rec = load_all(root)[2]  # participant 3 has Intensity instead of METs
+    assert rec.static["activity_source"] == "derived_from_activity_calories"
+    assert rec.activity["met"].min() == pytest.approx(1.0, abs=0.01)
+    assert rec.activity["met"].max() == pytest.approx(4.5, abs=0.01)
+
+
+def test_missing_amount_consumed_means_the_whole_meal_was_eaten(root):
+    assert load_all(root)[2].meals["carb_g"].tolist() == [60.0, 80.0]
+
+
+def test_meal_labels_are_normalised_across_files(root):
+    assert load_all(root)[0].meals["label"].tolist() == ["breakfast", "lunch"]
+    assert load_all(root)[2].meals["label"].tolist() == ["snack", "snack"]
+
+
+def test_unnamed_index_column_is_ignored(root):
+    assert len(load_all(root)[2].cgm) == 2 * 96

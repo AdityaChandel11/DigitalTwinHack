@@ -131,12 +131,16 @@ Verified on 2 Oct 2026 against the sources:
 - **The prototype**: the core in Plan 1 was run before the plan was written — steady state exact,
   parameter recovery on synthetic data, 67 tests green, 200-member ensemble over 10 days in about 3 s.
 
+Verified on real files, 3 Oct 2026 (see `docs/decisions/2026-10-03-gate1.md`): Shanghai headers match the
+loader; its diet text is English, one food per line; 65 of 109 Shanghai recordings are on insulin. CGMacros
+files vary (11 of 45 lack METs; the loader derives them from activity calories); its healthy group spends
+22.8 % of time below 70 mg/dL, so its lows are mostly sensor artefacts. Gate 1 is GO.
+
 Not yet verified — treat as hypotheses until `chhaya.data.audit` has run on the real files:
 
-- The exact header spelling in the Shanghai workbooks (the loader matches by pattern and reports the
-  headers it found when it cannot).
-- Whether `Amount Consumed` sits on the meal row in CGMacros, and how many snacks go unlogged.
-- How many Shanghai recordings are inpatient and on insulin (exogenous insulin is not modelled yet).
+- How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
+- Whether the Shanghai recordings are inpatient (2.4 fingersticks a day suggests so); exogenous insulin is not
+  modelled yet.
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
 - **Sensor-off accuracy on real patients. Nobody knows this number yet.** Gate 2 measures it.

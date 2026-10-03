@@ -1,0 +1,38 @@
+{
+  "cgmacros": {
+    "recordings": 45,
+    "patients": 45,
+    "patient_days": 490.5,
+    "fingersticks": 0,
+    "meals": 1706,
+    "meals_with_carbs": 1706,
+    "low_events": 524,
+    "nights_with_low": 95,
+    "recordings_on_insulin": 0,
+    "by_group": {
+      "prediabetes": 16,
+      "healthy": 15,
+      "t2d": 14
+    }
+  },
+  "shanghai": {
+    "recordings": 109,
+    "patients": 100,
+    "patient_days": 1170.7,
+    "fingersticks": 3268,
+    "meals": 3808,
+    "meals_with_carbs": 0,
+    "low_events": 367,
+    "nights_with_low": 99,
+    "recordings_on_insulin": 65,
+    "by_group": {
+      "t2d": 109
+    },
+    "distinct_diet_entries": 2765
+  },
+  "gate1": {
+    "usable_recordings": 106,
+    "required": 60,
+    "go": true
+  }
+}

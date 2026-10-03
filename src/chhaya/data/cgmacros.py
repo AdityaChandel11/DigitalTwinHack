@@ -67,9 +67,21 @@ def _static(row: pd.Series | None) -> dict:
     }
 
 
+def _pick(df: pd.DataFrame, name: str) -> str | None:
+    """The header of df that equals `name` ignoring case, or None. Real files vary (Mets vs METs)."""
+    return next((c for c in df.columns if c.lower() == name.lower()), None)
+
+
+def _meal_label(s: pd.Series) -> np.ndarray:
+    """breakfast / lunch / dinner / snack, whatever the case or numbering in the file."""
+    out = s.astype(str).str.strip().str.lower().str.replace(r"\s*\d+$", "", regex=True)
+    return out.str.replace(r"^snacks$", "snack", regex=True).to_numpy()
+
+
 def _thin(df: pd.DataFrame, col: str, step: int) -> pd.DataFrame:
     """One reading per `step`-minute bin, so a sensor interpolated to 1 minute is not over-weighted."""
-    if col not in df.columns:
+    col = _pick(df, col)
+    if col is None:
         return empty(CGM_COLS)
     d = df.loc[df[col].notna(), ["t_min", col]]
     d = d[(d[col] >= 20) & (d[col] <= 600)]
@@ -100,28 +112,56 @@ def load_recording(csv_path: Path, bio_row: pd.Series | None) -> Recording | Non
     else:
         return None
 
-    m = df[df["Meal Type"].notna() & df["Carbs"].notna()] if "Meal Type" in df.columns else df.iloc[:0]
-    frac = (
-        pd.to_numeric(m.get("Amount Consumed"), errors="coerce").fillna(100.0).clip(0.0, 100.0) / 100.0
-    ).to_numpy()
+    meal_col, carb_col, eaten_col = _pick(df, "Meal Type"), _pick(df, "Carbs"), _pick(df, "Amount Consumed")
+    if meal_col is None or carb_col is None:
+        m = df.iloc[:0]
+    else:
+        m = df[df[meal_col].notna() & df[carb_col].notna()]
+    # A file with no Amount Consumed column means the whole meal was eaten.
+    eaten = pd.to_numeric(m[eaten_col], errors="coerce") if eaten_col else pd.Series(np.nan, index=m.index)
+    frac = (eaten.fillna(100.0).clip(0.0, 100.0) / 100.0).to_numpy()
+
+    def macro(name: str) -> np.ndarray:
+        col = _pick(df, name)
+        grams = pd.to_numeric(m[col], errors="coerce").fillna(0.0) if col else pd.Series(0.0, index=m.index)
+        return grams.to_numpy(dtype=float) * frac
+
     meals = pd.DataFrame(
         {
             "t_min": m["t_min"].to_numpy(dtype=float),
-            "carb_g": m["Carbs"].to_numpy(dtype=float) * frac,
-            "protein_g": m["Protein"].to_numpy(dtype=float) * frac,
-            "fat_g": m["Fat"].to_numpy(dtype=float) * frac,
-            "fibre_g": m["Fiber"].to_numpy(dtype=float) * frac,
-            "label": m["Meal Type"].astype(str).to_numpy(),
+            "carb_g": macro("Carbs"),
+            "protein_g": macro("Protein"),
+            "fat_g": macro("Fat"),
+            "fibre_g": macro("Fiber"),
+            "label": _meal_label(m[meal_col]) if meal_col else np.array([], dtype=object),
         },
         columns=MEAL_COLS,
     )
 
-    a = df[df["Mets"].notna()] if "Mets" in df.columns else df.iloc[:0]
+    met_col, kcal_col, hr_col = _pick(df, "METs"), _pick(df, "Calories (Activity)"), _pick(df, "HR")
+    weight = static.get("weight_kg")
+    if met_col:
+        met = pd.to_numeric(df[met_col], errors="coerce") / 10.0  # the file stores METs multiplied by 10
+        static["activity_source"] = "mets"
+    elif kcal_col and weight is not None and np.isfinite(weight) and weight > 0:
+        # 11 of 45 files carry Intensity or Steps instead of METs. Activity kcal per minute x 60 / kg is METs
+        # (checked on participant 001: 1.04 and 4.56 against the file's own 1.0 and 4.4).
+        met = pd.to_numeric(df[kcal_col], errors="coerce") * 60.0 / weight
+        static["activity_source"] = "derived_from_activity_calories"
+    else:
+        met = pd.Series(np.nan, index=df.index)
+        static["activity_source"] = "none"
+    ok = met.notna()
+    hr = (
+        pd.to_numeric(df.loc[ok, hr_col], errors="coerce")
+        if hr_col
+        else pd.Series(np.nan, index=df.index[ok])
+    )
     activity = pd.DataFrame(
         {
-            "t_min": a["t_min"].to_numpy(dtype=float),
-            "met": a["Mets"].to_numpy(dtype=float) / 10.0,  # the file stores METs multiplied by 10
-            "hr": pd.to_numeric(a.get("HR"), errors="coerce").to_numpy(dtype=float),
+            "t_min": df.loc[ok, "t_min"].to_numpy(dtype=float),
+            "met": met[ok].to_numpy(dtype=float),
+            "hr": hr.to_numpy(dtype=float),
         },
         columns=ACTIVITY_COLS,
     )
