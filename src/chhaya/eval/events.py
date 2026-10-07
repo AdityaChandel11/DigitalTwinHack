@@ -78,16 +78,26 @@ def minutes_to_high(t, g, meal_t: float, threshold: float = EVENT_MGDL) -> float
 
 
 def drug_flags(agents) -> dict[str, float]:
-    text = "" if agents is None else str(agents).lower()
+    """Four flags read from the record's agents list. No entry at all is missing, not "takes none of them"."""
+    text = "" if agents is None else str(agents).strip().lower()
+    if text in ("", "nan"):
+        return dict.fromkeys(_DRUGS, float("nan"))
     return {k: float(bool(re.search(p, text))) for k, p in _DRUGS.items()}
 
 
+def _number(value) -> float:
+    try:
+        return float("nan") if value is None else float(value)
+    except (TypeError, ValueError):
+        return float("nan")
+
+
 def _record(static: dict) -> dict[str, float]:
-    num = lambda key: float(static[key]) if static.get(key) is not None else np.nan  # noqa: E731
+    num = lambda key: _number(static.get(key))  # noqa: E731
     sex = static.get("sex")
     return {
         "r_age": num("age"),
-        "r_male": np.nan if sex is None else float(sex == "M"),
+        "r_male": float(sex == "M") if sex in ("M", "F") else np.nan,
         "r_bmi": num("bmi"),
         "r_duration": num("diabetes_duration_y"),
         "r_hba1c": num("hba1c_pct"),
@@ -127,9 +137,12 @@ def meal_table(rec: Recording, k_days: float = 3.0) -> pd.DataFrame:
         "h_tar": float(np.mean(g[cal] > EVENT_MGDL)),
         "h_rate": (sum(seen) + 1.0) / (len(seen) + 2.0),  # shrunk toward one half when few meals were seen
     }
+    # the registered baseline (no learner): the plain share, undefined when no calibration meal could be scored
+    share = sum(seen) / len(seen) if seen else float("nan")
     record = _record(rec.static)
-    ft = rec.fingersticks["t_min"].to_numpy(dtype=float)
-    fg = rec.fingersticks["glucose_mgdl"].to_numpy(dtype=float)
+    order = np.argsort(rec.fingersticks["t_min"].to_numpy(dtype=float), kind="stable")
+    ft = rec.fingersticks["t_min"].to_numpy(dtype=float)[order]
+    fg = rec.fingersticks["glucose_mgdl"].to_numpy(dtype=float)[order]
     pump = float("csii" in set(rec.doses["route"])) if len(rec.doses) else 0.0
     rows = []
     for m in meals[meals >= split]:
@@ -157,6 +170,7 @@ def meal_table(rec: Recording, k_days: float = 3.0) -> pd.DataFrame:
                 "c_cos": float(np.cos(2 * np.pi * clock / 1440)),
                 **record,
                 **history,
+                "h_share": share,
                 "h_at": float(shape[b0]),
                 "h_peak": float(max(shape[(b0 + i) % shape.size] for i in range(5))),
                 "f_has": int(recent.any()),

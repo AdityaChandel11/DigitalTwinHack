@@ -8,6 +8,7 @@ import pandas as pd
 from chhaya.data.schema import Recording
 
 MAX_GAP_MIN = 10
+MAX_STEP_MIN = 20  # two sensor readings further apart than this are not neighbours
 PAIR_COLS = ["t_min", "cbg", "cgm", "slope", "hour"]
 THRESHOLDS = {
     "below_54": (54.0, True),
@@ -38,10 +39,10 @@ def paired(
     j = np.clip(np.searchsorted(ct, ft), 1, ct.size - 1)
     near = np.where(np.abs(ct[j] - ft) < np.abs(ct[j - 1] - ft), j, j - 1)
     ok = np.abs(ct[near] - ft) <= max_gap
-    inner = (near > 0) & (near < ct.size - 1)
-    slope = np.where(
-        inner, (cg[np.clip(near + 1, 0, ct.size - 1)] - cg[np.clip(near - 1, 0, ct.size - 1)]) / 2.0, np.nan
-    )
+    nxt, prv = np.clip(near + 1, 0, ct.size - 1), np.clip(near - 1, 0, ct.size - 1)
+    # a slope needs a reading on each side, both a normal step away: across a gap it is not a slope
+    inner = (near > 0) & (near < ct.size - 1) & (ct[nxt] - ct[prv] <= 2 * MAX_STEP_MIN)
+    slope = np.where(inner, (cg[nxt] - cg[prv]) / 2.0, np.nan)
     tod0 = rec.start.hour * 60 + rec.start.minute
     return pd.DataFrame(
         {
@@ -74,11 +75,14 @@ def validity_table(pairs: pd.DataFrame) -> dict:
 def label_validity(recs: list[Recording]) -> dict:
     """The label check of Amendment 3, section L, over every recording given."""
     frames = [paired(r).assign(patient_id=r.patient_id) for r in recs]
-    p = pd.concat([f for f in frames if len(f)], ignore_index=True)
+    frames = [f for f in frames if len(f)]
+    if not frames:
+        raise ValueError("no fingerstick could be paired with a sensor reading in these recordings")
+    p = pd.concat(frames, ignore_index=True)
     diff = p["cgm"] - p["cbg"]
     by_range = []
     for lo, hi in RANGES:
-        m = (p["cbg"] >= lo) & (p["cbg"] < hi)
+        m = (p["cbg"] >= lo) & ((p["cbg"] < hi) | ((hi == RANGES[-1][1]) & (p["cbg"] == hi)))
         if m.any():
             by_range.append(
                 {

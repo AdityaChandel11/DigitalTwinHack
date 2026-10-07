@@ -1,6 +1,8 @@
 import dataclasses
 
+import numpy as np
 import pandas as pd
+import pytest
 
 from chhaya.data.pairs import label_validity, paired, validity_table
 
@@ -40,3 +42,18 @@ def test_label_validity_reports_pairs_and_patients(rec):
     assert out["n_pairs"] == 2 and out["n_patients"] == 1
     assert set(out["thresholds"]) == {"below_54", "below_70", "above_180", "above_250"}
     assert out["mard_percent"] > 0.0
+
+
+def test_slope_is_unknown_across_a_gap_in_the_sensor_trace(rec):
+    cgm = rec.cgm[(rec.cgm["t_min"] <= 600) | (rec.cgm["t_min"] >= 900)]
+    sticks = pd.DataFrame({"t_min": [300.0, 600.0], "glucose_mgdl": [120.0, 120.0]})
+    slope = paired(dataclasses.replace(rec, cgm=cgm, fingersticks=sticks)).set_index("t_min")["slope"]
+    assert np.isfinite(slope[300.0]) and np.isnan(slope[600.0])  # the next reading is five hours away
+
+
+def test_every_pair_falls_in_a_fingerstick_range_and_no_pairs_is_said_plainly(rec):
+    sticks = pd.DataFrame({"t_min": [30.0, 600.0], "glucose_mgdl": [100.0, 600.0]})
+    out = label_validity([dataclasses.replace(rec, fingersticks=sticks)])
+    assert sum(r["n"] for r in out["by_fingerstick_range"]) == out["n_pairs"] == 2
+    with pytest.raises(ValueError, match="no fingerstick"):
+        label_validity([rec])

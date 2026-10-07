@@ -260,3 +260,46 @@ sensor report and against the plain fingerstick average; error by day since the 
 
 Neither dataset has genotypes. The record schema carries one genetic-marker field; it is synthetic, labelled as
 such on screen, and switched off in every experiment above.
+
+### Note to Amendment 3, section M, 8 Oct 2026 (before the Gate 3 test run)
+
+Written after the code for section M existed and after two independent reviews of it, and before any Shanghai
+test patient was scored. No bar changes. This note fixes how the registered words were turned into code, so
+that the choices cannot be made after the result.
+
+**What had been seen when this was written.** One cross-validated run on the 49 development patients with
+eligible meals (1,436 meals, 36.4 % with the event): AUPRC record 0.495, sensor history 0.644, fingersticks
+0.534, fused 0.618, sensor on 0.717; fused minus sensor history -0.025 (interval -0.070 to 0.015). So M1 is
+expected to miss. Nothing was tuned in response: features, label and learner are as in the plan of 7 Oct. The
+plain-share baseline described below had not been computed for any patient.
+
+**The personal rate.** Section M says "the share of calibration-window meals with the event". The plan of
+7 Oct implemented an add-one smoothed share, (events + 1) / (meals + 2), because 0 of 0 is undefined. That is
+not the registered quantity and it changes how patients rank. Resolved as follows:
+
+- **M2 is judged against the plain share**, as registered. Where no calibration-window meal could be scored
+  the baseline is 0.5, and the number of such meals is reported.
+- The smoothed share stays as the history arm's feature, as planned, and the fused model's difference from it
+  is reported beside M2 with no bar.
+- A calibration-window meal counts toward either share when it starts at least 120 minutes before the split
+  and has at least 6 sensor readings in the 120 minutes after it.
+
+**Other readings of the text, fixed as coded.**
+
+- A sensor reading stamped exactly at the meal time counts as "in the 20 minutes before it" and is available
+  to the sensor-on arm. A fingerstick stamped exactly at the meal time is not used by any arm.
+- A meal exactly at the split counts as after it.
+- "Its maximum over the next 120 minutes" is the maximum over the five half-hour bins starting with the
+  meal's bin (120 to 150 minutes).
+- The sensor-on arm's "30-minute change" is the last reading minus the trace interpolated 30 minutes before
+  the meal.
+- A record with no agents entry has its four drug flags missing (imputed, with an indicator when development
+  data has such a case), not zero. No development record lacks the entry.
+- In the 250 mg/dL analysis the personal rate and the history features are still the 180 mg/dL ones.
+- The "starts at or below 180" analysis selects meals by a sensor reading at meal time, so it describes
+  which meals, not a sensor-off product.
+- Secondary analyses carry no verdict. One that fails is published with its error.
+
+**Guards added to the command.** `--confirm` runs only at k = 3 and 2,000 resamples, on committed code, and
+refuses to run when a confirmatory result is already on disk. The primary result is written before any
+secondary analysis starts.
