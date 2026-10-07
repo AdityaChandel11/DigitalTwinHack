@@ -47,6 +47,28 @@ def compare(record: pd.DataFrame, population: pd.DataFrame) -> dict:
     return {"by_k": by_k, "p1_record_helps_at_k1": p1, "sensor_days_to_match": match}
 
 
+def report_text(out: dict) -> str:
+    """The table and the registered sensor-days figure, with its caveat when the record did not help."""
+    lines = [
+        "# The record as the prior",
+        "",
+        f"P1 (record prior helps at k = 1): **{'PASS' if out['p1_record_helps_at_k1'] else 'NOT PASSED'}**",
+        "",
+        pd.DataFrame(out["by_k"]).round(3).to_markdown(index=False),
+        "",
+        "Sensor days the population prior needs to match the record prior at k = 1: "
+        f"{out['sensor_days_to_match']}",
+    ]
+    if not out["p1_record_helps_at_k1"]:
+        # the figure compares two cohort medians; it is no saving when the paired difference is not reliable
+        lines += [
+            "",
+            "This figure is not a number of sensor days saved: at k = 1 the two priors are not distinguishable "
+            "patient by patient (see `twin_median_diff` and `twin_p`).",
+        ]
+    return "\n".join(lines) + "\n"
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--record", type=Path, required=True)
@@ -58,13 +80,7 @@ def main() -> None:
     (out_dir / "summary.json").write_text(
         json.dumps(_clean(out), indent=2, allow_nan=False), encoding="utf-8"
     )
-    table = pd.DataFrame(out["by_k"]).round(3).to_markdown(index=False)
-    verdict = "PASS" if out["p1_record_helps_at_k1"] else "NOT PASSED"
-    text = (
-        f"# The record as the prior\n\nP1 (record prior helps at k = 1): **{verdict}**\n\n{table}\n\n"
-        f"Sensor days the population prior needs to match the record prior at k = 1: "
-        f"{out['sensor_days_to_match']}\n"
-    )
+    text = report_text(out)
     (out_dir / "report.md").write_text(text, encoding="utf-8")
     print(text)
 

@@ -1,0 +1,62 @@
+{
+  "by_k": [
+    {
+      "k_days": 1,
+      "n_patients": 20,
+      "twin_record": 30.317902643940712,
+      "twin_population": 30.795098546842926,
+      "twin_median_diff": -0.021822484908662787,
+      "twin_frac_record_better": 0.65,
+      "twin_p": 0.1558971405029297,
+      "ode_record": 29.909544298086928,
+      "ode_population": 31.993883694944596,
+      "ode_median_diff": -0.08400873224427663,
+      "ode_frac_record_better": 0.75,
+      "ode_p": 0.0291290283203125
+    },
+    {
+      "k_days": 3,
+      "n_patients": 19,
+      "twin_record": 23.80244141067216,
+      "twin_population": 23.79253830187141,
+      "twin_median_diff": -0.000459888445394796,
+      "twin_frac_record_better": 0.5789473684210527,
+      "twin_p": 0.186798095703125,
+      "ode_record": 24.23064853554212,
+      "ode_population": 24.21010833044692,
+      "ode_median_diff": -0.006933940033711394,
+      "ode_frac_record_better": 0.5789473684210527,
+      "ode_p": 0.11266136169433594
+    },
+    {
+      "k_days": 5,
+      "n_patients": 19,
+      "twin_record": 21.94544067638834,
+      "twin_population": 21.668976617962866,
+      "twin_median_diff": -0.001301850312277253,
+      "twin_frac_record_better": 0.631578947368421,
+      "twin_p": 0.0782012939453125,
+      "ode_record": 23.266882953005904,
+      "ode_population": 23.269262143158016,
+      "ode_median_diff": -0.0071879913603041246,
+      "ode_frac_record_better": 0.631578947368421,
+      "ode_p": 0.04371452331542969
+    },
+    {
+      "k_days": 7,
+      "n_patients": 18,
+      "twin_record": 22.007653826758848,
+      "twin_population": 22.004753082680715,
+      "twin_median_diff": -0.0001301696697275645,
+      "twin_frac_record_better": 0.5555555555555556,
+      "twin_p": 0.3509407043457031,
+      "ode_record": 23.23420038906998,
+      "ode_population": 23.21285113667473,
+      "ode_median_diff": -0.0017035769190680838,
+      "ode_frac_record_better": 0.6111111111111112,
+      "ode_p": 0.2341461181640625
+    }
+  ],
+  "p1_record_helps_at_k1": false,
+  "sensor_days_to_match": 3
+}

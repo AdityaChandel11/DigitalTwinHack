@@ -40,3 +40,14 @@ def test_only_patients_scored_in_both_runs_are_compared():
     rec, pop = _runs(3.0)
     out = compare(rec, pop[pop["patient_id"] != "p0"])
     assert all(r["n_patients"] == 11 for r in out["by_k"])
+
+
+def test_report_does_not_offer_sensor_days_saved_when_the_record_did_not_help():
+    from chhaya.eval.fusion import report_text
+
+    helped = report_text(compare(*_runs(gap_at_k1=3.0)))
+    assert "**PASS**" in helped and "not distinguishable" not in helped
+    tied = compare(*_runs(gap_at_k1=0.0))
+    tied["sensor_days_to_match"] = 3  # two cohort medians can still differ by a hair
+    text = report_text(tied)
+    assert "**NOT PASSED**" in text and "not distinguishable" in text  # the figure is printed with its caveat

@@ -113,7 +113,10 @@ both. `RevealConfig` holds the switches; its defaults are the configuration chos
 
 **Fusion is Bayesian, not concatenation.** The health record sets the prior over the twin's seven
 personal parameters; sensor data is the likelihood. That sentence is the answer to the brief's "fusion of
-two data streams" and to "why is this a twin and not a classifier".
+two data streams" and to "why is this a twin and not a classifier". **Measured effect: nil.** Today the record
+sets one parameter's prior (basal glucose, from fasting glucose), and on held-out patients it changed the
+estimate by 0.02 mg/dL at k = 1 (P1 missed, `docs/decisions/2026-10-08-record-prior.md`). Gate 3's fusion bar
+(M1) missed too. Describe fusion as built and measured, never as a gain.
 
 ## Conventions
 
@@ -182,7 +185,8 @@ Not yet verified:
 - How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
-- Everything Amendment 3 registers except Gate 3 (run 8 Oct, missed its bars): the record as prior, fingersticks.
+- The fingerstick experiment (Amendment 3, section F). Gate 3 and the record prior were run on 8 Oct and both
+  missed their bars.
 - What the RSSDI glucose-monitoring consensus says about intermittent sensor use; read it before citing it.
 
 Known model gaps: no counter-regulation (deep hypoglycaemia dynamics are not trustworthy), no drug
