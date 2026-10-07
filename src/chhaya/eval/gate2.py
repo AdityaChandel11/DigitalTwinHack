@@ -21,6 +21,7 @@ from scipy.stats import wilcoxon
 from chhaya.config import REPO_ROOT, RESULTS_DIR, SEED, is_dev_patient
 from chhaya.data.schema import Recording
 from chhaya.eval.reveal import RevealConfig, run_reveal, why_skipped
+from chhaya.twin.priors import population_prior
 
 PRIMARY_K = 5
 TIR_BAR = 10.0  # percentage points
@@ -28,7 +29,7 @@ COVERAGE_BAND = (0.70, 0.90)
 MAX_FAILED_FRAC = 0.10  # more failed fits than this and the run cannot be GO (Amendment 2)
 
 
-def _rows_for(rec: Recording, k_list: list[int], n_members: int) -> list[dict]:
+def _rows_for(rec: Recording, k_list: list[int], n_members: int, prior: str = "record") -> list[dict]:
     """All (recording, k) rows for one recording. Top-level so worker processes can import it."""
     base = {
         "rec_id": rec.rec_id,
@@ -40,7 +41,10 @@ def _rows_for(rec: Recording, k_list: list[int], n_members: int) -> list[dict]:
     rows = []
     for k in k_list:
         try:
-            out = run_reveal(rec, k, n_members=n_members)
+            # None lets the reveal build the record-informed prior, as every Gate 2 run did
+            out = run_reveal(
+                rec, k, prior=population_prior() if prior == "population" else None, n_members=n_members
+            )
         except (RuntimeError, ValueError) as err:
             rows.append({**base, "k_days": k, "error": str(err), "skipped": None})
             print(f"{rec.rec_id} k={k}: FAILED {err}", flush=True)
@@ -54,13 +58,15 @@ def _rows_for(rec: Recording, k_list: list[int], n_members: int) -> list[dict]:
     return rows
 
 
-def run_cohort(recs: list[Recording], k_list: list[int], n_members: int = 200, jobs: int = 1) -> pd.DataFrame:
+def run_cohort(
+    recs: list[Recording], k_list: list[int], n_members: int = 200, jobs: int = 1, prior: str = "record"
+) -> pd.DataFrame:
     """One row per (recording, k). Failed fits keep a row with an `error`, skipped recordings a row with
     the reason in `skipped`, so nothing vanishes silently.
 
     `jobs` only spreads recordings over processes; every fit is seeded, so the rows do not depend on it.
     """
-    work = partial(_rows_for, k_list=k_list, n_members=n_members)
+    work = partial(_rows_for, k_list=k_list, n_members=n_members, prior=prior)
     if jobs > 1:
         with ProcessPoolExecutor(jobs) as pool:
             per_rec = list(pool.map(work, recs))
@@ -202,10 +208,10 @@ def write_report(df: pd.DataFrame, k_list: list[int], out_dir: Path, confirmator
     return result
 
 
-def results_dir(dataset: str, split: str, limit: int | None) -> Path:
-    """Where a run writes. Partial and per-split runs get their own folder so they cannot overwrite a full run."""
+def results_dir(dataset: str, split: str, limit: int | None, tag: str | None = None) -> Path:
+    """Where a run writes. Partial, per-split and tagged runs get their own folder so they cannot overwrite a full run."""
     name = dataset + ("" if split == "all" else f"-{split}") + (f"-limit{limit}" if limit else "")
-    return RESULTS_DIR / "gate2" / name
+    return RESULTS_DIR / "gate2" / (name + (f"-{tag}" if tag else ""))
 
 
 def _git(*args: str) -> str | None:
@@ -229,6 +235,8 @@ def provenance(args: argparse.Namespace) -> dict:
         "k": args.k,
         "members": args.members,
         "seed": SEED,
+        "prior": args.prior,
+        "tag": args.tag,
         "config": RevealConfig()._asdict(),
     }
 
@@ -251,14 +259,21 @@ def main() -> None:
     ap.add_argument("--members", type=int, default=200)
     ap.add_argument("--split", choices=["all", "dev", "test"], default="all", help="which patients")
     ap.add_argument("--jobs", type=int, default=1, help="worker processes; results do not depend on it")
+    ap.add_argument("--prior", choices=["record", "population"], default="record")
+    ap.add_argument(
+        "--tag",
+        default=None,
+        help="suffix for the results folder; required for any run that is not Gate 2 itself",
+    )
     args = ap.parse_args()
     recs = load(args.dataset)
     if args.split != "all":
         recs = [r for r in recs if is_dev_patient(r.patient_id) == (args.split == "dev")]
     recs = recs[: args.limit]
-    df = run_cohort(recs, args.k, args.members, args.jobs)
-    out_dir = results_dir(args.dataset, args.split, args.limit)
-    result = write_report(df, args.k, out_dir, confirmatory=args.split == "test" and args.limit is None)
+    df = run_cohort(recs, args.k, args.members, args.jobs, args.prior)
+    out_dir = results_dir(args.dataset, args.split, args.limit, args.tag)
+    confirmatory = args.split == "test" and args.limit is None and args.tag is None and args.prior == "record"
+    result = write_report(df, args.k, out_dir, confirmatory=confirmatory)
     (out_dir / "provenance.json").write_text(json.dumps(provenance(args), indent=2))
     print(json.dumps(_clean(result["primary"]), indent=2))
     print(json.dumps(result["verdict"], indent=2))

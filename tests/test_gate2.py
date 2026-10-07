@@ -145,3 +145,17 @@ def test_partial_runs_cannot_overwrite_full_results():
     assert gate2.results_dir("cgmacros", "test", None).name == "cgmacros-test"
     assert gate2.results_dir("cgmacros", "all", None).name == "cgmacros"
     assert gate2.results_dir("cgmacros", "dev", 5).name == "cgmacros-dev-limit5"
+
+
+def test_a_tagged_run_cannot_overwrite_the_confirmatory_folder():
+    plain = gate2.results_dir("cgmacros", "test", None)
+    tagged = gate2.results_dir("cgmacros", "test", None, tag="ksweep-prior-population")
+    assert plain.name == "cgmacros-test" and tagged.name == "cgmacros-test-ksweep-prior-population"
+
+
+def test_population_prior_is_passed_to_the_reveal(monkeypatch, rec):
+    seen = []
+    monkeypatch.setattr(gate2, "run_reveal", lambda rec, k, prior=None, n_members=200: seen.append(prior))
+    gate2.run_cohort([rec], [3], prior="record")
+    gate2.run_cohort([rec], [3], prior="population")
+    assert seen[0] is None and seen[1] is not None and seen[1].mu.shape == (7,)
