@@ -21,7 +21,7 @@ Last updated: 8 Oct 2026.
 |---|---|---|---|
 | M1 | Data truth | **Done.** Gate 1 is GO | `docs/decisions/2026-10-03-gate1.md` |
 | M2 | Core twin and the reveal | **Done and closed.** Gate 2 is GO on the corrected run: 21.9 vs 23.3 mg/dL against the average day at k = 5 (p = 4e-05), 0.35 mg/dL against the physiology-free control (p = 0.04) | `docs/decisions/2026-10-04-gate2-corrected.md`, `results/gate2/cgmacros-test/` |
-| M3 | Evidence: label check, excursions, fusion, fingersticks | **In progress.** 3.1 label check done: 8 of 64 sensor lows and 732 of 809 sensor highs confirmed by fingerstick. 3.2 **Gate 3 NOT PASSED** (M1, M2, M3 miss): fused sensor-off AUPRC 0.596 on 47 held-out patients, not better than any single stream nor than the personal rate (0.587; difference 0.009, interval -0.089 to 0.141); sensor on 0.760. 3.3 **P1 NOT PASSED**: the record prior changed the estimate by a median of 0.02 mg/dL at k = 1 (p = 0.16) on 20 held-out patients and by nothing from k = 3. 3.4 code built and tested (Plan 3, Tasks 3 to 5); filter choice and the confirmatory run remain (Task 6) | `docs/decisions/2026-10-08-gate3.md`, `docs/decisions/2026-10-08-record-prior.md`, `results/gate3/shanghai/`, `results/fusion/`, `results/audit/label_validity.json` |
+| M3 | Evidence: label check, excursions, fusion, fingersticks | **In progress.** 3.1 label check done: 8 of 64 sensor lows and 732 of 809 sensor highs confirmed by fingerstick. 3.2 **Gate 3 NOT PASSED** (M1, M2, M3 miss): fused sensor-off AUPRC 0.596 on 47 held-out patients, not better than any single stream nor than the personal rate (0.587; difference 0.009, interval -0.089 to 0.141); sensor on 0.760. 3.3 **P1 NOT PASSED**: the record prior changed the estimate by a median of 0.02 mg/dL at k = 1 (p = 0.16) on 20 held-out patients and by nothing from k = 3. 3.4 **F1 PASS, F2 PASS**: on 29 held-out patients fingersticks bring the running estimate 2.79 mg/dL closer to the hidden sensor than the daily shape alone (interval 1.60 to 4.69, p = 4e-06) and 9.50 closer in hindsight; 0.3 with one fingerstick a day. **M3 is complete except Plan 4 (3.5 to 3.7)** | `docs/decisions/2026-10-08-gate3.md`, `docs/decisions/2026-10-08-record-prior.md`, `results/gate3/shanghai/`, `docs/decisions/2026-10-08-fingersticks.md`, `results/fusion/`, `results/fingersticks/shanghai/`, `results/audit/label_validity.json` |
 | M4 | Product | Not started | |
 | M5 | Ship | Not started | |
 
@@ -49,6 +49,12 @@ Last updated: 8 Oct 2026.
   prior is one lab value on one parameter; a learned record-to-parameter map was never built and is not being
   built now. Fusion is described as built and measured, not as a gain. The "sensor-days-saved table" of 3.3
   exists and says there is no saving; the dashboard shows no such figure.
+- **8 Oct: fingersticks pass (F1, F2).** The filter (fade over 120 minutes, no slow level) was chosen on
+  development patients by the median paired difference, not by the plan's rule of lowest cohort-median RMSE;
+  the departure is in a dated note to Amendment 3, written before the test run. "Fingersticks already taken"
+  is read strictly (before the minute). The report-level outputs of section F are a declared second pass in
+  Plan 4 with the estimator frozen. Product: the retrospective reconstruction is the feature with the
+  strongest evidence; the gain needs several fingersticks a day.
 - 8 Oct: a dated note to Amendment 3 fixes how section M was coded (plain share for M2, and seven smaller
   readings of the text), written before the test run. `--confirm` on Gate 3 is pinned to the registered
   settings and refuses a second run.
