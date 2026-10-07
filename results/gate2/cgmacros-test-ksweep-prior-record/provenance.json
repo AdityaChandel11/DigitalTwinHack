@@ -1,0 +1,23 @@
+{
+  "commit": "d1a06b6",
+  "uncommitted_changes_in_src": false,
+  "dataset": "cgmacros",
+  "split": "test",
+  "limit": null,
+  "k": [
+    1,
+    3,
+    5,
+    7
+  ],
+  "members": 200,
+  "seed": 20261002,
+  "prior": "record",
+  "tag": "ksweep-prior-record",
+  "config": {
+    "meal_clock": true,
+    "blend": 0.5,
+    "loss": "linear",
+    "f_scale": 1.0
+  }
+}
