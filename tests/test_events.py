@@ -77,6 +77,21 @@ def test_only_fingersticks_taken_before_the_meal_are_used(rec):
     assert tab["f_mean"].iloc[-1] == 150.0  # and the one before the split is not counted
 
 
+def test_minutes_to_the_first_high_reading_is_reported_but_is_never_a_feature(rec):
+    from chhaya.eval.events import minutes_to_high
+
+    t = np.arange(0.0, 240.0, 15.0)
+    g = np.full(t.size, 140.0)
+    assert np.isnan(minutes_to_high(t, g, 30.0))
+    g[4:6] = 200.0  # readings at minutes 60 and 75
+    assert minutes_to_high(t, g, 30.0) == 30.0
+    assert np.isnan(minutes_to_high(t, g, 100.0))  # both are before this meal
+    tab = meal_table(rec, 3.0)
+    assert "mins_to_high" not in CONTEXT + RECORD + HISTORY + STICKS + SENSOR  # it is known only afterwards
+    assert tab.loc[tab["y"] == 0, "mins_to_high"].isna().all()
+    assert tab.loc[tab["y"] == 1, "mins_to_high"].between(0.0, 120.0).all()
+
+
 def test_short_recording_gives_no_rows(rec):
     short = dataclasses.replace(rec, cgm=rec.cgm[rec.cgm["t_min"] < SPLIT + 600])
     assert meal_table(short, 3.0).empty

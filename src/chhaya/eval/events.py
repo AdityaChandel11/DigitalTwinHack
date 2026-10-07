@@ -68,6 +68,15 @@ def excursion(t, g, meal_t: float, threshold: float = EVENT_MGDL) -> bool | None
     return bool(np.any(above[1:] & above[:-1] & (np.diff(t[m]) <= MAX_STEP_MIN)))
 
 
+def minutes_to_high(t, g, meal_t: float, threshold: float = EVENT_MGDL) -> float:
+    """Minutes from the meal to the first reading above `threshold` in the two hours after it; NaN if none.
+
+    Known only after the meal: a description of the event, never a feature.
+    """
+    m = (t > meal_t) & (t <= meal_t + HORIZON_MIN) & (g > threshold)
+    return float(t[m][0] - meal_t) if m.any() else float("nan")
+
+
 def drug_flags(agents) -> dict[str, float]:
     text = "" if agents is None else str(agents).lower()
     return {k: float(bool(re.search(p, text))) for k, p in _DRUGS.items()}
@@ -143,6 +152,7 @@ def meal_table(rec: Recording, k_days: float = 3.0) -> pd.DataFrame:
                 "y": int(y),
                 "y250": int(bool(excursion(t, g, m, SEVERE_MGDL))),
                 "start_high": int(g[before][-1] > EVENT_MGDL),
+                "mins_to_high": minutes_to_high(t, g, m) if y else float("nan"),
                 "c_sin": float(np.sin(2 * np.pi * clock / 1440)),
                 "c_cos": float(np.cos(2 * np.pi * clock / 1440)),
                 **record,

@@ -8,6 +8,11 @@ Usage: python -m chhaya.eval.gate3            (development patients, cross-valid
 
 from __future__ import annotations
 
+import argparse
+import json
+from collections import Counter
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from sklearn.impute import SimpleImputer
@@ -17,8 +22,11 @@ from sklearn.model_selection import GroupKFold
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from chhaya.config import SEED
-from chhaya.eval.events import CONTEXT, HISTORY, RECORD, SENSOR, STICKS
+from chhaya.config import RESULTS_DIR, SEED
+from chhaya.data.schema import Recording
+from chhaya.eval.events import CONTEXT, HISTORY, RECORD, SENSOR, STICKS, meal_table
+from chhaya.eval.gate2 import _clean, _git
+from chhaya.eval.reveal import why_skipped
 
 ARMS = {
     "record": CONTEXT + RECORD,
@@ -177,3 +185,180 @@ def evaluate(dev: pd.DataFrame, test: pd.DataFrame, y: str = "y", n_boot: int = 
             "pass": bool(m1 and m2),
         },
     }
+
+
+def build_table(recs: list[Recording], k_days: float = 3.0) -> tuple[pd.DataFrame, dict]:
+    """Every eligible meal of every recording, and a count of recordings skipped with the reason."""
+    frames, skipped = [], Counter()
+    for rec in recs:
+        why = why_skipped(rec, k_days)
+        tab = meal_table(rec, k_days) if why is None else pd.DataFrame()
+        if tab.empty:
+            skipped[why or "no eligible meal after the split"] += 1
+        else:
+            frames.append(tab)
+    table = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+    return table, dict(skipped)
+
+
+def development_run(dev: pd.DataFrame, y: str = "y", n_boot: int = 2000) -> dict:
+    """Cross-validated on development patients. For checking the pipeline; it gives no verdict."""
+    oof = out_of_fold(dev, y)
+    truth = dev[y].to_numpy(dtype=int)
+    pid = dev["patient_id"].to_numpy()
+    preds = {arm: oof[arm].to_numpy(dtype=float) for arm in ARMS}
+    preds[BASELINE] = dev["h_rate"].to_numpy(dtype=float)
+    return {
+        "confirmatory": False,
+        "n_meals": int(truth.size),
+        "n_patients": int(pd.unique(pid).size),
+        "prevalence": float(truth.mean()),
+        "arms": {a: {**metrics(truth, p), **within_patient_auroc(pid, truth, p)} for a, p in preds.items()},
+        "diffs": {b: boot_diff(pid, truth, preds["fused"], preds[b], n_boot) for b in (*SINGLE, BASELINE)},
+    }
+
+
+def _lightgbm(dev: pd.DataFrame, test: pd.DataFrame, y: str = "y") -> dict:
+    """The fused arm with a LightGBM at library defaults: a sensitivity analysis, with no bar."""
+    from lightgbm import LGBMClassifier
+
+    cols = ARMS["fused"]
+    model = LGBMClassifier(random_state=SEED, n_jobs=1, verbose=-1)
+    model.fit(dev[cols].to_numpy(dtype=float), dev[y].to_numpy(dtype=int))
+    p = model.predict_proba(test[cols].to_numpy(dtype=float))[:, 1]
+    truth = test[y].to_numpy(dtype=int)
+    return {**metrics(truth, p), **within_patient_auroc(test["patient_id"].to_numpy(), truth, p)}
+
+
+def _secondary(dev: pd.DataFrame, test: pd.DataFrame, n_boot: int) -> dict:
+    """The pre-declared secondary analyses: 250 mg/dL, meals that start in range, timing, LightGBM, subgroups.
+
+    An analysis whose development meals hold one outcome only cannot be fitted; it is left out, not faked.
+    """
+    out = {}
+    if dev["y250"].nunique() == 2:
+        out["above_250"] = evaluate(dev, test, "y250", n_boot)
+    low_dev, low_test = dev[dev["start_high"] == 0], test[test["start_high"] == 0]
+    if len(low_test) and low_dev["y"].nunique() == 2:
+        out["starts_at_or_below_180"] = evaluate(low_dev, low_test, "y", n_boot)
+    mins = test["mins_to_high"].dropna()
+    out["minutes_to_first_reading_above_180"] = {
+        "median": float(mins.median()) if len(mins) else None,
+        "n_meals": int(len(mins)),
+    }
+    out["lightgbm_fused"] = _lightgbm(dev, test)
+    p = fit_predict(dev, test, ARMS["fused"])
+    groups = {
+        "on_insulin": test["r_insulin"] == 1,
+        "not_on_insulin": test["r_insulin"] == 0,
+        "pump": test["pump"] == 1,
+        "no_pump": test["pump"] == 0,
+        "male": test["r_male"] == 1,
+        "female": test["r_male"] == 0,
+        "age_65_or_more": test["r_age"] >= 65,
+        "under_65": test["r_age"] < 65,
+    }
+    out["subgroups_fused"] = {
+        name: {
+            "n_meals": int(m.sum()),
+            "n_patients": int(test.loc[m, "patient_id"].nunique()),
+            **metrics(test.loc[m, "y"], p[m.to_numpy()]),
+        }
+        for name, m in groups.items()
+        if m.any()
+    }
+    return out
+
+
+def write_report(result: dict, out_dir: Path, confirmatory: bool) -> None:
+    """summary.json and report.md. Aggregates only: no per-meal rows, no patient identifiers."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "summary.json").write_text(
+        json.dumps(_clean(result), indent=2, allow_nan=False), encoding="utf-8"
+    )
+    r = result["primary"]
+    lines = ["# Gate 3: post-meal excursion above 180 mg/dL, predicted at meal time", ""]
+    if confirmatory:
+        verdict = "PASS" if r["verdict"]["pass"] else "NOT PASSED"
+        lines.append(f"Verdict: **{verdict}** (bars M1 and M2, Amendment 3)")
+        lines += ["", "```json", json.dumps(r["verdict"], indent=2), "```"]
+    else:
+        lines.append("Development patients, cross-validated. Not confirmatory: no verdict.")
+    lines += [
+        "",
+        f"Meals {r['n_meals']}, patients {r['n_patients']}, share with the event {r['prevalence']:.3f}.",
+        "",
+    ]
+    lines += [pd.DataFrame(r["arms"]).T.round(3).to_markdown(), ""]
+    lines += ["AUPRC of the fused sensor-off model minus each comparator (95 % interval over patients):", ""]
+    lines.append(pd.DataFrame(r["diffs"]).T.round(3).to_markdown())
+    if "kept_without_sensor" in r:
+        kept = r["kept_without_sensor"]
+        lines += ["", f"Share of the sensor-on gain over prevalence kept without the sensor: {kept:.2f}"]
+    sec = result.get("secondary")
+    if sec:
+        mins = sec["minutes_to_first_reading_above_180"]
+        lines += ["", "## Secondary (no bar)", ""]
+        lines.append(
+            f"Median minutes from meal to the first reading above 180: {mins['median']} ({mins['n_meals']} meals)."
+        )
+        rows = {"LightGBM, library defaults (fused)": sec["lightgbm_fused"]}
+        for name in ("above_250", "starts_at_or_below_180"):
+            if name in sec:
+                rows[f"{name}: fused"] = sec[name]["arms"]["fused"]
+                rows[f"{name}: personal rate"] = sec[name]["arms"][BASELINE]
+        lines += ["", pd.DataFrame(rows).T.round(3).to_markdown(), ""]
+        lines.append(pd.DataFrame(sec["subgroups_fused"]).T.round(3).to_markdown())
+    if result.get("skipped"):
+        lines += ["", "Recordings skipped: " + "; ".join(f"{v} ({k})" for k, v in result["skipped"].items())]
+    (out_dir / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def refuse_second_run(out_dir: Path) -> None:
+    """The test split is scored once. A re-run after a defect is an amendment, made by hand, not by accident."""
+    if (out_dir / "summary.json").exists():
+        raise SystemExit(
+            f"{out_dir} already holds the confirmatory run. Scoring the test patients again needs a dated "
+            "amendment (docs/PREREGISTRATION.md); move the folder aside deliberately if that is what this is."
+        )
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--confirm", action="store_true", help="score the test patients; this is done once")
+    ap.add_argument("--k", type=float, default=3.0)
+    ap.add_argument("--boot", type=int, default=2000)
+    args = ap.parse_args()
+    out_dir = RESULTS_DIR / "gate3" / ("shanghai" if args.confirm else "shanghai-dev")
+    if args.confirm:
+        refuse_second_run(out_dir)
+    from chhaya.data.shanghai import load_all
+
+    table, skipped = build_table(load_all(), args.k)
+    dev = table[table["dev"]].reset_index(drop=True)
+    if not args.confirm:
+        del table  # no test patient's row is used below this line
+        result = {"primary": development_run(dev, n_boot=args.boot), "skipped": skipped}
+    else:
+        test = table[~table["dev"]].reset_index(drop=True)
+        result = {
+            "primary": evaluate(dev, test, "y", args.boot),
+            "skipped": skipped,
+            "secondary": _secondary(dev, test, args.boot),
+        }
+    write_report(result, out_dir, confirmatory=args.confirm)
+    status = _git("status", "--porcelain", "--", "src")
+    prov = {
+        "commit": _git("rev-parse", "--short", "HEAD"),
+        "uncommitted_changes_in_src": bool(status),
+        "k_days": args.k,
+        "boot": args.boot,
+        "seed": SEED,
+        "confirm": args.confirm,
+    }
+    (out_dir / "provenance.json").write_text(json.dumps(prov, indent=2), encoding="utf-8")
+    print((out_dir / "report.md").read_text(encoding="utf-8"))
+
+
+if __name__ == "__main__":
+    main()

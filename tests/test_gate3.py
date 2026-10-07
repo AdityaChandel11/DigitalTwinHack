@@ -74,3 +74,59 @@ def test_out_of_fold_predictions_never_come_from_the_same_patient():
     oof = gate3.out_of_fold(dev)
     assert list(oof.index) == list(dev.index) and set(gate3.ARMS) <= set(oof.columns)
     assert oof["fused"].between(0, 1).all()
+
+
+def test_development_run_scores_only_development_patients():
+    t = _table(signal=True, seed=4)
+    out = gate3.development_run(t[t["dev"]], n_boot=100)
+    assert out["n_patients"] == 30 and out["confirmatory"] is False
+    assert "fused" in out["arms"] and "verdict" not in out  # a development run gives no verdict
+
+
+def test_report_is_written_without_any_per_meal_rows(tmp_path):
+    t = _table(signal=True, seed=5)
+    result = gate3.evaluate(t[t["dev"]], t[~t["dev"]], n_boot=100)
+    gate3.write_report({"primary": result, "skipped": {"too short": 2}}, tmp_path, confirmatory=True)
+    assert {p.name for p in tmp_path.iterdir()} == {"summary.json", "report.md"}
+    text = (tmp_path / "report.md").read_text(encoding="utf-8")
+    assert "PASS" in text and "fused" in text and "p0" not in text  # no patient identifiers
+
+
+def test_build_table_counts_what_it_skips(rec):
+    import dataclasses
+
+    short = dataclasses.replace(rec, rec_id="short", cgm=rec.cgm[rec.cgm["t_min"] < 2 * 1440])
+    table, skipped = gate3.build_table([rec, short], 3.0)
+    assert len(table) == 9 and sum(skipped.values()) == 1
+
+
+def test_secondary_analyses_cover_everything_the_registration_lists():
+    t = _table(signal=True, seed=6)
+    t["y250"] = t["y"] * (t["t_min"] % 2 == 0).astype(int)
+    t["mins_to_high"] = np.where(t["y"] == 1, 45.0, np.nan)
+    t["r_age"] = np.where(t["patient_id"].str[1:].astype(int) % 4 < 2, 70.0, 50.0)  # both ages in each split
+    out = gate3._secondary(t[t["dev"]], t[~t["dev"]], n_boot=50)
+    assert out["above_250"]["n_meals"] == int((~t["dev"]).sum())
+    assert out["starts_at_or_below_180"]["n_meals"] == int((~t["dev"]).sum())
+    assert out["minutes_to_first_reading_above_180"] == {
+        "median": 45.0,
+        "n_meals": int(t.loc[~t["dev"], "y"].sum()),
+    }
+    assert 0.5 < out["lightgbm_fused"]["auprc"] <= 1.0 and "verdict" not in out["lightgbm_fused"]
+    assert {"age_65_or_more", "under_65", "not_on_insulin"} <= set(out["subgroups_fused"])
+
+
+def test_secondary_analysis_with_one_outcome_only_is_skipped_not_a_crash():
+    t = _table(signal=True, seed=7)  # y250 is 0 for every meal
+    t["mins_to_high"] = np.nan
+    out = gate3._secondary(t[t["dev"]], t[~t["dev"]], n_boot=50)
+    assert "above_250" not in out and out["minutes_to_first_reading_above_180"]["median"] is None
+
+
+def test_the_test_patients_cannot_be_scored_a_second_time(tmp_path):
+    import pytest
+
+    gate3.refuse_second_run(tmp_path)  # nothing there yet: allowed
+    (tmp_path / "summary.json").write_text("{}", encoding="utf-8")
+    with pytest.raises(SystemExit, match="already"):
+        gate3.refuse_second_run(tmp_path)
