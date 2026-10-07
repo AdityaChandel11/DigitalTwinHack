@@ -1,0 +1,472 @@
+{
+  "primary": {
+    "n_meals": 1205,
+    "n_patients": 47,
+    "prevalence": 0.391701244813278,
+    "n_meals_without_a_personal_rate": 0,
+    "arms": {
+      "record": {
+        "auprc": 0.566018627609339,
+        "auroc": 0.64631795269036,
+        "brier": 0.23778745969906137,
+        "calibration_slope": 0.5248443696544011,
+        "calibration_intercept": -0.3494794662836099,
+        "within_patient_auroc": 0.6224172006968366,
+        "within_patient_n": 20
+      },
+      "history": {
+        "auprc": 0.6260482817863078,
+        "auroc": 0.7767258422549541,
+        "brier": 0.19040506539586388,
+        "calibration_slope": 0.8568708603403731,
+        "calibration_intercept": -0.0693292906563534,
+        "within_patient_auroc": 0.6229706323514764,
+        "within_patient_n": 20
+      },
+      "fingersticks": {
+        "auprc": 0.6419543432390826,
+        "auroc": 0.7026860244641248,
+        "brier": 0.20511813376977264,
+        "calibration_slope": 0.9987037802383699,
+        "calibration_intercept": 0.06241726734033656,
+        "within_patient_auroc": 0.5683617581372303,
+        "within_patient_n": 20
+      },
+      "fused": {
+        "auprc": 0.59609433825759,
+        "auroc": 0.7126130136194418,
+        "brier": 0.21641561536615678,
+        "calibration_slope": 0.4819858838563283,
+        "calibration_intercept": -0.33835354278120355,
+        "within_patient_auroc": 0.6218082166296625,
+        "within_patient_n": 20
+      },
+      "sensor_on": {
+        "auprc": 0.7601076586107972,
+        "auroc": 0.8163051772377276,
+        "brier": 0.16960608877522307,
+        "calibration_slope": 0.7726591075780006,
+        "calibration_intercept": -0.3234158790552461,
+        "within_patient_auroc": 0.7801031876787329,
+        "within_patient_n": 20
+      },
+      "personal_rate": {
+        "auprc": 0.5871161355400678,
+        "auroc": 0.7556318935417485,
+        "brier": 0.22391628513697456,
+        "calibration_slope": 0.11859499064403654,
+        "calibration_intercept": -0.5069885454530383,
+        "within_patient_auroc": 0.5120454200602019,
+        "within_patient_n": 20
+      },
+      "personal_rate_smoothed": {
+        "auprc": 0.6105210920658605,
+        "auroc": 0.7583734131847296,
+        "brier": 0.21230778493011476,
+        "calibration_slope": 0.7674217417634861,
+        "calibration_intercept": -0.6421389781703926,
+        "within_patient_auroc": 0.5120454200602019,
+        "within_patient_n": 20
+      }
+    },
+    "diffs": {
+      "record": {
+        "diff": 0.030075710648250986,
+        "lo": -0.06877656206060606,
+        "hi": 0.15546289674962604,
+        "n_resamples_used": 2000
+      },
+      "history": {
+        "diff": -0.02995394352871783,
+        "lo": -0.09481128379449291,
+        "hi": 0.05203474299774668,
+        "n_resamples_used": 2000
+      },
+      "fingersticks": {
+        "diff": -0.045860004981492675,
+        "lo": -0.1187937647595065,
+        "hi": 0.07215900587921875,
+        "n_resamples_used": 2000
+      },
+      "personal_rate": {
+        "diff": 0.008978202717522143,
+        "lo": -0.08893720984207731,
+        "hi": 0.14122370316210758,
+        "n_resamples_used": 2000
+      },
+      "personal_rate_smoothed": {
+        "diff": -0.01442675380827052,
+        "lo": -0.10972836231653264,
+        "hi": 0.13203338675846818,
+        "n_resamples_used": 2000
+      }
+    },
+    "kept_without_sensor": 0.554803298176695,
+    "alerts": {
+      "threshold": 0.1887712099851273,
+      "sensitivity": 0.864406779661017,
+      "false_alerts_per_patient_week": 8.893829905503058,
+      "eligible_meals_per_patient_week": 21.43413007226237
+    },
+    "net_benefit": {
+      "0.3": {
+        "model": 0.18008298755186722,
+        "alert_always": 0.13100177830468285
+      },
+      "0.5": {
+        "model": 0.07219917012448132,
+        "alert_always": -0.216597510373444
+      },
+      "0.7": {
+        "model": -0.02683264177040109,
+        "alert_always": -1.027662517289073
+      }
+    },
+    "verdict": {
+      "m1_fused_beats_every_single_stream": false,
+      "m2_fused_beats_personal_rate": false,
+      "m3_calibration_slope_in_range": false,
+      "pass": false
+    }
+  },
+  "skipped": {
+    "too short to hold out a day after calibration": 4
+  },
+  "secondary": {
+    "above_250": {
+      "n_meals": 1205,
+      "n_patients": 47,
+      "prevalence": 0.0987551867219917,
+      "n_meals_without_a_personal_rate": 0,
+      "arms": {
+        "record": {
+          "auprc": 0.1373060559754407,
+          "auroc": 0.6047015491279384,
+          "brier": 0.1498577313033838,
+          "calibration_slope": 0.08660951873914625,
+          "calibration_intercept": -1.963700537592771,
+          "within_patient_auroc": 0.6902364591991678,
+          "within_patient_n": 7
+        },
+        "history": {
+          "auprc": 0.22276512111034816,
+          "auroc": 0.8034882461271802,
+          "brier": 0.08933610867222416,
+          "calibration_slope": 0.6667120560590596,
+          "calibration_intercept": -0.3621212025229292,
+          "within_patient_auroc": 0.6752791602988216,
+          "within_patient_n": 7
+        },
+        "fingersticks": {
+          "auprc": 0.22130373392764593,
+          "auroc": 0.7504913567636999,
+          "brier": 0.09350334400860387,
+          "calibration_slope": 0.5116369268189385,
+          "calibration_intercept": -0.8105399460659601,
+          "within_patient_auroc": 0.5877769854794312,
+          "within_patient_n": 7
+        },
+        "fused": {
+          "auprc": 0.15333514759708256,
+          "auroc": 0.6363959948620332,
+          "brier": 0.12552714924013597,
+          "calibration_slope": 0.19023708845240025,
+          "calibration_intercept": -1.698135559540225,
+          "within_patient_auroc": 0.6386477885449453,
+          "within_patient_n": 7
+        },
+        "sensor_on": {
+          "auprc": 0.3034362316713589,
+          "auroc": 0.7424826284104802,
+          "brier": 0.09848318935492992,
+          "calibration_slope": 0.38560155140013314,
+          "calibration_intercept": -1.2886167065699656,
+          "within_patient_auroc": 0.826567405050034,
+          "within_patient_n": 7
+        },
+        "personal_rate": {
+          "auprc": 0.20394930604858424,
+          "auroc": 0.7693718371326431,
+          "brier": 0.3285301774687092,
+          "calibration_slope": 0.1019285420485451,
+          "calibration_intercept": -2.392665971704033,
+          "within_patient_auroc": 0.5277532123960695,
+          "within_patient_n": 7
+        },
+        "personal_rate_smoothed": {
+          "auprc": 0.23855505258249735,
+          "auroc": 0.7729003203491341,
+          "brier": 0.29781953459124205,
+          "calibration_slope": 0.8284949484023939,
+          "calibration_intercept": -2.7575534432776867,
+          "within_patient_auroc": 0.5277532123960695,
+          "within_patient_n": 7
+        }
+      },
+      "diffs": {
+        "record": {
+          "diff": 0.016029091621641844,
+          "lo": -0.03909867747069465,
+          "hi": 0.07291307304044209,
+          "n_resamples_used": 2000
+        },
+        "history": {
+          "diff": -0.0694299735132656,
+          "lo": -0.159209433023553,
+          "hi": 0.006897126011606151,
+          "n_resamples_used": 2000
+        },
+        "fingersticks": {
+          "diff": -0.06796858633056338,
+          "lo": -0.20028078065330762,
+          "hi": 0.008884101017024556,
+          "n_resamples_used": 2000
+        },
+        "personal_rate": {
+          "diff": -0.05061415845150169,
+          "lo": -0.12880748239658568,
+          "hi": 0.029770112461338233,
+          "n_resamples_used": 2000
+        },
+        "personal_rate_smoothed": {
+          "diff": -0.08521990498541479,
+          "lo": -0.15720724146319387,
+          "hi": 0.023269056708196883,
+          "n_resamples_used": 2000
+        }
+      },
+      "kept_without_sensor": 0.26665859991379526,
+      "alerts": {
+        "threshold": 0.011466362837334786,
+        "sensitivity": 0.8319327731092437,
+        "false_alerts_per_patient_week": 13.109505280711508,
+        "eligible_meals_per_patient_week": 21.43413007226237
+      },
+      "net_benefit": {
+        "0.3": {
+          "model": -0.028452874925903978,
+          "alert_always": -0.28749259039715475
+        },
+        "0.5": {
+          "model": -0.05228215767634855,
+          "alert_always": -0.8024896265560166
+        },
+        "0.7": {
+          "model": -0.10318118948824341,
+          "alert_always": -2.0041493775933605
+        }
+      }
+    },
+    "starts_at_or_below_180": {
+      "n_meals": 1041,
+      "n_patients": 47,
+      "prevalence": 0.30739673390970224,
+      "n_meals_without_a_personal_rate": 0,
+      "arms": {
+        "record": {
+          "auprc": 0.4822596774415095,
+          "auroc": 0.6484526699029126,
+          "brier": 0.22932233185397388,
+          "calibration_slope": 0.49440759602934603,
+          "calibration_intercept": -0.6570947217284702,
+          "within_patient_auroc": 0.6713895841035448,
+          "within_patient_n": 20
+        },
+        "history": {
+          "auprc": 0.5660291754007577,
+          "auroc": 0.7581440707350902,
+          "brier": 0.17536175580399346,
+          "calibration_slope": 0.8352355493855272,
+          "calibration_intercept": -0.1291649952908935,
+          "within_patient_auroc": 0.6403862738988664,
+          "within_patient_n": 20
+        },
+        "fingersticks": {
+          "auprc": 0.5600634389409889,
+          "auroc": 0.7103783807212205,
+          "brier": 0.1844215499194214,
+          "calibration_slope": 1.1388205059527345,
+          "calibration_intercept": 0.07900553443044106,
+          "within_patient_auroc": 0.6424846001892257,
+          "within_patient_n": 20
+        },
+        "fused": {
+          "auprc": 0.49329017153228144,
+          "auroc": 0.6886724167822469,
+          "brier": 0.20868386298852923,
+          "calibration_slope": 0.4010610557505407,
+          "calibration_intercept": -0.6033740713924898,
+          "within_patient_auroc": 0.6440035968189288,
+          "within_patient_n": 20
+        },
+        "sensor_on": {
+          "auprc": 0.5668348408015605,
+          "auroc": 0.7335384882108184,
+          "brier": 0.19041686031812277,
+          "calibration_slope": 0.5460572244381542,
+          "calibration_intercept": -0.5336658992344288,
+          "within_patient_auroc": 0.7366694867929326,
+          "within_patient_n": 20
+        },
+        "personal_rate": {
+          "auprc": 0.48192608471930126,
+          "auroc": 0.74279863037448,
+          "brier": 0.2389652039999327,
+          "calibration_slope": 0.10226039516356888,
+          "calibration_intercept": -0.8521670663472868,
+          "within_patient_auroc": 0.5119792525985811,
+          "within_patient_n": 20
+        },
+        "personal_rate_smoothed": {
+          "auprc": 0.5060040087072708,
+          "auroc": 0.7452821601941747,
+          "brier": 0.22434359748802016,
+          "calibration_slope": 0.6878289303749249,
+          "calibration_intercept": -0.9593157102001724,
+          "within_patient_auroc": 0.5119792525985811,
+          "within_patient_n": 20
+        }
+      },
+      "diffs": {
+        "record": {
+          "diff": 0.011030494090771947,
+          "lo": -0.09488958236621592,
+          "hi": 0.14467601003529357,
+          "n_resamples_used": 2000
+        },
+        "history": {
+          "diff": -0.07273900386847626,
+          "lo": -0.14031894087013175,
+          "hi": 0.023963064679398367,
+          "n_resamples_used": 2000
+        },
+        "fingersticks": {
+          "diff": -0.06677326740870743,
+          "lo": -0.15607325532142677,
+          "hi": 0.08168667762688604,
+          "n_resamples_used": 2000
+        },
+        "personal_rate": {
+          "diff": 0.011364086812980179,
+          "lo": -0.07712615077009576,
+          "hi": 0.14970331556449698,
+          "n_resamples_used": 2000
+        },
+        "personal_rate_smoothed": {
+          "diff": -0.012713837174989362,
+          "lo": -0.10537969806799546,
+          "hi": 0.14134019519162438,
+          "n_resamples_used": 2000
+        }
+      },
+      "kept_without_sensor": 0.7165232580889331,
+      "alerts": {
+        "threshold": 0.18310774217739953,
+        "sensitivity": 0.81875,
+        "false_alerts_per_patient_week": 8.28904947192885,
+        "eligible_meals_per_patient_week": 18.516953863257367
+      },
+      "net_benefit": {
+        "0.3": {
+          "model": 0.09139563606422396,
+          "alert_always": 0.010566762728146013
+        },
+        "0.5": {
+          "model": 0.0038424591738712775,
+          "alert_always": -0.3852065321805956
+        },
+        "0.7": {
+          "model": -0.03202049311559396,
+          "alert_always": -1.3086775536343256
+        }
+      }
+    },
+    "minutes_to_first_reading_above_180": {
+      "median": 30.0,
+      "n_meals": 472
+    },
+    "lightgbm_fused": {
+      "auprc": 0.622792867066146,
+      "auroc": 0.7605932203389829,
+      "brier": 0.21129978642958103,
+      "calibration_slope": 0.473296027229208,
+      "calibration_intercept": -0.09479497801511842,
+      "within_patient_auroc": 0.5664029311424896,
+      "within_patient_n": 20
+    },
+    "subgroups_fused": {
+      "on_insulin": {
+        "n_meals": 676,
+        "n_patients": 28,
+        "auprc": 0.612689483072,
+        "auroc": 0.7388211289956926,
+        "brier": 0.21946456616404333,
+        "calibration_slope": 0.5103241288274376,
+        "calibration_intercept": -0.5040009830058485
+      },
+      "not_on_insulin": {
+        "n_meals": 529,
+        "n_patients": 20,
+        "auprc": 0.6060490792200813,
+        "auroc": 0.6910815852241452,
+        "brier": 0.21251941359040755,
+        "calibration_slope": 0.5633712259027926,
+        "calibration_intercept": -0.06942486403704833
+      },
+      "pump": {
+        "n_meals": 214,
+        "n_patients": 19,
+        "auprc": 0.7045904008105479,
+        "auroc": 0.7270175438596491,
+        "brier": 0.24950836819803732,
+        "calibration_slope": 0.6812659836888374,
+        "calibration_intercept": -0.767103716283571
+      },
+      "no_pump": {
+        "n_meals": 991,
+        "n_patients": 28,
+        "auprc": 0.5867389331329724,
+        "auroc": 0.7061467507426129,
+        "brier": 0.20926945077884854,
+        "calibration_slope": 0.48292743398884774,
+        "calibration_intercept": -0.2834295590011458
+      },
+      "male": {
+        "n_meals": 738,
+        "n_patients": 30,
+        "auprc": 0.6413752492154888,
+        "auroc": 0.7500692049288873,
+        "brier": 0.20941634058405967,
+        "calibration_slope": 0.5753835675005299,
+        "calibration_intercept": -0.38455562668772525
+      },
+      "female": {
+        "n_meals": 467,
+        "n_patients": 17,
+        "auprc": 0.47790751378103924,
+        "auroc": 0.6129428416801965,
+        "brier": 0.2274765678055308,
+        "calibration_slope": 0.32505965040769974,
+        "calibration_intercept": -0.4206247848101768
+      },
+      "age_65_or_more": {
+        "n_meals": 559,
+        "n_patients": 19,
+        "auprc": 0.703248841876815,
+        "auroc": 0.7167195235148515,
+        "brier": 0.21851896745645072,
+        "calibration_slope": 0.5499809864900492,
+        "calibration_intercept": 0.03858714815765155
+      },
+      "under_65": {
+        "n_meals": 646,
+        "n_patients": 28,
+        "auprc": 0.5311294825305449,
+        "auroc": 0.723078165374677,
+        "brier": 0.214595532055825,
+        "calibration_slope": 0.4634456164649283,
+        "calibration_intercept": -0.6611022599718834
+      }
+    }
+  }
+}
