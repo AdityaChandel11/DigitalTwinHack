@@ -63,3 +63,30 @@ def score(pred, truth, lo=None, hi=None) -> dict[str, float]:
     if lo is not None and hi is not None:
         out["cov80"] = coverage(truth, lo, hi)
     return out
+
+
+def within_15_15(pred, ref) -> float:
+    """Percent of readings within 15 mg/dL of a reference below 100 mg/dL, or within 15 % of one at or above it.
+
+    The agreement rule of ISO 15197:2013 for glucose meters, used here to put an estimate next to a real sensor.
+    """
+    pred, ref = np.asarray(pred, dtype=float), np.asarray(ref, dtype=float)
+    err = np.abs(pred - ref)
+    return float(100.0 * np.mean(np.where(ref < 100.0, err <= 15.0, err <= 0.15 * ref)))
+
+
+def clarke_zones(pred, ref) -> dict[str, float]:
+    """Percent of readings in each zone of the Clarke error grid (A: clinically accurate ... E: opposite treatment)."""
+    pred, ref = np.asarray(pred, dtype=float), np.asarray(ref, dtype=float)
+    a = ((ref <= 70) & (pred <= 70)) | ((pred >= 0.8 * ref) & (pred <= 1.2 * ref))
+    e = ((ref >= 180) & (pred <= 70)) | ((ref <= 70) & (pred >= 180))
+    c = ((ref >= 70) & (ref <= 290) & (pred >= ref + 110)) | (
+        (ref >= 130) & (ref <= 180) & (pred <= 1.4 * ref - 182)
+    )
+    d = (
+        ((ref >= 240) & (pred >= 70) & (pred <= 180))
+        | ((ref <= 175 / 3) & (pred >= 70) & (pred <= 180))
+        | ((ref >= 175 / 3) & (ref <= 70) & (pred >= 1.2 * ref))
+    )
+    zone = np.select([a, e, c, d], ["A", "E", "C", "D"], default="B")
+    return {z: float(100.0 * np.mean(zone == z)) for z in "ABCDE"}
