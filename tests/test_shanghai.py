@@ -109,3 +109,21 @@ def test_folder_with_no_usable_workbook_is_an_error_not_an_empty_list(root):
     pd.read_excel(path).iloc[:0].to_excel(path, index=False)
     with pytest.raises(ValueError, match="none of the 1 workbooks"):
         load_all(root)
+
+
+def test_record_carries_two_hour_glucose_and_cpeptide():
+    from chhaya.data.shanghai import _static
+
+    row = pd.Series(
+        {
+            "Age (years)": 60,
+            "Fasting Plasma Glucose (mg/dl)": 150.0,
+            "2-hour Postprandial Plasma Glucose (mg/dl)": 250.2,
+            "Fasting C-peptide (nmol/L)": 0.4,
+            "2-hour Postprandial C-peptide (nmol/L)": 1.1,
+        }
+    )
+    s = _static(row)
+    assert s["fasting_glucose_mgdl"] == 150.0 and s["pp2h_glucose_mgdl"] == 250.2
+    assert s["fasting_cpeptide_nmol"] == 0.4 and s["pp2h_cpeptide_nmol"] == 1.1
+    assert np.isnan(_static(pd.Series({"Age (years)": 60}))["pp2h_glucose_mgdl"])
