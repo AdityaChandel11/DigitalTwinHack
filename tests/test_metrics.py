@@ -58,3 +58,19 @@ def test_clarke_zones_on_clear_cases():
     assert round(z["A"], 1) == 28.6 and round(z["B"], 1) == 14.3 and round(z["C"], 1) == 14.3
     assert round(z["D"], 1) == 14.3 and round(z["E"], 1) == 28.6
     assert abs(sum(z.values()) - 100.0) < 1e-9
+
+
+def test_clarke_zones_on_the_less_visited_regions_and_the_15_15_edge():
+    from chhaya.eval.metrics import clarke_zones, within_15_15
+
+    one = lambda pred, ref: max(
+        clarke_zones(np.array([pred]), np.array([ref])).items(), key=lambda kv: kv[1]
+    )[0]  # noqa: E731
+    assert one(20.0, 150.0) == "C"  # lower C: a normal-high value read as low, inviting overcorrection upward
+    assert one(100.0, 50.0) == "D"  # left D: a real low read as normal
+    assert one(80.0, 65.0) == "D"  # the strip between 58.3 and 70
+    assert one(150.0, 300.0) == "D" and one(60.0, 60.0) == "A" and one(130.0, 100.0) == "B"
+    edge = within_15_15(np.array([115.0, 85.0, 115.01]), np.array([100.0, 100.0, 100.0]))
+    assert edge == pytest.approx(
+        200.0 / 3.0
+    )  # exactly 15 off at a reference of 100 is in; a hair more is out

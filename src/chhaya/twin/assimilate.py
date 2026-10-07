@@ -13,7 +13,7 @@ import numpy as np
 
 
 class FilterConfig(NamedTuple):
-    tau_min: float = 120.0  # how long a deviation seen at a fingerstick persists
+    tau_min: float = 60.0  # how long a deviation persists; chosen on development patients, 8 Oct
     fast_sd: float = 25.0  # stationary spread of the fading deviation, mg/dL
     obs_sd: float = 15.0  # fingerstick against sensor disagreement after the map, mg/dL
     slow: bool = False  # also track a slow level (drift over days)
@@ -52,19 +52,28 @@ def map_source(cbg) -> str:
     return "pooled slope" if cbg.size >= MIN_OFFSET_PAIRS else "pooled map"
 
 
-def deviation(t_obs, z, t_eval, cfg: FilterConfig = FilterConfig(), smooth: bool = False) -> np.ndarray:
+def deviation(
+    t_obs,
+    z,
+    t_eval,
+    cfg: FilterConfig = FilterConfig(),
+    smooth: bool = False,
+    strictly_before: bool = False,
+) -> np.ndarray:
     """Deviation from the daily shape at `t_eval`, from surprises `z` seen at fingerstick times `t_obs`.
 
     State: a slow level (random walk, optional) and a fast deviation that fades with time constant `tau_min`.
-    Live (`smooth=False`): each value uses only fingersticks at or before it. In hindsight (`smooth=True`):
-    all fingersticks, for the retrospective report. Fingersticks may be given in any order.
+    Live (`smooth=False`): each value uses only fingersticks at or before it, or only those stamped before it
+    when `strictly_before` is set (a fingerstick and a reading that share a minute have no known order).
+    In hindsight (`smooth=True`): all fingersticks, for the retrospective report; this is the exact smoothed
+    mean at every time, not only at the fingersticks. Fingersticks may be given in any order.
     """
     t_obs, z, t_eval = (np.asarray(a, dtype=float) for a in (t_obs, z, t_eval))
     order = np.argsort(t_obs, kind="stable")
     t_obs, z = t_obs[order], z[order]
     n = t_obs.size
     if n == 0:
-        return np.zeros(t_eval.size)
+        return np.zeros(t_eval.shape)
     h = np.array([1.0, 1.0])
     x = np.zeros(2)
     p = np.diag([cfg.slow_sd0**2 if cfg.slow else 0.0, cfg.fast_sd**2])
@@ -87,14 +96,21 @@ def deviation(t_obs, z, t_eval, cfg: FilterConfig = FilterConfig(), smooth: bool
         for i in range(n - 2, -1, -1):
             c = ps[i] @ fs[i + 1].T @ np.linalg.pinv(pps[i + 1])
             xs[i] = xs[i] + c @ (xs[i + 1] - xps[i + 1])
-    idx = np.searchsorted(t_obs, t_eval, side="right") - 1
+    idx = np.searchsorted(t_obs, t_eval, side="left" if strictly_before and not smooth else "right") - 1
     j = np.clip(idx, 0, n - 1)
     back = np.where(idx >= 0, xs[j, 0] + xs[j, 1] * np.exp(-(t_eval - t_obs[j]) / cfg.tau_min), 0.0)
     if not smooth:
         return back
     nxt = np.clip(idx + 1, 0, n - 1)
     fwd = xs[nxt, 0] + xs[nxt, 1] * np.exp(-(t_obs[nxt] - t_eval) / cfg.tau_min)
-    gap = np.maximum(t_obs[nxt] - t_obs[j], 1.0)
+    # Between two fingersticks the state is a bridge pinned at both smoothed ends: the slow level moves in a
+    # straight line and the fading deviation follows the Ornstein-Uhlenbeck bridge. A straight blend of the two
+    # decays would shrink the deviation in the middle of a gap by up to a half.
+    gap = np.maximum(t_obs[nxt] - t_obs[j], 1e-9)
+    u = np.clip(t_eval - t_obs[j], 0.0, gap) / cfg.tau_min
+    v = np.clip(t_obs[nxt] - t_eval, 0.0, gap) / cfg.tau_min
+    den = -np.expm1(-2.0 * gap / cfg.tau_min)
     w = np.clip((t_eval - t_obs[j]) / gap, 0.0, 1.0)
-    between = (1.0 - w) * back + w * fwd
+    fast = (np.exp(-u) * -np.expm1(-2.0 * v) * xs[j, 1] + np.exp(-v) * -np.expm1(-2.0 * u) * xs[nxt, 1]) / den
+    between = (1.0 - w) * xs[j, 0] + w * xs[nxt, 0] + fast
     return np.where(idx < 0, fwd, np.where(idx + 1 < n, between, back))

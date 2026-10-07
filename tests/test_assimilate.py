@@ -76,3 +76,55 @@ def test_map_source_names_the_case_sensor_map_takes():
     assert map_source(wide) == "own slope"
     assert map_source(np.full(30, 120.0)) == "pooled slope"  # many pairs, but no spread to fit a slope on
     assert map_source(wide[:4]) == "pooled slope" and map_source(wide[:2]) == "pooled map"
+
+
+def test_strictly_before_leaves_out_the_fingerstick_of_the_same_minute():
+    t_eval = np.array([60.0, 61.0, 120.0])
+    at_or_before = deviation(np.array([60.0]), np.array([20.0]), t_eval)
+    strict = deviation(np.array([60.0]), np.array([20.0]), t_eval, strictly_before=True)
+    assert at_or_before[0] > 0 and strict[0] == 0.0
+    assert np.allclose(at_or_before[1:], strict[1:])
+
+
+def _exact_posterior_mean(t_obs, z, t_eval, cfg):
+    """Brute-force Gaussian conditioning for the same model: the reference the filter and smoother must match."""
+    t0 = t_obs.min()
+
+    def cov(a, b):
+        fast = cfg.fast_sd**2 * np.exp(-np.abs(a[:, None] - b[None, :]) / cfg.tau_min)
+        if not cfg.slow:
+            return fast
+        walk = cfg.slow_sd_per_sqrt_day**2 / 1440.0 * (np.minimum(a[:, None], b[None, :]) - t0)
+        return fast + cfg.slow_sd0**2 + walk
+
+    k = cov(t_obs, t_obs) + cfg.obs_sd**2 * np.eye(t_obs.size)
+    return cov(t_eval, t_obs) @ np.linalg.solve(k, z)
+
+
+def test_in_hindsight_the_estimate_is_the_exact_smoother_everywhere():
+    rng = np.random.default_rng(3)
+    t_obs = np.sort(rng.uniform(0.0, 3000.0, 12))
+    t_obs[5] = t_obs[4]  # two fingersticks at the same minute
+    z = rng.normal(0.0, 30.0, 12)
+    t_eval = np.concatenate(
+        [np.linspace(t_obs[0], 3300.0, 400), t_obs]
+    )  # between, at, and after fingersticks
+    for cfg in (FilterConfig(), FilterConfig(tau_min=240.0), FilterConfig(slow=True)):
+        got = deviation(t_obs, z, t_eval, cfg, smooth=True)
+        assert np.allclose(got, _exact_posterior_mean(t_obs, z, t_eval, cfg), atol=1e-6)
+
+
+def test_the_live_estimate_is_the_exact_filter():
+    rng = np.random.default_rng(4)
+    t_obs = np.sort(rng.uniform(0.0, 3000.0, 10))
+    z = rng.normal(0.0, 30.0, 10)
+    for cfg in (FilterConfig(), FilterConfig(slow=True)):
+        for te in (t_obs[3] + 40.0, t_obs[7] + 5.0, t_obs[-1] + 300.0):
+            seen = t_obs <= te
+            want = _exact_posterior_mean(t_obs[seen], z[seen], np.array([te]), cfg)
+            assert np.allclose(deviation(t_obs, z, np.array([te]), cfg), want, atol=1e-6)
+
+
+def test_no_fingersticks_keeps_the_shape_of_the_times_asked_for():
+    assert deviation(np.array([]), np.array([]), np.zeros((3,))).shape == (3,)
+    assert deviation(np.array([]), np.array([]), np.float64(5.0)).shape == ()
