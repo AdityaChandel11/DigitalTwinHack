@@ -44,6 +44,14 @@ def sensor_map(cbg, cgm, pooled: tuple[float, float]) -> tuple[float, float]:
     return pooled
 
 
+def map_source(cbg) -> str:
+    """Which of the three cases of `sensor_map` a set of calibration fingersticks falls in."""
+    cbg = np.asarray(cbg, dtype=float)
+    if cbg.size >= MIN_OWN_PAIRS and np.ptp(cbg) > MIN_OWN_SPAN:
+        return "own slope"
+    return "pooled slope" if cbg.size >= MIN_OFFSET_PAIRS else "pooled map"
+
+
 def deviation(t_obs, z, t_eval, cfg: FilterConfig = FilterConfig(), smooth: bool = False) -> np.ndarray:
     """Deviation from the daily shape at `t_eval`, from surprises `z` seen at fingerstick times `t_obs`.
 

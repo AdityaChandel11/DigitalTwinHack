@@ -67,3 +67,12 @@ def test_sensor_map_falls_back_to_the_pooled_slope_with_few_pairs():
     few = sensor_map(cbg[:4], cbg[:4] - 12.0, pooled)
     assert few[1] == pooled[1] and abs(np.mean(few[0] + few[1] * cbg[:4] - (cbg[:4] - 12.0))) < 1e-9
     assert sensor_map(cbg[:1], cbg[:1], pooled) == pooled
+
+
+def test_map_source_names_the_case_sensor_map_takes():
+    from chhaya.twin.assimilate import map_source
+
+    wide = np.linspace(80.0, 300.0, 30)
+    assert map_source(wide) == "own slope"
+    assert map_source(np.full(30, 120.0)) == "pooled slope"  # many pairs, but no spread to fit a slope on
+    assert map_source(wide[:4]) == "pooled slope" and map_source(wide[:2]) == "pooled map"

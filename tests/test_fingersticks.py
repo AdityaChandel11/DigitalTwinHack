@@ -2,6 +2,7 @@ import dataclasses
 
 import numpy as np
 import pandas as pd
+import pytest
 from conftest import make_recording
 
 from chhaya.eval import fingersticks as fx
@@ -97,6 +98,8 @@ def test_scoring_covers_the_same_fingersticks_whatever_the_thinning_rule():
 
 def test_the_confirmatory_run_takes_no_filter_overrides_and_only_committed_code():
     fx.check_confirm(None, False, "")
+    with pytest.raises(SystemExit, match="registered"):
+        fx.check_confirm(None, False, "", k=(7.0,))
     for tau, slow, status, why in (
         (60.0, False, "", "defaults"),
         (None, True, "", "defaults"),
@@ -109,3 +112,47 @@ def test_the_confirmatory_run_takes_no_filter_overrides_and_only_committed_code(
             assert why in str(err)
         else:
             raise AssertionError("should have refused")
+
+
+def test_the_sensor_map_never_reads_a_sensor_value_from_after_the_split():
+    rec = _recording(0.0)
+    near = pd.DataFrame(
+        {"t_min": [SPLIT - 5.0], "glucose_mgdl": [150.0]}
+    )  # its nearest reading is at the split
+    sticks = (
+        pd.concat([rec.fingersticks, near], ignore_index=True).sort_values("t_min").reset_index(drop=True)
+    )
+    rec = dataclasses.replace(rec, fingersticks=sticks)
+    cgm = rec.cgm.copy()
+    cgm.loc[cgm["t_min"] >= SPLIT, "glucose_mgdl"] = 300.0
+    a = fx.estimates(rec, 3, FilterConfig(), POOLED)
+    b = fx.estimates(dataclasses.replace(rec, cgm=cgm), 3, FilterConfig(), POOLED)
+    assert (
+        a["map"] == b["map"]
+        and np.allclose(a["live"], b["live"])
+        and np.allclose(a["hindsight"], b["hindsight"])
+    )
+    assert len(fx.calibration_pairs(rec, 3)) == len(
+        fx.calibration_pairs(dataclasses.replace(rec, cgm=cgm), 3)
+    )
+    assert (fx.calibration_pairs(dataclasses.replace(rec, cgm=cgm), 3)["cgm"] < 300.0).all()
+
+
+def test_the_run_says_whose_map_was_used():
+    own = fx.run_recording(_recording(0.0), 3, FilterConfig(), POOLED)
+    assert own["map_source"] == "own slope"
+    few = _recording(0.0)
+    late_only = few.fingersticks[(few.fingersticks["t_min"] >= SPLIT) | (few.fingersticks["t_min"] == 0)]
+    row = fx.run_recording(
+        dataclasses.replace(few, fingersticks=late_only.reset_index(drop=True)), 3, FilterConfig(), POOLED
+    )
+    assert row["map_source"] == "pooled map"  # one calibration pair is too few even for an offset
+    counts = fx.map_sources(pd.DataFrame([own, own, {**row, "rec_id": "another"}]))  # one count per recording
+    assert counts == {"own slope": 1, "pooled map": 1}
+
+
+def test_each_development_design_writes_to_its_own_folder():
+    assert fx.run_name(False, None, False) == "shanghai-dev"
+    assert fx.run_name(False, 60.0, True) == "shanghai-dev-tau60-slow"
+    assert fx.run_name(False, 240.0, False) == "shanghai-dev-tau240"
+    assert fx.run_name(True, None, False) == "shanghai"

@@ -12,6 +12,7 @@ fingersticks the estimate uses must not depend on which hidden sensor timestamps
 from __future__ import annotations
 
 import argparse
+import dataclasses
 import json
 from collections import Counter
 
@@ -26,13 +27,14 @@ from chhaya.eval.gate2 import _clean, _git, _paired_p
 from chhaya.eval.gate3 import refuse_second_run
 from chhaya.eval.metrics import clarke_zones, mard, rmse, within_15_15
 from chhaya.eval.reveal import why_skipped
-from chhaya.twin.assimilate import FilterConfig, deviation, pooled_map, sensor_map
+from chhaya.twin.assimilate import FilterConfig, deviation, map_source, pooled_map, sensor_map
 
 BIN = 30
 MIN_HIDDEN_DAYS = 2.0
 MIN_STICKS_PER_DAY = 1.0
 MIN_HIDDEN_PAIRS = 3
 RULES = ("all", "2/day", "1/day", "every 2nd day")
+REGISTERED_K = (3.0, 5.0)  # primary, then the one that is also reported
 
 
 def thin(t, day, rule: str) -> np.ndarray:
@@ -62,6 +64,28 @@ def why_not(rec: Recording, k_days: float) -> str | None:
     return None
 
 
+def calibration_pairs(rec: Recording, k_days: float) -> pd.DataFrame:
+    """Fingerstick and sensor pairs from the calibration window only.
+
+    The sensor trace is cut at the split first: a fingerstick taken just before the split must not be paired
+    with a hidden reading just after it.
+    """
+    split = k_days * 1440.0
+    return paired(dataclasses.replace(rec, cgm=rec.cgm[rec.cgm["t_min"] < split]), hi=split)
+
+
+def map_sources(rows: pd.DataFrame) -> dict[str, int]:
+    """How many recordings used their own slope, the pooled slope with their own offset, or the pooled map."""
+    return {str(k): int(v) for k, v in rows.drop_duplicates("rec_id")["map_source"].value_counts().items()}
+
+
+def run_name(confirm: bool, tau: float | None, slow: bool) -> str:
+    """Results folder. Each development design keeps its own, so the six compared designs can be regenerated."""
+    if confirm:
+        return "shanghai"
+    return "shanghai-dev" + (f"-tau{tau:g}" if tau is not None else "") + ("-slow" if slow else "")
+
+
 def estimates(
     rec: Recording, k_days: float, cfg: FilterConfig, pooled: tuple[float, float], rule: str = "all"
 ) -> dict:
@@ -79,7 +103,7 @@ def estimates(
         g[cal].mean()
     )
     at = lambda tt: shape[((tod0 + np.asarray(tt)) % 1440).astype(int) // BIN]  # noqa: E731
-    cal_pairs = paired(rec, hi=split)
+    cal_pairs = calibration_pairs(rec, k_days)
     a, b = sensor_map(cal_pairs["cbg"], cal_pairs["cgm"], pooled)
     sticks = rec.fingersticks[rec.fingersticks["t_min"] >= split].sort_values("t_min", kind="stable")
     day = ((tod0 + sticks["t_min"].to_numpy(dtype=float)) // 1440).astype(int)
@@ -90,7 +114,8 @@ def estimates(
     tt = t[~cal]
     control = at(tt)
     return {
-        "t": tt, "control": control, "map": (a, b), "ft": ft, "cbg": cbg, "z": z, "shape_at": at,
+        "t": tt, "control": control, "map": (a, b), "map_source": map_source(cal_pairs["cbg"]),
+        "ft": ft, "cbg": cbg, "z": z, "shape_at": at,
         "live": control + deviation(ft, z, tt, cfg, smooth=False),
         "hindsight": control + deviation(ft, z, tt, cfg, smooth=True),
     }  # fmt: skip
@@ -122,7 +147,7 @@ def run_recording(
     }
     row = {
         "rec_id": rec.rec_id, "patient_id": rec.patient_id, "dev": is_dev_patient(rec.patient_id), "k_days": k_days,
-        "rule": rule, "n_sticks": len(e["ft"]), "n_scored": len(st),
+        "rule": rule, "n_sticks": len(e["ft"]), "n_scored": len(st), "map_source": e["map_source"],
         "hidden_days": float((e["t"].max() - split) / 1440.0),
         "control_rmse": rmse(e["control"], truth), "live_rmse": rmse(e["live"], truth),
         "hindsight_rmse": rmse(e["hindsight"], truth),
@@ -160,10 +185,14 @@ def verdict(s: dict) -> dict:
     }
 
 
-def check_confirm(tau: float | None, slow: bool, src_status: str | None) -> None:
-    """The confirmatory run uses the code defaults, on committed code."""
+def check_confirm(
+    tau: float | None, slow: bool, src_status: str | None, k: tuple[float, ...] = REGISTERED_K
+) -> None:
+    """The confirmatory run uses the code defaults and the registered k, on committed code."""
     if tau is not None or slow:
         raise SystemExit("the confirmatory run uses the code defaults; remove --tau and --slow")
+    if tuple(k) != REGISTERED_K:
+        raise SystemExit("the confirmatory run is registered at k = 3 (primary) and k = 5; remove --k")
     if src_status is None:
         raise SystemExit(
             "git is not available, so the code that scores the test patients cannot be identified"
@@ -175,13 +204,13 @@ def check_confirm(tau: float | None, slow: bool, src_status: str | None) -> None
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--confirm", action="store_true", help="score the test patients; this is done once")
-    ap.add_argument("--k", type=float, nargs="+", default=[3.0, 5.0])
+    ap.add_argument("--k", type=float, nargs="+", default=list(REGISTERED_K))
     ap.add_argument("--tau", type=float, default=None, help="development runs only")
     ap.add_argument("--slow", action="store_true", help="development runs only")
     args = ap.parse_args()
-    out_dir = RESULTS_DIR / "fingersticks" / ("shanghai" if args.confirm else "shanghai-dev")
+    out_dir = RESULTS_DIR / "fingersticks" / run_name(args.confirm, args.tau, args.slow)
     if args.confirm:
-        check_confirm(args.tau, args.slow, _git("status", "--porcelain", "--", "src"))
+        check_confirm(args.tau, args.slow, _git("status", "--porcelain", "--", "src"), tuple(args.k))
         refuse_second_run(out_dir)
     from chhaya.data.shanghai import load_all
 
@@ -193,15 +222,18 @@ def main() -> None:
         cfg = FilterConfig(tau_min=args.tau or cfg.tau_min, slow=args.slow)
     result = {"confirmatory": args.confirm, "filter": cfg._asdict(), "by_k": []}
     for k in args.k:
-        cal = pd.concat([paired(r, hi=k * 1440.0) for r in dev_recs], ignore_index=True)
+        cal = pd.concat([calibration_pairs(r, k) for r in dev_recs], ignore_index=True)
         pooled = pooled_map(cal["cbg"], cal["cgm"])
         skipped = Counter(w for w in (why_not(r, k) for r in scored) if w)
         block = {"k_days": k, "pooled_map": pooled, "skipped": dict(skipped), "rules": {}}
         for rule in RULES:
             rows = [row for row in (run_recording(r, k, cfg, pooled, rule) for r in scored) if row]
             if rows:
-                s = summarise(pd.DataFrame(rows))
+                df = pd.DataFrame(rows)
+                s = summarise(df)
                 block["rules"][rule] = {**s, **(verdict(s) if rule == "all" else {})}
+                block.setdefault("recordings", int(df["rec_id"].nunique()))
+                block.setdefault("map_sources", map_sources(df))
         result["by_k"].append(block)
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "summary.json").write_text(
@@ -227,6 +259,9 @@ def main() -> None:
             pd.DataFrame(block["rules"]).T.round(3).to_markdown(),
         ]
         lines += [
+            "",
+            f"Recordings scored: {block.get('recordings', 0)}. Sensor map used: "
+            + "; ".join(f"{v} ({k})" for k, v in block.get("map_sources", {}).items()),
             "",
             "Recordings outside the cohort: " + "; ".join(f"{v} ({k})" for k, v in block["skipped"].items()),
         ]
