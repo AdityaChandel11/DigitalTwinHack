@@ -5,9 +5,10 @@ Date: 4 Oct 2026. Supersedes the Milestone 3 and 4 sections of the roadmap as wr
 
 ## What we are building, in one sentence
 
-Chhaya is the shadow of one sensor wear: it tells the doctor **how long that sensor report stays true, what
-keeps it true, and when to wear a sensor again**, with an honest band, and it predicts post-meal excursions
-without the sensor.
+Chhaya turns one sensor wear into the patient's shadow: it tells the doctor **how long that sensor report stays
+true, which of its readings not to believe, what keeps it true, and when to wear a sensor again**, with an
+honest band. (Revised 8 Oct: the clause "and it predicts post-meal excursions without the sensor" is removed;
+Gate 3 did not support it. See `docs/decisions/2026-10-08-gate3.md`.)
 
 ## Who it is for, and the one decision
 
@@ -33,7 +34,7 @@ The dashboard simulates options the doctor enters. It never recommends a dose.
 | Personal profile | The patient's daily glucose shape from one sensor wear, with a band | Gate 2; Shanghai fingerstick experiment |
 | Physiology | The E-DES model with seven personal parameters; the record sets its prior, the sensor is the evidence | Gate 2 (adds about 2 % for five days when meals are logged) |
 | Upkeep | Fingersticks nudge the estimate and feed the staleness alarm | Experiment F and the staleness test |
-| Foresight | Probability of a post-meal excursion, at meal time, without the sensor | Experiment M |
+| Foresight | Withdrawn 8 Oct. Experiment M (post-meal excursion at meal time, sensor off) missed M1, M2 and M3; the dashboard shows the measured arm accuracies and risk bands only | Gate 3 record |
 | What-if | Swap or resize a meal on the virtual patient; labelled simulation, associational | Per-meal predicted against observed rise (r = 0.42 pooled) |
 
 Cut because we cannot defend them: low-glucose alarms, dose or drug what-ifs, walk what-ifs, time-in-range

@@ -42,8 +42,9 @@ Last updated: 8 Oct 2026.
 - **8 Oct: Gate 3 did not pass; failures 1 and 3 of the table below are triggered.** Responses as written
   there: the result is published with its bars; the stream switch shows the measured numbers; the dashboard
   shows risk bands, not probabilities (M3 missed); there is no meal alert. The record-prior result is the
-  second fusion test. **Open for the team lead:** the headline clause "predicts post-meal excursions without
-  the sensor" is not supported as written (the sensor week's own excursion rate does as well as any model).
+  second fusion test. **Headline revised the same day:** the clause "predicts post-meal excursions without
+  the sensor" is removed (the sensor week's own excursion rate does as well as any model) and "which of its
+  readings not to believe" is added (the label check).
 - 8 Oct: a dated note to Amendment 3 fixes how section M was coded (plain share for M2, and seven smaller
   readings of the text), written before the test run. `--confirm` on Gate 3 is pinned to the registered
   settings and refuses a second run.

@@ -1,7 +1,8 @@
 # Chhaya
 
-**A Type 2 diabetes digital twin that is the shadow of one sensor wear: how long that sensor report stays true,
-what keeps it true, and when to wear a sensor again.**
+**A Type 2 diabetes digital twin that turns one sensor wear into the patient's shadow: how long that report stays
+true, which of its readings not to believe, what keeps it true, and when to wear a sensor again. Every number is
+scored once on held-out patients against a bar written beforehand, and the misses are published too.**
 
 Submission to the Happiest Health Digital Twin Challenge 2026.
 
@@ -18,9 +19,11 @@ A continuous glucose sensor in India costs about Rs 4,200 for 14 days, so almost
 continuously. Chhaya (Hindi for "shadow") wears the sensor once: a physiological glucose-insulin model is
 personalised to the patient from their health record (the prior) and the sensor fortnight (the evidence).
 After the sensor is removed, the twin keeps an estimate with an uncertainty band, measures what a meal log
-and fingersticks add to it, predicts post-meal excursions without the sensor, and says when the old sensor
-report should no longer be trusted. It does not replace a sensor and it raises no low-glucose alarm: in our
-check, most sensor lows in the open data were not confirmed by a fingerstick.
+and fingersticks add to it, and says when the old sensor report should no longer be trusted. It does not
+replace a sensor and it raises no low-glucose alarm: in our check, 8 of 64 sensor readings below 70 mg/dL in
+the open data were confirmed by a fingerstick taken at the same moment, while 732 of 809 readings above 180
+were. We also tested whether fusing the record, the sensor week and fingersticks predicts a post-meal
+excursion better than the sensor week alone; it does not (`docs/decisions/2026-10-08-gate3.md`).
 
 The headline experiment is hide-and-reveal: calibrate on the first k days, hide the rest, estimate the
 hidden days without the sensor, then lay the real trace on top.

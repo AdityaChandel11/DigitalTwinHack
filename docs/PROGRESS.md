@@ -29,10 +29,10 @@ When the next task names a different model, Claude stops and waits for the switc
 
 ## Decision waiting on the team lead
 
-**The headline's second clause.** CLAUDE.md and the roadmap say Chhaya "predicts post-meal excursions without
-the sensor". Gate 3 does not support that as written: the sensor week's own excursion rate does as well as
-every model we built without the sensor. Reword or drop the clause, then update CLAUDE.md. What the data
-does support is stated in `docs/decisions/2026-10-08-gate3.md`, "Consequences for the product".
+None open on the headline. On 8 Oct the team lead asked for a stronger headline; the clause "predicts post-meal
+excursions without the sensor" was removed (Gate 3 did not support it) and "which of its readings not to
+believe" was added (the label check supports it). Changed in CLAUDE.md, README.md and the M3 design. Revisit
+the wording after Plan 3's fingerstick and record-prior results: "what keeps it true" must survive them.
 
 ## What was done, in order (details in docs/decisions/)
 
@@ -51,9 +51,10 @@ does support is stated in `docs/decisions/2026-10-08-gate3.md`, "Consequences fo
 
 ## What Chhaya is now (the headline)
 
-The shadow of one sensor wear: **how long that sensor report stays true, what keeps it true, and when to wear a
-sensor again**, with an honest band. It does not replace a sensor and has no low-glucose alarm and no meal
-alert. The clause about predicting post-meal excursions is under review (see above).
+One sensor wear turned into the patient's shadow: **how long that sensor report stays true, which of its
+readings not to believe, what keeps it true, and when to wear a sensor again**, with an honest band. Every
+number is scored once on held-out patients against a bar written beforehand, misses published. It does not
+replace a sensor and has no low-glucose alarm and no meal alert.
 
 ## The claims to quote (and nothing bigger)
 

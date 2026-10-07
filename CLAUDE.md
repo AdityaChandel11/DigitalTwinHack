@@ -1,10 +1,12 @@
 # Chhaya — project guide for Claude
 
 Chhaya (Hindi for "shadow") is our entry to the Happiest Health **Digital Twin Challenge 2026**: a Type 2 diabetes
-digital twin that is the shadow of one sensor wear. It tells the doctor **how long that sensor report stays true,
-what keeps it true (meal log, fingersticks), and when to wear a sensor again**, with an honest band, and it
-predicts post-meal excursions without the sensor. It does not claim to replace a sensor (headline revised 4 Oct;
-see `docs/decisions/2026-10-04-plan-revision.md`).
+digital twin that turns one sensor wear into the patient's shadow. It tells the doctor **how long that sensor report
+stays true, which of its readings not to believe, what keeps it true (meal log, fingersticks), and when to wear a
+sensor again**, with an honest band, and every claim is scored once on held-out patients against a bar written
+beforehand, misses published. It does not claim to replace a sensor, to alarm on lows, or to predict post-meal
+excursions better than the sensor week already does (headline revised 4 Oct and again 8 Oct after Gate 3; see
+`docs/decisions/2026-10-04-plan-revision.md` and `docs/decisions/2026-10-08-gate3.md`).
 
 - **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
 - **Where we are and what is next: [docs/PROGRESS.md](docs/PROGRESS.md). Read it first.**
@@ -180,7 +182,7 @@ Not yet verified:
 - How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
-- Everything Amendment 3 registers: post-meal excursion prediction (Gate 3), the record as prior, fingersticks.
+- Everything Amendment 3 registers except Gate 3 (run 8 Oct, missed its bars): the record as prior, fingersticks.
 - What the RSSDI glucose-monitoring consensus says about intermittent sensor use; read it before citing it.
 
 Known model gaps: no counter-regulation (deep hypoglycaemia dynamics are not trustworthy), no drug
