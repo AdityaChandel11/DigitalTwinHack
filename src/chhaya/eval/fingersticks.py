@@ -41,7 +41,7 @@ MIN_STICKS_PER_DAY = 1.0
 MIN_HIDDEN_PAIRS = 3
 RULES = ("all", "2/day", "1/day", "every 2nd day")
 REGISTERED_K = (3.0, 5.0)  # primary, then the one that is also reported
-REGISTERED_FILTER = (60.0, False)  # tau_min and slow, as frozen in docs/decisions before the test run
+REGISTERED_FILTER = (120.0, False)  # tau_min and slow, frozen in docs/decisions/2026-10-08-fingersticks.md
 N_BOOT = 2000
 ESTIMATORS = ("live", "live_same_minute", "hindsight")
 

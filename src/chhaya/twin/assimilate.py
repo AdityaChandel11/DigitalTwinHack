@@ -13,7 +13,7 @@ import numpy as np
 
 
 class FilterConfig(NamedTuple):
-    tau_min: float = 60.0  # how long a deviation persists; chosen on development patients, 8 Oct
+    tau_min: float = 120.0  # how long a deviation persists; chosen on development patients, 8 Oct
     fast_sd: float = 25.0  # stationary spread of the fading deviation, mg/dL
     obs_sd: float = 15.0  # fingerstick against sensor disagreement after the map, mg/dL
     slow: bool = False  # also track a slow level (drift over days)

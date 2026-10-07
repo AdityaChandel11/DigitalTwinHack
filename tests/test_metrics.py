@@ -63,9 +63,10 @@ def test_clarke_zones_on_clear_cases():
 def test_clarke_zones_on_the_less_visited_regions_and_the_15_15_edge():
     from chhaya.eval.metrics import clarke_zones, within_15_15
 
-    one = lambda pred, ref: max(
-        clarke_zones(np.array([pred]), np.array([ref])).items(), key=lambda kv: kv[1]
-    )[0]  # noqa: E731
+    def one(pred: float, ref: float) -> str:
+        zones = clarke_zones(np.array([pred]), np.array([ref]))
+        return max(zones, key=zones.get)
+
     assert one(20.0, 150.0) == "C"  # lower C: a normal-high value read as low, inviting overcorrection upward
     assert one(100.0, 50.0) == "D"  # left D: a real low read as normal
     assert one(80.0, 65.0) == "D"  # the strip between 58.3 and 70

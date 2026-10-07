@@ -303,3 +303,74 @@ not the registered quantity and it changes how patients rank. Resolved as follow
 **Guards added to the command.** `--confirm` runs only at k = 3 and 2,000 resamples, on committed code, and
 refuses to run when a confirmatory result is already on disk. The primary result is written before any
 secondary analysis starts.
+
+### Note to Amendment 3, section F, 8 Oct 2026 (before the fingerstick test run)
+
+Written after the code for section F existed, after two independent reviews of it and after the six declared
+designs were run on development patients, and before any Shanghai test patient was scored for this
+experiment. No bar changes. One declared choice is made differently from the plan of 7 Oct, and it is stated
+here so that it cannot be mistaken for a choice made after the result.
+
+**What had been seen when this was written.** Development patients only (24 patients, 25 recordings at
+k = 3; control RMSE 36.0 mg/dL), all six designs, twice: before and after the review fixes below. After the
+fixes, at k = 3 with all fingersticks, live estimate against control:
+
+| Design | Median live RMSE | Median paired difference (95 % interval) | Patients better | p |
+|---|---|---|---|---|
+| tau 60 | 35.55 | -0.94 (-2.44 to -0.45) | 79 % | 0.00001 |
+| tau 120 | 35.25 | -1.19 (-2.66 to -0.37) | 75 % | 0.0008 |
+| tau 240 | 34.89 | -0.44 (-2.39 to 0.24) | 62 % | 0.03 |
+| tau 60, slow level | 34.15 | -0.94 (-2.05 to 0.85) | 58 % | 0.13 |
+| tau 120, slow level | 34.32 | -0.85 (-2.03 to 1.44) | 58 % | 0.17 |
+| tau 240, slow level | 34.49 | +0.39 (-2.05 to 2.41) | 46 % | 0.43 |
+
+**The design choice, and how it departs from the plan.** Section F says the choice among the six is made on
+development patients "by the live estimate's RMSE". The plan of 7 Oct turned that into: lowest cohort-median
+live RMSE at k = 3, a tie within 0.1 mg/dL going to the simpler design. That rule selects **tau 60 with the
+slow level**. It is not used. The design frozen for the test run is **tau 120 without the slow level**, chosen
+by the **median paired difference from the control** at k = 3 (the quantity F1 tests), with the same tie rule;
+the runner-up is 0.25 mg/dL behind.
+
+- Why: every design is scored against the same control, so the cohort median of the RMSE differs between
+  designs only through which patient happens to sit in the middle. The paired difference removes that. The
+  design the plan's rule selects is better than the control in 58 % of development patients, with an interval
+  that crosses zero.
+- This was decided by the team lead after seeing the table above. It is a choice on development data, made
+  before the test run; it is still a departure from the written rule, and a reader should weigh F1 knowing it.
+- Before the review fixes the same criterion selected tau 60 without the slow level (-1.47 against -1.44 for
+  tau 120). That table included the same-minute reading described next.
+- tau 120 without the slow level was also the code default from the exploration of 4 Oct.
+
+**"Only fingersticks already taken" is read strictly.** The live estimate at a minute uses fingersticks
+stamped before that minute. In the Shanghai sheets every hidden fingerstick shares its row with a sensor
+reading, and an estimate allowed to read it is scored there on fingerstick-against-sensor agreement. On
+development patients that reading accounted for a third to a half of the tau 60 effect. **F1 is judged on the
+strict estimate.** The at-or-before variant is reported beside it, with no bar.
+
+**Other readings of the text, fixed as coded.**
+
+- Cohort: the Gate 2 coverage rule also applies (it removed no development recording). "At least k + 2
+  days" is measured to the last sensor reading. The cohort is the same under every thinning rule; with no
+  fingerstick kept, the estimate is the control.
+- The sensor-scale line is the patient's own when there are at least 8 calibration pairs spanning more than
+  40 mg/dL (slope kept within 0.6 to 1.2), the development patients' pooled slope with the patient's own
+  offset with 3 to 7 pairs, and the pooled line otherwise. Calibration pairs use sensor readings from before
+  the split only. The run reports how many recordings fell in each case.
+- Thinning: "two a day" keeps the first and the last fingerstick of the clock day; "one every second day"
+  counts clock days from the day the sensor came off and keeps that day.
+- Accuracy against a hidden fingerstick: the fingerstick is predicted from fingersticks stamped before it;
+  the control and the live estimate are mapped back to the fingerstick's scale; the real sensor is scored as
+  read. All five Clarke zones are kept.
+- The in-hindsight estimate is the exact smoothed mean of the filter's model.
+- F1 and F2 are judged at k = 3 only; k = 5 is reported without a verdict. A 95 % percentile interval for
+  each median paired difference is reported (2,000 resamples of patients, seed `config.SEED`).
+
+**Outputs deferred, declared.** Section F also lists error in mean glucose, time above 180 and time in range
+against the stale report and the plain fingerstick average, and error by day since the sensor came off. They
+are not in this run. They will be computed by a second guarded command (Plan 4) with `estimates` and
+`FilterConfig` as committed for this run. They are descriptive and carry no bar; that second pass reads the
+same test patients after F1 is known, and is declared here for that reason.
+
+**Guards on the command.** `--confirm` runs only with the frozen filter, at k = 3 and 5, on committed code, and
+refuses when a confirmatory result is already on disk. The primary result (k = 3, all fingersticks) is written
+before anything else is computed.
