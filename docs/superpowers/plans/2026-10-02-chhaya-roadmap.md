@@ -1,184 +1,161 @@
 # Chhaya roadmap — 2 Oct to 20 Oct 2026
 
-The concept was chosen in [docs/WAR_ROOM.md](../../WAR_ROOM.md). This document is the build order: five
-milestones, two go/no-go gates, and what each milestone must put on screen. Each milestone gets its own
-task-level plan; the first one is written:
-[2026-10-02-chhaya-plan-1-core-twin.md](2026-10-02-chhaya-plan-1-core-twin.md).
+The concept was chosen in [docs/WAR_ROOM.md](../../WAR_ROOM.md) and revised on 4 Oct
+([plan revision](../../decisions/2026-10-04-plan-revision.md), [design](../specs/2026-10-04-chhaya-m3-design.md)).
+This document is the build order: five milestones, what each must put on screen, and the guards against the
+ways this can fail. Pass bars live in [docs/PREREGISTRATION.md](../../PREREGISTRATION.md) (Amendment 3 for
+everything from Milestone 3 on).
 
-Milestones 3–5 are specified here by deliverable, interface and acceptance test, not by code. That is
-deliberate: Gate 2 decides which headline we are building, and writing task-level code for the losing
-branch would be wasted. Their plans are written the day each one starts.
+Task-level plans:
+
+- Plan 1, core twin (done): [2026-10-02-chhaya-plan-1-core-twin.md](2026-10-02-chhaya-plan-1-core-twin.md)
+- Plan 2, label check and the excursion experiment: [2026-10-07-chhaya-plan-2-excursions.md](2026-10-07-chhaya-plan-2-excursions.md)
+- Plan 3, record prior and fingersticks: [2026-10-07-chhaya-plan-3-prior-and-fingersticks.md](2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
+- Plan 4 (expiry, band, staleness) and the Milestone 4 and 5 plans are written the day each starts.
 
 ## Status (update this table whenever a milestone step finishes)
 
-Last updated: 3 Oct 2026.
+Last updated: 7 Oct 2026.
 
 | # | Milestone | Status | Evidence |
 |---|---|---|---|
 | M1 | Data truth | **Done.** Gate 1 is GO | `docs/decisions/2026-10-03-gate1.md` |
-| M2 | Core twin and the reveal | **Done, with a corrected re-run pending** (break test found input defects; Amendment 2). Gate 2 is GO on the 20 held-out test patients (22.5 vs 24.2 mg/dL at k = 5, better in 90 %, p = 3.1e-05) | `docs/decisions/2026-10-03-gate2-final.md`, `results/gate2/cgmacros-test-registered/` |
-| M3 | Accuracy and fusion | Not started. **Primary comparator is now the physiology-free control** (Amendment 2); do not start until the corrected re-run is reported. Reordered below by which limit each item reduces | |
-| M4 | Product | Not started. Live mode added (4.8) | |
+| M2 | Core twin and the reveal | **Done and closed.** Gate 2 is GO on the corrected run: 21.9 vs 23.3 mg/dL against the average day at k = 5 (p = 4e-05), 0.35 mg/dL against the physiology-free control (p = 0.04) | `docs/decisions/2026-10-04-gate2-corrected.md`, `results/gate2/cgmacros-test/` |
+| M3 | Evidence: label check, excursions, fusion, fingersticks | **Planned, not started.** Bars committed in Amendment 3. Start at Plan 2, Task 1 | |
+| M4 | Product | Not started | |
 | M5 | Ship | Not started | |
-
-Plan 1 (Tasks 1 to 10) is complete and merged to `main`. Milestone 3 needs its own task-level plan.
 
 ### Decisions and changes since this roadmap was written
 
-- Project renamed to **Chhaya**. Team SynapseX, IIT Kanpur, solo. `docs/WAR_ROOM.md` is public.
-- CGMacros meal inputs were wrong in two ways (unit of `Amount Consumed` in 8 files; meal clock an hour
-  early in 4). Both are fixed by general rules.
-- The estimate is now an **equal-weight blend of the physiology and the patient's own average day**. The
-  physiology knows what was eaten today; the average day knows the habits the meal log misses. Chosen on
-  development patients. This replaces the planned habit model.
-- Tried on development patients and **not adopted**: robust calibration loss, a looser basal-glucose prior,
-  a time-of-day residual profile. None helped.
-- After the first Gate 2 run, every claim is made on the **20 held-out test patients only** (Amendment 1).
-- 65 of 109 Shanghai recordings are on insulin, so insulin as a model input is promoted (3.3).
-- CGMacros lows are mostly sensor artefacts, so any overnight-low work uses Shanghai only.
-
-### The two limits, and what we do about each
-
-- **Sensor noise cannot be removed.** Two sensors on the same person disagree by about 39 mg/dL RMSE. We
-  report it as the floor, and report the clinical summaries (time in range, GMI) where the twin is strong.
-- **Unlogged meals and day-to-day drift can be reduced.** That is the purpose of M3, in the order below.
+- Project renamed to **Chhaya**. Team SynapseX, IIT Kanpur, solo.
+- The estimate is an equal-weight blend of the physiology and the patient's own average day (chosen on
+  development patients). After the first Gate 2 run every claim is made on held-out test patients only.
+- **4 Oct: the headline changed.** Chhaya is "the shadow of one sensor wear: how long that report stays true,
+  what keeps it true, and when to wear a sensor again". It does not claim to replace a sensor.
+- **4 Oct: the overnight-low module is withdrawn**, as a headline and as a fallback. In Shanghai, 12 % of sensor
+  readings below 70 mg/dL were confirmed by a fingerstick taken at the same moment.
+- **4 Oct: the adverse event is a post-meal excursion** above 180 mg/dL, predicted at meal time on Shanghai.
+- **4 Oct: cut** the Shanghai food table, insulin kinetics, oral drug terms, the cross-patient corrector,
+  meal-shape tuning, walk what-ifs, time-in-range claims and the "inside sensor noise" line.
+- Three working days were lost between 4 and 7 Oct. The calendar below is rebuilt from 7 Oct and the cut order
+  is stricter.
 
 ## What wins this
 
-Judging is on "technical implementation and real-world healthcare impact". No rubric is published. The
-strongest public entry (AMRIT_VIT) already has a hybrid ODE twin, real-data validation, Indian dishes,
-a triage view and 75 tests. Matching that is the floor. We win on three things nobody else can show:
+Judging is on "technical implementation and real-world healthcare impact". No rubric is published. The best
+public entries already have real data, ablations with intervals, conformal bands, React front ends and CI, so
+those are the floor. What only we can show:
 
-1. **The reveal.** A real patient's hidden glucose, the twin's sensor-less estimate with its band, then
-   the real trace laid on top. Every other entry takes CGM as input and cannot run this at all.
-2. **Fusion that is measured.** The record is the prior, the sensor is the evidence, and we report what
-   the record is worth in sensor-days saved. AMRIT_VIT's own ablation found the record adds almost
-   nothing to their spike model.
-3. **Honesty that is checkable.** Pass bars committed before the run, patient-wise splits, a second
-   physical sensor as the noise floor, failures counted, every figure regenerated by one command.
+1. **The reveal, with an honest band.** A real patient's hidden glucose, the shadow's estimate, then the real
+   trace on top. No other entry runs without the sensor.
+2. **Evidence that was allowed to fail.** Bars committed before each run; a fallback we withdrew because our own
+   check showed its labels were wrong; nulls published next to passes. No other public entry pre-registers.
+3. **Labels checked against fingersticks.** We can say which sensor events are real and refuse to alarm on the
+   ones that are not.
+4. **Fusion that is measured.** A stream switch on the dashboard that shows the measured accuracy of record
+   only, sensor history only, fingersticks only and fused, on held-out patients.
 
-## Where we stand on accuracy
+There is no large effect hidden in the open data: meal logs add about 2 %, fingersticks 3 to 8 % in an
+exploratory look. We win on measuring the truth better and packaging it better, not on a big number.
 
-Nobody has published sensor-off accuracy for medicated T2D on open data, so there is no number to beat —
-only context:
+## Calendar (rebuilt 7 Oct)
 
-| Reference | Setting | Reported |
+| Date | Work | Ends with |
 |---|---|---|
-| Virtual CGM, bidirectional LSTM (Sci Rep 2025) | 171 **healthy** adults, no CGM at inference | RMSE 19.5 mg/dL, MAPE 12.3 %, r = 0.43 |
-| January AI white paper | wellness users, sensor-free prediction | 13.0 % error (as quoted in the War Room doc) |
-| AMRIT_VIT (competitor) | **sensor-on**, 60-min forecast, real Shanghai T2D | MAE 18.7 mg/dL (persistence 19.9) |
-| Two physical sensors on one arm and abdomen | CGMacros Libre vs Dexcom | measured in Milestone 2 — the floor |
+| Wed 7 Oct | Plan 2, Tasks 1 to 3: label check, record fields, meal table | Label check in `results/audit/` |
+| Thu 8 Oct | Plan 2, Tasks 4 and 5: excursion experiment, development run, then the one confirmatory run | **Gate 3** decision record |
+| Fri 9 Oct | Plan 3: record prior runs (in the background) and the fingerstick experiment | Decision records for P and F |
+| Sat 10 Oct | Plan 4: expiry and case series, band recalibration; staleness only if both are done by 16:00 | **Science stops at midnight** |
+| Sun 11 – Wed 14 Oct | **M4 Product**: artifact build, three screens, record JSON, demo patient. Clinician review 13 or 14 Oct | Dashboard runs offline |
+| Thu 15 Oct | **Feature freeze.** Safety review of every screen, clean-clone test on a second folder | Freeze tag |
+| Fri 16 Oct | README, architecture PDF, model card, TRIPOD+AI checklist, video script | |
+| Sat 17 – Sun 18 Oct | Deck; record and upload the video | **Internal deadline, 18 Oct** |
+| Mon 19 Oct | Slack: re-record, fix links, second clean-clone | |
+| Tue 20 Oct, 12:00 | Submit | 7 hours before the portal closes |
 
-Healthy glucose is flat and easy; T2D swings more. Our bars are therefore relative (beat the patient's
-own average day, time-in-range within 10 points), fixed in `docs/PREREGISTRATION.md`.
+## M3 — Evidence (7 to 10 Oct)
 
-## Calendar
+Definitions and bars: Amendment 3. Cut from the bottom; the first four are not cuttable.
 
-| Dates | Milestone | Ends with |
-|---|---|---|
-| Fri 2 – Sun 4 Oct | **M1 Data truth** (Plan 1, Tasks 1–9) | **Gate 1** |
-| Sat 3 Oct (planned 5 – 8 Oct) | **M2 Core twin and the reveal** (Plan 1, Task 10 + iteration on dev patients) | **Gate 2** |
-| Sun 4 – Mon 12 Oct | **M3 Accuracy and fusion** | Results tables final |
-| Sun 11 – Thu 15 Oct | **M4 Product** (overlaps M3; different person) | **Feature freeze, 15 Oct** |
-| Fri 16 – Mon 19 Oct | **M5 Ship** | Clean-clone run passes |
-| Tue 20 Oct, 12:00 | Submit | 7 hours of slack |
-
-## M1 — Data truth (Plan 1, Tasks 1–9)
-
-Scaffold, the `Recording` contract, the twin core, calibration, metrics, the reveal experiment, both
-loaders, the audit. Tasks 1–6 need no data and run on synthetic recordings; start both downloads first.
-
-**Gate 1 (Sun 4 Oct).** `python -m chhaya.data.audit` must show at least **60 Shanghai recordings of
-3+ days with 2+ logged meals a day**.
-
-- GO: Shanghai is the fingerstick, drug and record cohort in M3.
-- NO-GO: CGMacros becomes the only cohort. We lose real fingersticks; M3.3 then uses fingersticks
-  sampled from the Dexcom trace with glucometer noise, and says so.
-
-The audit also answers, with counts: how many real overnight lows exist (decides whether the Night Watch
-fallback is even available), how many recordings are on insulin, and how many distinct diet strings need
-mapping.
-
-## M2 — Core twin and the reveal (Plan 1, Task 10)
-
-First real-data run of the hide-and-reveal on CGMacros at k = 3, 5, 7 days.
-
-**Gate 2 (Thu 8 Oct).** The verdict printed by `python -m chhaya.eval.gate2` — P1 (beats the average
-day, p < 0.05) and P2 (time-in-range within 10 points).
-
-- The first run is untuned and counts every patient.
-- If it misses, Mon–Thu is for structural fixes chosen on **dev patients only**: slow-down coefficients,
-  the Michaelis constant, interstitial lag, a robust loss for unlogged snacks, a learned population
-  prior. The claim is then made on test patients only.
-- **NO-GO on Thursday** switches the headline to Night Watch (overnight-low risk from the same engine,
-  where the record changes the answer). Milestones 3–5 keep their shape; the reveal becomes a secondary
-  figure reported as-is.
-
-## M3 — Accuracy and fusion (4–12 Oct)
-
-Each item is one task with a test cycle, chosen on development patients and claimed on test patients.
-Ordered by expected gain against the reducible limit; cut from the bottom.
-
-| # | Deliverable | Limit it reduces | Interface | Accepted when |
+| # | Deliverable | Plan | Accepted when | If time runs out |
 |---|---|---|---|---|
-| 3.1 | **Shanghai food table.** Parse the one-food-per-line English diet text into foods and grams; map each food to carb, protein, fat, fibre | Unlocks every Shanghai result (real fingersticks, drugs, labs) | `data/reference/shanghai_foods.csv` (`food, carb_g_per_100g, protein, fat, fibre, source`); `shanghai.attach_macros(recs, table)` | At least 90 % of meal rows get macros; 50 random rows hand-checked; unmapped foods listed, not guessed |
-| 3.2 | **Fingerstick assimilation.** Ensemble Kalman update of state and parameters at each fingerstick | Unlogged meals and drift: the biggest lever | `twin/assimilate.py::run_sensor_off(fit, inp, sticks_t, sticks_mgdl) -> Ensemble` | Error-vs-fingersticks curve from 0 through 2 to 3 a week to 4 a day; the band tightens at each stick; no future stick changes an earlier estimate (tested) |
-| 3.3 | **Insulin as a model input.** Parse dose text; pen injections enter plasma insulin through an absorption curve per insulin type. Pump and IV recordings are excluded and counted | 65 of 109 Shanghai recordings currently unusable | `model.Inputs.insulin_rate`; `shanghai.parse_doses` | A pre-registration amendment is committed first; sign and size tests against literature; reveal re-run on the insulin cohort |
-| 3.4 | **Cross-patient corrector.** Gradient-boosted model on the blend's residual from time since meal, macros, heart rate, time of day; no CGM; trained leave-patient-out | Systematic errors the physiology repeats across people | `twin/corrector.py::fit_corrector`, `apply_corrector` | Ablation ladder: mean, average day, physiology, blend, blend + corrector. Kept only if it helps on test patients |
-| 3.5 | **Record to prior, learned.** Ridge map from record fields to fitted parameters on development patients, including the lab-versus-Libre offset (about 20 %) | Sensor days needed to calibrate | `priors.fit_record_map`, `record_prior(static, record_map)` | The sensor-days-saved curve: RMSE vs k with and without the record, on test patients, reported whichever way it comes out |
-| 3.6 | **Meal timing and absorption shape.** The physiology peaks 15 to 30 minutes late and its tail is too long | Timing error after every meal | constants in `model.Fixed`, chosen on development patients | Meal-aligned response on development patients peaks within 15 minutes of the observed peak |
-| 3.7 | **Adverse-event prediction** (the brief's required output). From the ensemble: P(above 180 mg/dL within 2 h of a meal) and P(below 70 overnight), sensor-off and sensor-on | — | `eval/events.py::event_probs`, `score_events` | AUROC, PR-AUC, Brier, reliability diagram, median lead time; a sensor-on LightGBM forecaster and persistence as the baseline table |
-| 3.8 | **Band recalibration.** One conformal factor from development patients | Band is slightly wide (86 to 92 % for a nominal 80 %) | `eval/calibrate.py::conformal_scale` | 80 % band covers 75 to 85 % on test patients |
-| 3.9 | **Staleness detector.** CUSUM on standardised fingerstick surprises; names the parameter that moved | Twin going out of date silently | `twin/staleness.py::staleness(surprises) -> StaleFlag` | Fires on a synthetic 30 % drop in insulin sensitivity within 6 fingersticks; false-alarm rate reported; Shanghai repeat-recording patients as the one real test |
-| 3.10 | **Oral drug terms.** Sulfonylurea (secretion, lengthened by low eGFR), metformin (hepatic output) | What-if realism | `model.Inputs.drug_secretion`, `drug_hepatic` | Sign and size tests; labelled as simulation |
+| 3.1 | **Label check.** Sensor against fingerstick agreement as a repo command | Plan 2, Task 1 | `results/audit/label_validity.json` regenerates; the below-70 and above-180 figures appear in the README | Not cuttable |
+| 3.2 | **Excursion experiment (Gate 3).** Post-meal above 180 at meal time; record, sensor history, fingersticks, fused, sensor on, personal rate | Plan 2, Tasks 2 to 5 | Confirmatory run done once; M1 and M2 reported with intervals; leakage test green | Not cuttable: it is the brief's adverse event and its fusion ablation |
+| 3.3 | **Record as prior.** Reveal at k = 1, 3, 5, 7 with and without the record | Plan 3, Tasks 1 and 2 | P1 reported; the sensor-days-saved table exists | Not cuttable: two background runs |
+| 3.4 | **Fingersticks.** Live and in-hindsight estimates, thinning, accuracy against the fingerstick beside a real sensor's | Plan 3, Tasks 3 to 6 | Filter design frozen on development patients before the test run; F1 and F2 reported | Not cuttable; the thinning table can be dropped |
+| 3.5 | **Expiry.** Error by day since the sensor; the eight re-recorded patients as a case series | Plan 4 | One figure and one table, labelled case series | Keep the case series, drop the by-day figure |
+| 3.6 | **Band recalibration** | Plan 4 | Test coverage and patients within 70 to 90 % reported | Cut second; state "calibrated on average, not per patient" |
+| 3.7 | **Staleness alarm on real drift** | Plan 4 | AUROC with interval on test recordings | Cut first; the dashboard then shows days since the sensor only, and the README says the alarm is untested |
 
-Already done, earlier than planned: the habit model (the average-day half of the blend carries habitual
-meals) and the two-sensor noise floor (reported by every reveal run).
+Every experiment gets a decision record (`docs/decisions/<date>-<topic>.md`) and a row in the Status table in the
+same commit as its results.
 
-## M4 — Product (11–15 Oct)
+## M4 — Product (11 to 15 Oct)
+
+One decision on screen: is the last sensor report still valid, where in the day is the problem, should the
+patient wear a sensor again.
 
 | # | Deliverable | Accepted when |
 |---|---|---|
-| 4.1 | **Artifact build.** `python -m chhaya.build` writes one Parquet/JSON bundle per patient to `artifacts/`: fit, ensemble quantiles, reveal arrays, events, what-ifs | The dashboard starts with the network unplugged and never calls `fit_twin` |
-| 4.2 | **Dashboard, page 1 — Patient twin.** 90-day reconstructed daily profile with band, estimated GMI beside last lab HbA1c, hour-of-day risk strip, "calibrated N days ago / confidence" badge, and the **reveal toggle** | A clinician reads the state of the patient in under 10 seconds; the estimate is never shown without band and the word "estimated" |
-| 4.3 | **Page 2 — What-if.** Swap or resize a meal (Indian dishes with macro values and their source), add a walk, re-time a dose; before and after curves with bands | Every option is a simulation of something the doctor entered; no recommendation text |
-| 4.4 | **Page 3 — Clinic list.** All patients sorted by tonight's low risk, then time above range, with a one-line reason and the staleness flag | — |
-| 4.5 | **Page 4 — Evidence.** The results tables and figures from M2–M3, limitations, data provenance | Every figure matches `results/` byte for byte |
-| 4.6 | **The record as FHIR-shaped JSON** (Patient, Condition, Observation with LOINC codes, MedicationStatement) for each patient, plus one fully synthetic demo patient, "Mrs. R." | Labelled synthetic on screen. A genetic-marker field exists in the schema, is synthetic, and is switched off in every validation run |
-| 4.7 | **Figures.** Reveal (hero), error vs calibration days, error vs fingersticks, sensor-days saved, two-sensor noise floor, reliability diagram | Each regenerated by one script from `results/` |
-| 4.8 | **Live mode.** The judge edits a meal, adds a walk, or enters a fingerstick and the twin recomputes on screen; a synthetic patient runs forward in time past the end of her sensor, with the band widening until a fingerstick tightens it | Each interaction responds in under 2 seconds from pre-computed parameters; the synthetic patient is labelled synthetic; nothing is re-fitted live |
+| 4.1 | **Artifact build.** `python -m chhaya.build` writes one JSON bundle per patient to `artifacts/`: profile, band, reveal arrays, excursion probabilities per arm, days since sensor, what-ifs | The dashboard starts with the network unplugged and never fits a model |
+| 4.2 | **Patient screen.** Last sensor report beside today's shadow with its band; reveal switch; days since the sensor; where-in-the-day strip; stream switch that changes the probability and shows that arm's measured accuracy | A clinician reads the state of the patient in under 10 seconds; no estimate without band and the word "estimated"; a sensor low reads "sensor low, unconfirmed" |
+| 4.3 | **Clinic list.** Patients ordered by days since sensor and share of meals predicted above 180, one-line reason | |
+| 4.4 | **Evidence screen.** Every results table with its bar, the label check, limits, provenance | Every figure matches `results/` |
+| 4.5 | **Meal what-if** on the virtual patient | Labelled "simulation"; no dose, drug or walk options; no recommendation text |
+| 4.6 | **Record as FHIR-shaped JSON** and the synthetic demo patient "Mrs. R." | Labelled synthetic on screen; the genetic-marker field is synthetic and off in every experiment |
+| 4.7 | **Figures**: reveal (hero), stream ablation, record-prior curve, fingerstick accuracy beside a sensor, label check, expiry | Each regenerated by one script from `results/` |
+| 4.8 | **Front end.** One page served by one local command. Decide on 13 Oct at 18:00: if the custom page does not show the patient screen end to end, switch to Streamlit that evening | One command starts it; a recorded walkthrough is in the repo |
 
-Streamlit and Plotly, one process. No separate API server and no Docker: fewer things to break in a
-recorded demo, and Docker is not installed. Run `healthcare-reviewer` on every page before freeze.
+Limits banner on every screen. Run `healthcare-reviewer` on every screen on 15 Oct.
 
-## M5 — Ship (16–20 Oct)
+## M5 — Ship (16 to 20 Oct)
 
 | Item | Note |
 |---|---|
-| README | Team and college, title, problem and use case, stack and model details, results, limitations, licences, how to run. First screen is the reveal figure |
+| README | First screen: the reveal, four numbers with their bars, what Chhaya is not. Then team, problem, method, results, limits, licences, how to run. Developer guide removed |
+| One command | `python -m chhaya.reproduce` regenerates every number quoted anywhere, and CI runs the fast tests |
+| Model card and TRIPOD+AI checklist | In `docs/`; every item answered or marked not applicable with a reason |
+| Data licences | `DATA_LICENSES.md`: ShanghaiT2DM CC BY 4.0, CGMacros CC BY-NC-SA 4.0 (non-commercial), nothing redistributed |
 | Architecture diagram | PDF, from the module map in CLAUDE.md |
-| Deck | PDF/PPT via `pptx-deck:create-deck`, following the War Room demo narrative |
-| Video | **At least 20 minutes.** Script on 16 Oct, record on 17–18 Oct, unlisted YouTube link in the README. Budget two full days — it is the largest single cost in this milestone |
-| Licence | MIT for code; dataset licences stated; nothing redistributed |
-| Clean-clone test | Fresh clone on a second machine: `uv sync`, download, audit, gate2 smoke run, dashboard starts |
-| Submission | Repo public; folder named `Team Name_College Name`; team leader's details and the link on the portal by 12:00 on 20 Oct |
+| Deck | PDF, following the video script |
+| Video | At least 20 minutes. Script 16 Oct, record 17 and 18 Oct, unlisted link in the README |
+| War Room doc | Competitor names removed if the team lead confirms |
+| AI assistance | One honest sentence in the README; the team lead can explain every equation live |
+| Clean-clone test | Fresh clone in a second folder: sync, download, audit, smoke runs, dashboard starts |
+| Submission | Repo public; folder `SynapseX_IITK`; by 12:00 on 20 Oct |
 
-## Risks
+## Twelve ways this fails, and the guard against each
 
-| Risk | Signal | Response |
-|---|---|---|
-| Sensor-off accuracy is no better than the average day | Gate 2 fails after dev-only iteration | Night Watch headline; publish the reveal result as measured |
-| Shanghai diet text cannot be mapped reliably | Fewer than 90 % of rows mapped in 3.1 | CGMacros is primary for meal-driven results; Shanghai is used for fingersticks and the record |
-| Unlogged snacks dominate the error | Large positive residuals with no meal nearby | Robust loss; habit model fills gaps; state it as a logging-quality limit |
-| Shanghai patients are inpatients on insulin | Audit shows most recordings on insulin | Exclude pump and IV; model basal and bolus in 3.7 or restrict to non-insulin patients and say so |
-| Feature sprawl eats the video | Anything in M3 still open on 13 Oct | Cut from the bottom of the M3 table. Freeze on 15 Oct is not negotiable |
-| It reads as "another glucose twin" | First screen of README shows a forecast, not the reveal | The reveal is the first image and the first minute everywhere |
+| # | Failure | Guard, already in the plan | Trigger | Response when triggered |
+|---|---|---|---|---|
+| 1 | A confirmatory run loses its bar | Bars are in Amendment 3; the README template has a "missed its bar" row from the start | Any bar fails | Publish it with the bar. The headline does not depend on any single bar passing |
+| 2 | The excursion event is too common or too rare to discriminate | 250 mg/dL threshold and "meals that start at or below 180" are pre-declared secondary analyses | Development-run event rate above 85 % or below 10 % | Report the primary as registered and lead with the pre-declared secondary on screen, saying so |
+| 3 | Fusion does not beat the best single stream | The stream switch shows measured numbers either way | M1 fails | Say "fusion did not beat the best single stream, by this much"; keep the record-prior result as the second fusion test |
+| 4 | Leakage in a feature builder | A test per builder: change hidden sensor readings, assert non-sensor features are unchanged; `--confirm` required to touch test patients | Leakage test red | Fix before any run; a run made with leakage is void and recorded as void |
+| 5 | A clinician says the lows are not real | The label check is a repo command and a front-page finding; no low alarm exists | — | Already answered by our own data |
+| 6 | Dataset licence challenged | Shanghai CC BY 4.0 read on Figshare; CGMacros non-commercial stated; nothing redistributed; `DATA_LICENSES.md` | Organiser objects to non-commercial data | Shanghai-only results stand alone (excursions, fingersticks, label check) |
+| 7 | Science eats the product days | Science stops at midnight on 10 Oct; cut order is fixed (3.7, 3.6, 3.5) | Anything in 3.1 to 3.4 open on 10 Oct at 16:00 | Drop 3.5 to 3.7 that hour; unfinished items become a "not done" line in the README |
+| 8 | The custom front end is not ready | Streamlit fallback with a fixed decision time | 13 Oct, 18:00 | Switch that evening; no further front-end work beyond the three screens |
+| 9 | The video takes two days longer than planned | Script on 16 Oct; two recording days; 19 Oct is slack; the recorded walkthrough doubles as demo footage | Not uploaded by 18 Oct, 22:00 | Use 19 Oct; cut the deck to the video's slides |
+| 10 | The reveal looks like an average day on screen | The hero figure shows the band and its measured coverage, the average day in grey and the hidden trace; the claim beside it is the measured one | Hero figure review on 14 Oct | Lead with coverage ("83 % of hidden readings inside the 80 % band") and the expiry curve, not with closeness |
+| 11 | Clean clone fails on another machine | Clean-clone test on 15 Oct and again on 19 Oct; pinned `uv.lock`; download script with checksums | Either test fails | Fix that day; nothing else ships first |
+| 12 | A judge reads a small number before the framing | README first screen states what the shadow is and is not before any number; each number sits beside its comparator and bar | README review on 16 Oct | Rewrite the first screen until a cold reader can say what Chhaya does not claim |
 
-## How the work splits across people
+Standing risks with no full guard: no Indian data; supervised hospital care in Shanghai; hidden windows of at
+most about ten days; a solo builder. Each is stated in the README limits section.
 
-The contract between tracks is `Recording` (data → model) and the artifact bundle (model → dashboard).
+## Tasks only the team lead can do
 
-- **Track A — model and evaluation:** Plan 1 Tasks 2–6 and 10, then 3.2–3.6, 3.9.
-- **Track B — data:** Plan 1 Tasks 7–9, then 3.1, 3.7, 4.6.
-- **Track C — product:** from Gate 2 onward, 4.1–4.5 against synthetic artifacts first.
-- **Track D — story:** README skeleton, deck, video script from 12 Oct; figures in 4.7.
+| When | Task |
+|---|---|
+| Now | Send the organisers three questions: is there a rubric with weights; is the 20-minute video a minimum, and is Phase 2 a live Q&A; is open data under a non-commercial licence acceptable when fetched by script |
+| Now | Read the RSSDI glucose-monitoring consensus before it is cited: https://journals.sagepub.com/doi/10.1177/30502071241293567 |
+| By 12 Oct | Arrange one clinician to look at the dashboard on 13 or 14 Oct; ask permission to quote them |
+| 16 Oct | Decide whether competitor names stay in the public War Room doc |
+| 17 – 18 Oct | Record the video; be able to explain the model, the split and every bar without notes |
+
+## How the work splits across sessions
+
+The contract between tracks is `Recording` (data to model) and the artifact bundle (model to dashboard).
+Science sessions execute Plans 2 to 4 task by task with tests first. Product sessions start from synthetic
+artifacts on 11 Oct so they do not wait on late science.

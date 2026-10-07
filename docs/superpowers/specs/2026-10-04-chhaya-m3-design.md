@@ -53,8 +53,9 @@ Definitions and bars are in Amendment 3; this is the build view.
 | B | Band recalibration | CGMacros | `chhaya.eval.calibrate` | `results/calibrate/` |
 | S | Staleness alarm on real drift | Shanghai | `chhaya.twin.staleness` | `results/staleness/` |
 
-Order: L, M, P, F are Plan 2 (`docs/superpowers/plans/2026-10-04-chhaya-plan-2-m3-experiments.md`). E, B and S
-are Plan 3, written the day Plan 2 finishes. Cut from the end if 10 Oct arrives first: S, then B, then E.
+Order: L and M are Plan 2 (`docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md`); P and F are Plan 3
+(`docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md`); E, B and S are Plan 4, written
+the day Plan 3 finishes. Cut from the end if 10 Oct arrives first: S, then B, then E.
 
 ### Rules every experiment module follows
 

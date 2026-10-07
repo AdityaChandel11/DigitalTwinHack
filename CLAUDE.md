@@ -1,15 +1,20 @@
 # Chhaya — project guide for Claude
 
 Chhaya (Hindi for "shadow") is our entry to the Happiest Health **Digital Twin Challenge 2026**: a Type 2 diabetes
-digital twin that keeps estimating a patient's glucose **after the CGM sensor comes off**, from logged
-meals, a fitness band and occasional fingersticks, and tells the doctor when it has gone stale.
+digital twin that is the shadow of one sensor wear. It tells the doctor **how long that sensor report stays true,
+what keeps it true (meal log, fingersticks), and when to wear a sensor again**, with an honest band, and it
+predicts post-meal excursions without the sensor. It does not claim to replace a sensor (headline revised 4 Oct;
+see `docs/decisions/2026-10-04-plan-revision.md`).
 
 - **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
 - **Where we are and what is next: [docs/PROGRESS.md](docs/PROGRESS.md). Read it first.**
-- **Submission closes 20 Oct 2026, 19:00 IST.** We submit by 12:00 that day. Feature freeze is 15 Oct.
+- **Submission closes 20 Oct 2026, 19:00 IST.** We submit by 12:00 that day. Feature freeze is 15 Oct. Science
+  stops at midnight on 10 Oct.
 - **Why this concept, and what everyone else is building:** [docs/WAR_ROOM.md](docs/WAR_ROOM.md) (read Phase 6).
 - **What to build, in order, with gates:** [docs/superpowers/plans/2026-10-02-chhaya-roadmap.md](docs/superpowers/plans/2026-10-02-chhaya-roadmap.md).
-- **Task-level plan currently being executed:** [docs/superpowers/plans/2026-10-02-chhaya-plan-1-core-twin.md](docs/superpowers/plans/2026-10-02-chhaya-plan-1-core-twin.md).
+- **Design from Milestone 3 on:** [docs/superpowers/specs/2026-10-04-chhaya-m3-design.md](docs/superpowers/specs/2026-10-04-chhaya-m3-design.md).
+- **Task-level plans being executed:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md),
+  then [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md).
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## Working agreement (solo project: Claude is the teammate)
@@ -38,7 +43,9 @@ These are what separate us from entries that validate a model on their own simul
 silently is worse than a bad number.
 
 1. **No leakage.** In the hidden window the twin may use meals, band data and (later) fingersticks — never
-   CGM. Every evaluation asserts that scored timestamps lie after the calibration split.
+   CGM. Every evaluation asserts that scored timestamps lie after the calibration split. Every feature builder
+   has a test that changes the hidden sensor readings and asserts the non-sensor features do not move.
+   Test patients are scored once per experiment, by a command that needs `--confirm`.
 2. **Split by patient, never by row.** `chhaya.config.is_dev_patient()` is the only split. Population
    settings (priors, slow-down coefficients, band recalibration, any learned corrector) are tuned on dev
    patients and reported on test patients.
@@ -145,22 +152,36 @@ loader; its diet text is English, one food per line; 65 of 109 Shanghai recordin
 files vary (11 of 45 lack METs; the loader derives them from activity calories); its healthy group spends
 22.8 % of time below 70 mg/dL, so its lows are mostly sensor artefacts. Gate 1 is GO.
 
-**Gate 2 is GO as registered** (3 Oct 2026, `docs/decisions/2026-10-03-gate2-final.md`), **and the break test
-(`docs/decisions/2026-10-03-break-test.md`) says what that means**: on 20 held-out CGMacros patients, 5 days after the
-sensor comes off, Chhaya is 1.5 mg/dL (7 %) closer to the hidden sensor than the patient's average day (22.5 vs
-24.2, p = 3e-05) but only about 0.4 mg/dL closer than a physiology-free control (p = 0.03). The gain comes from the
+**Gate 2 is GO and closed** (corrected run, 4 Oct 2026, `docs/decisions/2026-10-04-gate2-corrected.md`; what it
+means is in `docs/decisions/2026-10-03-break-test.md`): on 19 held-out CGMacros patients, 5 days after the sensor
+comes off, Chhaya is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's average day (21.9 vs 23.3,
+p = 4e-05) but only about 0.35 mg/dL closer than a physiology-free control (p = 0.04). The gain comes from the
 meal log, lasts about five days, and activity adds nothing measurable. Time-in-range is not a strength. Quote only
-the sentence in the "claim to quote" section of the break-test record. A corrected re-run (Amendment 2) is pending.
+the sentence in the "claim to quote" section of the corrected-run record.
 
-Not yet verified — treat as hypotheses until `chhaya.data.audit` has run on the real files:
+Found on 4 Oct 2026 by scratch scripts (`scripts/research_2026-10-04/`), **not quotable until Plan 2, Task 1
+regenerates them** (`docs/decisions/2026-10-04-plan-revision.md`):
+
+- **Sensor lows in Shanghai are mostly not capillary lows**: of 64 sensor readings below 70 mg/dL with a
+  fingerstick within 10 minutes, 8 (12 %) were confirmed; at night 0 of 9. Sensor highs are real (above 180: 90 %
+  confirmed). So there is **no low-glucose model and no overnight-low fallback**; a sensor low on screen reads
+  "sensor low, unconfirmed".
+- Shanghai is supervised care (pumps in 35 of 109 recordings, IV insulin in 6, seven fixed fingerstick times a
+  day). The paper never says inpatient or outpatient. The sensor reads 8 to 35 mg/dL below the fingerstick,
+  more at high glucose.
+- The sheet's "Hypoglycemia (yes/no)" column is not defined as prior history: never a predictor.
+- Exploratory, development patients only: fingersticks add little reading by reading; the patient's own sensor
+  profile beats fingersticks alone; against the fingerstick the shadow is about 20 % off where a real sensor is
+  about 13 %.
+- ShanghaiT2DM is CC BY 4.0 on its Figshare page (read 4 Oct).
+
+Not yet verified:
 
 - How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
-- Whether the Shanghai recordings are inpatient (2.4 fingersticks a day suggests so); exogenous insulin is not
-  modelled yet.
-- The corrected Gate 2 re-run after Amendment 2 (sensor limits, METs, meal fixes).
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
-- Sensor-off accuracy on medicated or insulin-treated T2D, and with fingersticks. Milestone 3 measures it.
+- Everything Amendment 3 registers: post-meal excursion prediction (Gate 3), the record as prior, fingersticks.
+- What the RSSDI glucose-monitoring consensus says about intermittent sensor use; read it before citing it.
 
 Known model gaps: no counter-regulation (deep hypoglycaemia dynamics are not trustworthy), no drug
 kinetics, no exogenous insulin, one absorption curve per meal.
