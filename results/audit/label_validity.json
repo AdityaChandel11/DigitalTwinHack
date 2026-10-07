@@ -1,0 +1,83 @@
+{
+  "n_pairs": 3268,
+  "n_patients": 88,
+  "mard_percent": 12.848084442259717,
+  "bias": -11.992472460220318,
+  "thresholds": {
+    "below_54": {
+      "sensor_flags": 19,
+      "fingerstick_flags": 3,
+      "both": 2,
+      "ppv": 0.10526315789473684,
+      "sensitivity": 0.6666666666666666
+    },
+    "below_70": {
+      "sensor_flags": 64,
+      "fingerstick_flags": 18,
+      "both": 8,
+      "ppv": 0.125,
+      "sensitivity": 0.4444444444444444
+    },
+    "above_180": {
+      "sensor_flags": 809,
+      "fingerstick_flags": 1017,
+      "both": 732,
+      "ppv": 0.9048207663782447,
+      "sensitivity": 0.7197640117994101
+    },
+    "above_250": {
+      "sensor_flags": 202,
+      "fingerstick_flags": 313,
+      "both": 175,
+      "ppv": 0.8663366336633663,
+      "sensitivity": 0.5591054313099042
+    }
+  },
+  "by_fingerstick_range": [
+    {
+      "fingerstick_from": 0.0,
+      "fingerstick_to": 70.0,
+      "n": 18,
+      "bias": 9.9,
+      "mard_percent": 21.028305115637416
+    },
+    {
+      "fingerstick_from": 70.0,
+      "fingerstick_to": 100.0,
+      "n": 303,
+      "bias": 1.3782178217821788,
+      "mard_percent": 14.174454889289652
+    },
+    {
+      "fingerstick_from": 100.0,
+      "fingerstick_to": 180.0,
+      "n": 1919,
+      "bias": -7.696195935383013,
+      "mard_percent": 12.466664052019253
+    },
+    {
+      "fingerstick_from": 180.0,
+      "fingerstick_to": 250.0,
+      "n": 715,
+      "bias": -19.80755244755245,
+      "mard_percent": 12.740524102206574
+    },
+    {
+      "fingerstick_from": 250.0,
+      "fingerstick_to": 600.0,
+      "n": 313,
+      "bias": -34.683067092651754,
+      "mard_percent": 13.677851708836647
+    }
+  ],
+  "sensor_below_70": {
+    "n": 64,
+    "patients": 21,
+    "fingerstick_median": 94.5,
+    "confirmed_share": 0.125,
+    "flat_trace_n": 38,
+    "flat_trace_confirmed_share": 0.13157894736842105,
+    "night_n": 9,
+    "night_confirmed_share": 0.0
+  }
+}

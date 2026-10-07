@@ -110,6 +110,11 @@ def main(out_dir: Path = RESULTS_DIR / "audit") -> None:
             foods = shanghai.food_strings(recs)
             write_food_strings(foods, out_dir / "shanghai_food_strings.csv")
             summary[name]["distinct_diet_entries"] = int(len(foods))
+            from chhaya.data.pairs import label_validity
+
+            (out_dir / "label_validity.json").write_text(
+                json.dumps(label_validity(recs), indent=2), encoding="utf-8"
+            )
     (out_dir / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 
