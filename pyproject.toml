@@ -39,6 +39,8 @@ pythonpath = ["tests"]
 [tool.ruff]
 line-length = 110
 target-version = "py312"
+# archived exactly as run on 4 Oct 2026; see the README in that folder
+extend-exclude = ["scripts/research_2026-10-04"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]

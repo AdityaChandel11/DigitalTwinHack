@@ -1,0 +1,20 @@
+{
+  "commit": "985b2ad",
+  "uncommitted_changes_in_src": false,
+  "dataset": "cgmacros",
+  "split": "test",
+  "limit": null,
+  "k": [
+    3,
+    5,
+    7
+  ],
+  "members": 200,
+  "seed": 20261002,
+  "config": {
+    "meal_clock": true,
+    "blend": 0.5,
+    "loss": "linear",
+    "f_scale": 1.0
+  }
+}
