@@ -17,13 +17,15 @@ When the next task names a different model, Claude stops and waits for the switc
 
 ## Start here
 
-1. `docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md`, **Task 2**. Task 1 is done and
-   both Gate 2 sweeps of step 5 have finished: `results/gate2/cgmacros-test-ksweep-prior-record/` and
-   `...-prior-population/` (committed as run; not yet compared). Do steps 1 to 4 (`fusion.py`, tests first),
-   skip step 5, then step 6.
-   Model: Sonnet 5.5, medium, for the code; Opus 5.5, high, to read P1 and write its record.
-2. Plan 3, Tasks 3 to 6 (fingersticks). Sonnet 5.5, medium, for Tasks 3 to 5; Opus 5.5, high, for Task 6
-   (choosing the filter, the reviews, the one confirmatory run).
+1. **Plan 3, Task 2, step 6** (Opus 5.5, high). `fusion.py` is built and tested, and both Gate 2 sweeps are
+   committed. Run
+   `python -m chhaya.eval.fusion --record results/gate2/cgmacros-test-ksweep-prior-record --population results/gate2/cgmacros-test-ksweep-prior-population`,
+   read P1, write `docs/decisions/<date>-record-prior.md`, update the roadmap Status and this file.
+2. **Plan 3, Task 6** (Opus 5.5, high). Tasks 3 to 5 are built and tested (`metrics.within_15_15`,
+   `clarke_zones`, `twin/assimilate.py`, `eval/fingersticks.py`). Remaining: the six declared filter designs on
+   development patients, freeze the choice, `mle-reviewer` and `python-reviewer`, the one `--confirm` run,
+   the decision record. Before quoting any Clarke zone figure, check three plotted points of `clarke_zones`
+   against the published grid figure (not yet done), and say in the README that the Clarke grid is used.
 3. Plan 4 (expiry, band, staleness) is written the day Plan 3 finishes. Cut order if 10 Oct arrives first:
    staleness, band, by-day expiry.
 
