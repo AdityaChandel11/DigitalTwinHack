@@ -17,19 +17,27 @@ When the next task names a different model, Claude stops and waits for the switc
 
 ## Start here
 
-1. **Push when ready.** All of 8 Oct is merged into `main` locally (fast-forward, 202 tests pass there) and not
-   pushed: `origin/main` is still at `985b2ad`. The once-only guards (`results/gate3/shanghai/`,
-   `results/fingersticks/shanghai/`) are now on main, so `--confirm` is refused from any checkout of it.
+1. **GitHub.** `main` is on GitHub at `bdafe69` (all of 8 Oct up to the progress map). Plan 4 lives on the branch
+   `claude/plan-4-expiry-band-staleness-048969`, pushed 8 Oct, not yet merged into `main`. Merge it after Task 9.
+   Never run any `--confirm` command from a checkout that lacks the results folders of earlier passes: the
+   once-only guards read the folder in the checkout you run from.
 2. **Plan 4, what is left**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
-   Tasks 0 to 7 were done on 8 Oct: the registration note, five modules, two independent reviews, and the three
-   passes over held-out patients with one record each (`docs/decisions/2026-10-08-fingersticks-report.md`,
-   `-expiry.md`, `-band.md`).
-   - **Task 8, the staleness alarm**, is the only science left. The checkpoint (three records committed by
-     16:00 on 10 Oct) is met two days early, so it can be built: Sonnet 5.5, medium to build; Opus 5.5, high to
-     review; Opus 5.5, max to read. On development recordings it was no better than the plain fingerstick
-     average (AUROC 0.74 against 0.73), so expect a result of that kind. If it is cut instead, Task 9 has the
-     sentence.
-   - **Task 9** closes Milestone 3 (architecture and commands in CLAUDE.md, README command list, limits).
+   Tasks 0 to 7 were done on 8 Oct (registration note, five modules, two independent reviews, the three passes
+   over held-out patients with one record each: `docs/decisions/2026-10-08-fingersticks-report.md`, `-expiry.md`,
+   `-band.md`). **Task 8, the staleness alarm, is built, reviewed and run on development recordings (commits
+   `9ed5af7`, `7adc06c`, `25a6921`); only its test pass is left.**
+   - **Task 8, step 7 (Opus 5.5, max): the one pass over test recordings, then its record.** Before it:
+     `git status --porcelain -- src` prints nothing and `results/staleness/shanghai/` does not exist. Run
+     `python -m chhaya.eval.staleness --confirm` once from the worktree (use the main checkout's interpreter and
+     `CHHAYA_DATA_DIR`, see the memory note on running from a worktree). Write
+     `docs/decisions/2026-10-08-staleness.md` (template: the other three Plan 4 records and the plan's Task 8,
+     step 7), run `healthcare-reviewer` on it (the alarm is a prompt to consider a new sensor wear, never a
+     finding about glucose or advice on treatment), update this file, the roadmap row 3.7 and CLAUDE.md, commit.
+     What the development look shows (in-sample, not quotable): AUROC 0.72 for the alarm, 0.76 for the same sum
+     over the first two days, 0.73 for the plain fingerstick average, 0.56 for the fingerstick count alone;
+     8 of 25 recordings drifted, 7 downward. Expect "not shown to be better than the plain average", and say so.
+   - Then **Task 9** (Sonnet 5.5, medium) closes Milestone 3 (architecture and commands in CLAUDE.md, README
+     command list, limits); its staleness line is the "not done" sentence only if the pass is cut.
    - **What the three results change for the product** (Milestone 4; wording reviewed by
      `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the report
      since the sensor is an estimated, "sensor-equivalent" mean and share of fingerstick readings above 180,
@@ -156,7 +164,7 @@ estimate is still about 22 % off the next fingerstick where a real sensor is abo
 
 ## Waiting on the team lead
 
-- Push `main` to GitHub (the repo is public at submission; nothing from 8 Oct is on GitHub yet).
+- Merge the Plan 4 branch into `main` and push, after Task 9 (the repo is public at submission).
 - Three questions to the organisers (rubric; video minimum and live Q&A; non-commercial data).
 - Read the RSSDI glucose-monitoring consensus before it is cited.
 - One clinician to look at the dashboard on 13 or 14 Oct.
