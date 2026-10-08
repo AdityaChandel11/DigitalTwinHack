@@ -130,9 +130,9 @@
   }
 
   /* ---------- charts ---------- */
-  function frame(box, { clock0 = 0, g0 = 40, g1 = 300, yTicks, xStep, m }) {
+  function frame(box, { clock0 = 0, t0 = 0, t1 = 1440, g0 = 40, g1 = 300, yTicks, xStep, m }) {
     const Wd = box.clientWidth, H = box.clientHeight;
-    const X = t => m.l + (t / 1440) * (Wd - m.l - m.r);
+    const X = t => m.l + ((t - t0) / (t1 - t0)) * (Wd - m.l - m.r);
     const Y = g => m.t + (1 - (clamp(g, g0, g1) - g0) / (g1 - g0)) * (H - m.t - m.b);
     const svg = S('svg', { viewBox: `0 0 ${Wd} ${H}`, width: Wd, height: H, 'aria-hidden': 'true' });
     svg.append(S('rect', { x: m.l, y: Y(180), width: Wd - m.l - m.r, height: Y(70) - Y(180), class: 'c-range' }));
@@ -141,8 +141,8 @@
       svg.append(S('text', { x: m.l - 8, y: Y(g) + 4, 'text-anchor': 'end', class: 'c-tick' }, g));
     }
     // ticks at clock hours, wherever in the day this 24-hour block starts
-    for (let c = Math.ceil(clock0 / xStep) * xStep; c <= clock0 + 1440; c += xStep) {
-      const t = c - clock0, anchor = t < 30 ? 'start' : t > 1410 ? 'end' : 'middle';
+    for (let c = Math.ceil((clock0 + t0) / xStep) * xStep; c <= clock0 + t1; c += xStep) {
+      const t = c - clock0, anchor = t - t0 < 30 ? 'start' : t1 - t < 30 ? 'end' : 'middle';
       svg.append(S('text', { x: X(t), y: H - m.b + 16, 'text-anchor': anchor, class: 'c-tick' }, hhmm(c)));
     }
     box.querySelector('svg')?.remove();
@@ -320,6 +320,21 @@
     for (const z of ZONES) svg.append(S('path', { d: mid, class: `c-truth t-${z}`, 'clip-path': `url(#az-${z})` }));
   }
 
+  function drawWhatIf() {
+    const box = $('#wi-chart'), p = state.patients[state.current];
+    if (!box || !box.clientWidth || !p.whatif) return;
+    const wi = p.whatif, last = p.days[p.days.length - 1], amount = String($('#wi-range').value);
+    const as = wi.series[String(wi.meal.carbs)] || wi.series[amount], sim = wi.series[amount];
+    const f = frame(box, { clock0: last.clock0, t0: wi.t[0], t1: wi.t[wi.t.length - 1], g1: 300, yTicks: [70, 180, 300], xStep: 120, m: { l: 30, r: 8, t: 8, b: 24 } });
+    const { svg, X, Y } = f;
+    svg.append(S('path', { d: band(wi.t, sim.lo, sim.hi, X, Y), class: 'c-band' }));
+    svg.append(S('path', { d: line(wi.t, as.est, X, Y), class: 'c-avg', style: 'stroke-width:1.5' }));
+    svg.append(S('path', { d: line(wi.t, sim.est, X, Y), class: 'c-sim' }));
+    const peak = a => a.est.reduce((b, v, i) => (v > a.est[b] ? i : b), 0), ps = peak(sim), pa = peak(as);
+    $('#wi-out').textContent = `${amount} g`;
+    $('#wi-text').innerHTML = `Simulated peak <b>${Math.round(sim.est[ps])} mg/dL</b> (80 % band ${Math.round(sim.lo[ps])} to ${Math.round(sim.hi[ps])}) at ${hhmm(last.clock0 + wi.t[ps])}, dashed. As logged with ${wi.meal.carbs} g, the estimated peak is ${Math.round(as.est[pa])} mg/dL, thin line.`;
+  }
+
   /* ---------- patient ---------- */
   async function openPatient(id) {
     if (!state.patients[id]) state.patients[id] = await json(`data/patients/${encodeURIComponent(id)}.json`);
@@ -452,6 +467,10 @@
               <div><dt>Readings below 70</dt><dd>${p.wear.below_70} %<small>${W.sensor_low}</small></dd></div></dl></section>
           <section class="panel"><div class="panel-head"><h2>Treatment since the sensor</h2><span class="eyebrow">from the record · ${txWord}</span></div>
             <p class="small">${tx.state === 'changed' ? W.treatment_changed : tx.state === 'none' ? 'No change of agent, insulin or pump is recorded. In a case series the sensor mean had moved by more than 20 mg/dL in 4 of 5 repeat wears after a change (3 of 4 patients) and in 0 of 4 without. No recorded change does not mean the report still holds.' : 'The dataset does not record treatment for this patient. Not recorded is not the same as unchanged.'}</p></section>
+          ${p.whatif ? `<section class="panel"><div class="panel-head"><h2>Meal what-if</h2><span class="chip chip-sim">simulation</span><span class="eyebrow">${p.whatif.meal.label}, last day</span></div>
+            <div class="wi-ctl"><label for="wi-range">Carbohydrate</label><input type="range" id="wi-range" min="${p.whatif.amounts[0]}" max="${p.whatif.amounts[p.whatif.amounts.length - 1]}" step="10" value="${p.whatif.amounts.includes(Math.round(p.whatif.meal.carbs / 10) * 10) ? Math.round(p.whatif.meal.carbs / 10) * 10 : 60}"><output id="wi-out" for="wi-range"></output></div>
+            <div class="mini" id="wi-chart" role="img" aria-label="Estimated glucose after the meal as logged, and simulated with the chosen amount of carbohydrate."></div>
+            <p class="small" id="wi-text"></p><p class="small">${W.what_if}</p></section>` : ''}
           <section class="panel"><div class="panel-head"><h2>What keeps the report true</h2></div>
             <ul class="keep"><li><b>The meal log</b><p class="small">${W.keep_meals}</p></li><li><b>Fingersticks</b><p class="small">${W.keep_fingersticks}</p></li></ul></section>
           <section class="panel" id="record-panel"><div class="panel-head"><h2>Record</h2>${p.synthetic ? '<span class="chip chip-syn">Synthetic</span>' : ''}<span class="eyebrow">FHIR-shaped JSON</span></div>
@@ -462,6 +481,7 @@
     wirePatient();
     drawHero();
     drawProfile();
+    if (p.whatif) { $('#wi-range').oninput = drawWhatIf; drawWhatIf(); }
     drawTable();
   }
 
@@ -496,7 +516,7 @@
       applyCross();
     };
     let raf = 0;
-    new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { if (!$('#view-patient').hidden) { drawHero(); drawProfile(); } }); }).observe(box);
+    new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(() => { if (!$('#view-patient').hidden) { drawHero(); drawProfile(); drawWhatIf(); } }); }).observe(box);
   }
 
   /* ---------- evidence ---------- */

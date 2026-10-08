@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "bundle": "demo",
- "commit": "7b9fe68",
+ "commit": "73ebac1",
  "wording": {
   "limits": "Research prototype; evaluated on a Chinese cohort in supervised care and a US free-living cohort; estimates, not measurements; not for dosing.",
   "sensor_low": "sensor low, unconfirmed",

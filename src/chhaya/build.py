@@ -28,6 +28,7 @@ from chhaya.product.evidence import evidence
 from chhaya.product.names import pseudonyms
 from chhaya.product.patient import SCHEMA, patient_bundle, stick_estimate, twin_estimate
 from chhaya.product.synthetic import START, WEAR_DAYS, mrs_r
+from chhaya.product.whatif import meal_whatif
 
 DEMO_DIR = Path(__file__).parent / "dashboard" / "demo"
 LOCAL_DIR = REPO_ROOT / "artifacts"
@@ -80,6 +81,7 @@ def demo_patient(th: dict[float, float]) -> dict:
         synthetic=True,
     )  # fmt: skip
     b["dates"] = {"start": START.strftime("%Y-%m-%d"), "wear_days": int(WEAR_DAYS)}
+    b["whatif"] = meal_whatif(rec, out, WEAR_DAYS)
     return b
 
 
