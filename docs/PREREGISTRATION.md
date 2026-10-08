@@ -551,3 +551,30 @@ an estimate, a shape, a spread or a fitted value. They found defects, each fixed
   reported is of patients further from the report than inside the wear.
 
 Nothing else in the note changes.
+
+**Added 8 Oct 2026, after two independent reviews of the code for the staleness alarm and before any test
+recording was scored by it.** The reviews found no path by which a hidden sensor reading reaches a surprise, a
+score or a threshold, and none by which a test recording reaches a threshold. What changed (commit `7adc06c`),
+each with a test that failed first:
+
+- *The threshold.* The code took a score one rank too high whenever the number of development recordings
+  without drift is a multiple of ten. It is now the rule as written above. With 17 such recordings at k = 3
+  and 15 at k = 5 the thresholds are the same as before.
+- *Added beside the alarm, with no bar:* the same cumulative sum over the fingersticks of the first two days
+  after the sensor only, with a threshold set the same way; and an interval for the AUROC of the number of
+  fingersticks. The reason: a sum over more fingersticks can only grow and hidden windows differ in length,
+  while every recording in the cohort has two hidden days. The registered alarm stays the sum over the whole
+  hidden window; the two-day sum is reported, not primary. It was added after the development figures below
+  had been seen.
+- *Guards.* A pass over test recordings refuses a patient who is also among the development recordings,
+  refuses filter constants other than the registered ones (time constant 120 minutes, no slow level,
+  fingerstick spread 15 mg/dL), and is closed by any file of an earlier pass, not by the summary alone. A
+  calibration length at which no development recording is without drift keeps its row, with the reason.
+- *What had been seen on development recordings* (thresholds set on the same recordings, so in-sample). At
+  k = 3: 25 recordings, 8 drifted (7 downward), thresholds from 17. AUROC of the alarm 0.721 (interval 0.45 to
+  0.95); it was 0.735 before the fix to the spread recorded in the addendum above. First two days only: 0.757
+  (0.47 to 0.97). Plain fingerstick average: 0.728 (0.44 to 0.96). Number of fingersticks alone: 0.559 (0.32
+  to 0.78). The three caught 4, 5 and 3 of the 8 drifted recordings, each with 1 false alarm in 17. At k = 5
+  (21 recordings, 6 drifted): 0.744, 0.667 and 0.789.
+
+Nothing else in the note changes.

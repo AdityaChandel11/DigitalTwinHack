@@ -1,0 +1,152 @@
+{
+  "confirmatory": false,
+  "false_alarm_target": 0.1,
+  "by_k": [
+    {
+      "k_days": 3.0,
+      "primary": true,
+      "n_recordings": 25,
+      "n_patients": 24,
+      "n_drifted": 8,
+      "n_drifted_down": 7,
+      "median_abs_drift": 14.403276930409902,
+      "median_fingersticks": 32.0,
+      "auroc": {
+        "n_resamples_used": 1999,
+        "score": {
+          "auroc": 0.7205882352941176,
+          "lo": 0.4456384727804166,
+          "hi": 0.9527147709840017
+        },
+        "early": {
+          "auroc": 0.7573529411764706,
+          "lo": 0.47138655462184875,
+          "hi": 0.96875
+        },
+        "plain": {
+          "auroc": 0.7279411764705883,
+          "lo": 0.4375,
+          "hi": 0.9579861315155433
+        },
+        "n_sticks": {
+          "auroc": 0.5588235294117647,
+          "lo": 0.31695261437908495,
+          "hi": 0.7815126050420168
+        },
+        "diff": {
+          "difference": -0.007352941176470673,
+          "lo": -0.25,
+          "hi": 0.22918981481481476
+        }
+      },
+      "score": {
+        "threshold": 5.407162753872864,
+        "sensitivity": 0.5,
+        "false_alarm_rate": 0.058823529411764705,
+        "n_alarms": 5,
+        "drifted_alarmed": 4,
+        "n_drifted": 8,
+        "quiet_alarmed": 1,
+        "n_quiet": 17,
+        "median_days_to_alarm": 1.8854166666666665
+      },
+      "early": {
+        "threshold": 2.299363263719985,
+        "sensitivity": 0.625,
+        "false_alarm_rate": 0.058823529411764705,
+        "n_alarms": 6,
+        "drifted_alarmed": 5,
+        "n_drifted": 8,
+        "quiet_alarmed": 1,
+        "n_quiet": 17
+      },
+      "plain": {
+        "threshold": 44.90034971998267,
+        "sensitivity": 0.375,
+        "false_alarm_rate": 0.058823529411764705,
+        "n_alarms": 4,
+        "drifted_alarmed": 3,
+        "n_drifted": 8,
+        "quiet_alarmed": 1,
+        "n_quiet": 17
+      },
+      "development": {
+        "n_recordings": 25,
+        "n_without_drift": 17
+      }
+    },
+    {
+      "k_days": 5.0,
+      "primary": false,
+      "n_recordings": 21,
+      "n_patients": 20,
+      "n_drifted": 6,
+      "n_drifted_down": 6,
+      "median_abs_drift": 9.187333722287008,
+      "median_fingersticks": 22.0,
+      "auroc": {
+        "n_resamples_used": 1998,
+        "score": {
+          "auroc": 0.7444444444444445,
+          "lo": 0.4629282407407407,
+          "hi": 0.9444444444444445
+        },
+        "early": {
+          "auroc": 0.6666666666666667,
+          "lo": 0.37735969387755103,
+          "hi": 0.9196696428571428
+        },
+        "plain": {
+          "auroc": 0.788888888888889,
+          "lo": 0.5714285714285714,
+          "hi": 0.9700441176470588
+        },
+        "n_sticks": {
+          "auroc": 0.4777777777777778,
+          "lo": 0.16063550420168066,
+          "hi": 0.805607638888889
+        },
+        "diff": {
+          "difference": -0.04444444444444451,
+          "lo": -0.346687074829932,
+          "hi": 0.20854166666666682
+        }
+      },
+      "score": {
+        "threshold": 5.606803886480232,
+        "sensitivity": 0.16666666666666666,
+        "false_alarm_rate": 0.06666666666666667,
+        "n_alarms": 2,
+        "drifted_alarmed": 1,
+        "n_drifted": 6,
+        "quiet_alarmed": 1,
+        "n_quiet": 15,
+        "median_days_to_alarm": 4.645833333333333
+      },
+      "early": {
+        "threshold": 3.206171078689164,
+        "sensitivity": 0.0,
+        "false_alarm_rate": 0.06666666666666667,
+        "n_alarms": 1,
+        "drifted_alarmed": 0,
+        "n_drifted": 6,
+        "quiet_alarmed": 1,
+        "n_quiet": 15
+      },
+      "plain": {
+        "threshold": 26.947098515753225,
+        "sensitivity": 0.16666666666666666,
+        "false_alarm_rate": 0.06666666666666667,
+        "n_alarms": 2,
+        "drifted_alarmed": 1,
+        "n_drifted": 6,
+        "quiet_alarmed": 1,
+        "n_quiet": 15
+      },
+      "development": {
+        "n_recordings": 21,
+        "n_without_drift": 15
+      }
+    }
+  ]
+}

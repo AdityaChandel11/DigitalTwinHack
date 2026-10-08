@@ -3488,4 +3488,13 @@ Expected: every test passes (274 with Task 8, 265 without), ruff is clean, and t
 | A recording a build could no longer trace kept the trace of an earlier build; nothing recorded what built the traces | `traces.py` | The old file is removed; each build writes its commit and settings, and the passes that read traces copy them into their provenance |
 | The case series summary did not say its counts are over wears | `expiry.py` | It says so |
 
+The staleness modules of Task 8 were reviewed the same way after they were built (commit `7adc06c`): the
+threshold rule was one rank too high when the number of quiet development recordings is a multiple of ten; the
+test for "thresholds come from development recordings" could not fail; the effect of recording length was only
+partly disclosed, so the same sum over the first two days and an interval for the AUROC of the fingerstick count
+are now reported beside the alarm; and three guards were added (no patient both scored and used for thresholds,
+registered filter constants only, a pass closed by any file of an earlier one). The second addendum to the
+registration note records it, with the development figures. **The code blocks of Task 8 above show the files as
+first committed; the repository is the source of truth.**
+
 Not changed, with the reason: `pooled_line` does not itself refuse a test patient's recording (every caller builds its list with `is_dev_patient`, and the synthetic tests pass arbitrary patient names); `differences` treats a missing committed number as a difference (it fails safe); in `choose`, a fold too small for a factor per day is left out of that design's count only (the bias is toward the single factor).
