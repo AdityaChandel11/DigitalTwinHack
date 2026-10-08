@@ -578,3 +578,66 @@ each with a test that failed first:
   (21 recordings, 6 drifted): 0.744, 0.667 and 0.789.
 
 Nothing else in the note changes.
+
+### Note to Amendment 3, a band for the fingerstick estimate, 8 Oct 2026 (before its code, and before it is computed for any patient)
+
+Decided at the start of Milestone 4 (`docs/decisions/2026-10-08-m4-kickoff.md`). The estimates of section F
+(control, live, in hindsight) have no band, and rule 5 forbids drawing an estimate without one. This note adds
+one descriptive output, with no bar, and fixes how it is computed before any of it is written. No bar is added,
+changed or removed. The estimator of section F is frozen: its filter (time constant 120 minutes, no slow
+level, spreads of 25 and 15 mg/dL) and its code are not touched.
+
+**What had been seen when this was written.**
+
+- Every confirmatory result of Amendment 3 on test patients, among them the size of the error of section F's
+  estimates on held-out patients (control RMSE about 37 mg/dL at k = 3; live 2.8 and hindsight 9.5 closer) and
+  the staleness pass, which uses the same fingerstick surprises and the same per-patient spread as its scale.
+- The two spreads of the filter. They are its registered constants and are not tuned here.
+- **No band of these estimates, and no coverage of one, had been computed for any patient, development or
+  test, by any code.** The module that computes them did not exist.
+
+**What is estimated.** The live estimate (fingersticks stamped strictly before the minute, as F1 was scored)
+and the in-hindsight estimate, on the sensor's scale, at the hidden sensor timestamps. Cohort: section F's
+(`why_not`). Primary k = 3; k = 5 is reported.
+
+**The band.** Symmetric about the estimate, half-width `1.2816 x s(t) x c`, where `s(t)` is the spread the
+frozen filter itself assigns to the fading deviation at minute `t`, given only the times of the fingersticks it
+has used: 25 mg/dL far from any fingerstick, 12.9 mg/dL at one, in between by the filter's own recursion; for
+the in-hindsight estimate, the smoothed spread. `s(t)` does not depend on any reading. Two constructions are
+compared, and nothing in either is fitted:
+
+1. **filter**: `c = 1`. The filter's own spread, the same constants for every patient.
+2. **patient**: `c` is the patient's own spread about their daily shape in the calibration window
+   (`profile_sigma`, each day read against a shape built from the other days) divided by 25. The band keeps
+   the filter's narrowing near a fingerstick and takes its width from the patient.
+
+Both use only the calibration window and the times of hidden-window fingersticks. A test changes every hidden
+sensor reading and asserts that the estimate and both edges of the band do not move.
+
+**The choice, on development patients only.** At k = 3, for the live estimate: per recording, the share of
+hidden sensor readings inside the band; recordings of one patient are averaged; then the mean over patients.
+The construction whose mean lies closer to 80 % is frozen. If the two distances differ by less than one
+percentage point, the one with more development patients within 70 to 90 %; if still tied, the first. The
+frozen construction is used for both estimates and both calibration lengths. The choice and the development
+figures are written into an addendum to this note before the test pass.
+
+**What the one pass over test patients reports** (`python -m chhaya.eval.stickband --confirm`, results in
+`results/stickband/shanghai/`), for the frozen construction, for the live and the in-hindsight estimate, at
+k = 3 and k = 5: mean coverage over patients, the smallest and the largest patient, how many patients fall
+within 70 to 90 %, the median over patients of the mean half-width in mg/dL, and coverage by day since the
+sensor with the share of the cohort that reaches each day. The patient is the unit. The construction that was
+not chosen is reported beside it, marked as not chosen. Descriptive: no bar, no verdict.
+
+**What the product does with it, fixed now.** On Shanghai patients the dashboard draws the estimated trace
+with the frozen band and, beside it, the measured coverage on held-out patients (mean and range). The band is
+called an "80 % band" on screen only if that mean lies within 70 to 90 %; otherwise it is called "the band",
+with the measured figure. If the mean lies below 60 % or above 95 %, the band is not a fair picture of the
+error: it is not drawn, and neither is the estimated trace, and those patients show measured things only.
+
+**Guards**, as for the other descriptive passes: committed code; the registered filter constants; a patient
+may not be both a development and a test patient of the run; the pass over test patients is made once and is
+closed by any file of an earlier one.
+
+**Cut rule.** Science stops at midnight on 10 Oct. If the pass over test patients has not been run by 10 Oct
+2026, 16:00, it is not run, the module stays in the repository with its development figures, and Shanghai
+patients show measured things only.
