@@ -28,7 +28,10 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 | A4 reviews, development run, freeze | Done 8 Oct: no leakage path; `patient` frozen (addendum to the note) |
 | A5 the one held-out pass | Done 9 Oct: 83.6 % live, 86.1 % in hindsight, about 45 mg/dL each side (`docs/decisions/2026-10-09-stickband.md`). Left for D1: `healthcare-reviewer` on its screen sentence; for B6: the tenth entry in `claims.py` |
 | B1 claims, B2 wording, B3 names, record, treatment, B4 the synthetic patient | Done 8 Oct. `copy.py` was named `wording.py`; `pseudonym` became `pseudonyms` (one call names a whole cohort, so no two patients share a name) |
-| B5 to B8, C1 to C7, D1, D2 | Not started |
+| B5 to B8 | Done 9 Oct. Local bundle: 49 patients; the build reproduces the committed prompt counts and the Gate 2 traces |
+| C1 to C5 | Done 9 Oct, in one `app.js` ported from the mock; checked at desktop and phone width, console clean |
+| C6, C7 | Cut 9 Oct (budget): patient search, dark-theme polish. Not built: meal what-if |
+| D1, D2 | Not started. D1 is cut to one `healthcare-reviewer` pass on the wording |
 
 ## Global Constraints
 

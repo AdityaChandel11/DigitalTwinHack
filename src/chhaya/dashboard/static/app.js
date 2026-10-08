@@ -109,7 +109,7 @@
         <thead><tr>${th('name', 'Patient')}<th scope="col">Sensor wear</th>${th('days', 'Days since the sensor', 'r')}${th('tx', 'Treatment changed since the sensor (from the record)', 'w-tx')}${th('prompt', 'Prompt to consider a new sensor wear')}${th('fpd', 'Fingersticks a day', 'r')}<th scope="col"><span class="vh">Open</span></th></tr></thead>
         <tbody>${rows.map(p => `<tr tabindex="0" data-id="${esc(p.id)}" aria-label="Open ${esc(p.name)}">
           <td class="c-name" data-label="Patient"><span class="pname">${esc(p.name)}</span><span class="under"><span class="tag${p.synthetic ? ' tag-syn' : ''}">${COHORT[p.cohort]}</span><span class="pid">${esc(p.id)}</span></span></td>
-          <td data-label="Sensor wear"><span>${p.dates ? `<span class="nw">${wearWords(p)}</span>` : 'Held-out recording'}<span class="dim blk">${p.wear_days} days used</span></span></td>
+          <td data-label="Sensor wear"><span>${p.dates ? `<span class="nw">${wearWords(p)}</span>` : '<span class="nw">Held-out recording</span>'}<span class="dim blk">${p.wear_days} days used</span></span></td>
           <td class="r" data-label="Days since the sensor"><span class="days">${p.days_since}</span></td>
           <td data-label="Treatment changed since the sensor (from the record)">${stateCell(TX, p.treatment, p)}</td>
           <td data-label="Prompt to consider a new sensor wear">${stateCell(PR, p.prompt, p)}</td>
@@ -324,7 +324,9 @@
   async function openPatient(id) {
     if (!state.patients[id]) state.patients[id] = await json(`data/patients/${encodeURIComponent(id)}.json`);
     const p = state.patients[id];
-    if (state.current !== id) { hero.day = p.days.length - 1; hero.cross = null; if (qs.get('reveal') !== '1') hero.reveal = 0; }
+    // open on the latest day the sensor covers almost fully: the last day of a recording is often a few hours
+    const fullDays = p.days.map((x, i) => (x.sensor.filter(v => v != null).length >= 80 ? i : -1)).filter(i => i >= 0);
+    if (state.current !== id) { hero.day = fullDays.length ? fullDays[fullDays.length - 1] : p.days.length - 1; hero.cross = null; if (qs.get('reveal') !== '1') hero.reveal = 0; }
     state.current = id;
     drawPatient();
   }

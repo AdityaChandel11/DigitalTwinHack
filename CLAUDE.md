@@ -90,6 +90,12 @@ uv run python -m chhaya.eval.traces --split dev|test [--confirm] --jobs 6   # re
 uv run python -m chhaya.eval.expiry shanghai|cgmacros|cases [--confirm]     # -> results/expiry/
 uv run python -m chhaya.eval.calibrate [--confirm]                # band factor -> results/calibrate/
 uv run python -m chhaya.eval.staleness [--confirm]                # prompt on drift -> results/staleness/
+uv run python -m chhaya.eval.stickband [--confirm]                # band of the fingerstick estimate -> results/stickband/
+# Milestone 4, the product: nothing is fitted while the dashboard runs
+uv run python -m chhaya.build                                     # demo bundle (synthetic patient + evidence), committed
+uv run python -m chhaya.build --real --confirm                    # + every held-out patient -> artifacts/ (git-ignored)
+uv run python -m chhaya.dashboard                                 # serves artifacts/ if built, else the demo bundle
+uv run python -m chhaya.dashboard --export site                   # static copy with the demo bundle only, for a host
 ```
 
 ## Architecture
