@@ -374,3 +374,155 @@ same test patients after F1 is known, and is declared here for that reason.
 **Guards on the command.** `--confirm` runs only with the frozen filter, at k = 3 and 5, on committed code, and
 refuses when a confirmatory result is already on disk. The primary result (k = 3, all fingersticks) is written
 before anything else is computed.
+
+### Note to Amendment 3, descriptive outputs and the second pass of section F, 8 Oct 2026 (before any of them reads a test patient)
+
+Written after the three confirmatory runs of Amendment 3 (sections M, P and F) were known and before any
+output below was computed for a test patient. No bar is added, changed or removed: everything here is
+descriptive, as registered. This note fixes how the registered words become code, so that those choices
+cannot be made after the numbers. Task-level plan: `docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md`.
+
+**What had been seen when this was written.**
+
+- The confirmatory results of sections M, P and F on test patients, and the Gate 2 results, including the
+  range of per-patient band coverage (0.60 to 0.99) and, from the break test of 3 Oct on the registered run,
+  that the twin's advantage held on each of the first five days after the sensor and reversed on the sixth.
+- From the counts of 4 Oct, on all Shanghai patients including the test split: that the sensor mean falls by
+  more than 20 mg/dL between the first and last three days in 29 % of recordings of eight days or more and
+  rises by that much in 5 % (a quantity close to the drift label below), and which patients were recorded more
+  than once, with the gaps between their recordings.
+- The code for these outputs, written and tested on synthetic recordings in a scratch copy of the repository,
+  and **one run of each output on development patients** from that copy. Those runs showed, at k = 3 unless
+  said otherwise:
+  - Second pass of F (24 patients): the stale report missed the hidden window's mean by a median of 14.8 mg/dL
+    (8.9 at k = 5) and the report rebuilt in hindsight missed it by 12.1 (11.4 at k = 5); the rebuilt report
+    was not better than the stale one on time above 180 (9.9 against 8.8 points) or time in range (13.0
+    against 9.4). Patients who test more often gained more from the live estimate (Spearman -0.67).
+  - Expiry, Shanghai (49 patients): a day's mean lay a median of 10.8 mg/dL from the report inside the wear
+    and 9 to 15 on days 1 to 11; inside each patient the distance grew by 0.56 mg/dL per day (interval 0.28 to
+    1.40).
+  - Expiry, CGMacros (25 patients): the twin was closer than its control on every day that at least 23
+    patients reached (days 1 to 7; days 1 to 5 at k = 5) and further on the later days, which half the patients
+    or fewer reach and which are the last days of their sensor. Band coverage fell on those same days.
+  - Case series: three of the eight patients are development patients; one of them had moved by more than
+    20 mg/dL, with a treatment change.
+  - Band (25 patients, k = 5): mean coverage 0.874 before; the rule below chose one factor, 0.78.
+  - Staleness (25 recordings, 8 drifted): AUROC 0.735 with the threshold set on the same recordings, against
+    0.728 for the plain fingerstick average.
+- **Three things were changed after those development runs**, and nothing else: the test of each day against
+  day 0 was turned to ask "further than inside the wear" (it had asked the opposite); the AUROC of the number
+  of fingersticks was added beside the alarm; and the rule for a band factor per day was tightened twice (a day
+  must be reached by 80 % of the cohort; the per-day design must not leave fewer patients within 70 to 90 %),
+  because the first version fitted a factor on the last days of the wear, where half the patients are gone.
+  Under the first version the per-day design was chosen; under the rule below, the single factor.
+- No output below had been computed for any test patient, by any code.
+
+**Common readings.**
+
+- *Day since the sensor.* 24-hour blocks counted from the split; day 1 is the first 24 hours. A day of a
+  recording is scored when it holds at least 48 sensor readings. A day reached by fewer than 6 patients keeps
+  its medians and gets no paired comparison. Each by-day summary records what share of the cohort reaches the
+  day.
+- *A report.* Mean glucose, percent of readings above 180 mg/dL and percent within 70 to 180, on the
+  sensor's scale. The stale report is these three numbers from the calibration window. Errors are absolute
+  differences from the same numbers of the hidden sensor readings.
+- *Day 0, inside the wear.* Each 24-hour block of the calibration window against the report of its other
+  blocks, averaged. It uses k - 1 days where a later day is read against k, so it slightly overstates the
+  error of a report that has not aged. Each later day's distance from the report's mean is compared with it,
+  one-sided ("further than inside the wear").
+- *Inside each patient.* Recordings end at different lengths, so a curve of daily medians mixes ageing with
+  who is still recording. The least-squares slope of each quantity on the day, inside each patient with at
+  least three scored days, is reported as a median with its interval.
+- *Statistics.* The patient is the unit; recordings of one patient are averaged first. Medians over patients;
+  paired differences with 95 % percentile bootstrap intervals (2,000 resamples of patients, seed
+  `config.SEED`) and one-sided signed-rank p-values. They are reported as description. None is a verdict.
+
+**F, second pass** (`python -m chhaya.eval.fingersticks_report`).
+
+- Cohort, k, map and estimator are those of the confirmatory run: `estimates` and `FilterConfig` are imported
+  unchanged. Before anything is written the pass recomputes, at k = 3 and k = 5, the number of patients, the
+  control's median RMSE and the live and in-hindsight median paired differences, and stops if any differs
+  from `results/fingersticks/shanghai/summary.json` by more than 1e-6.
+- *Chhaya's report* is read from the **in-hindsight** estimate (the registration calls it the estimate "for
+  the retrospective report"). The live estimate and the daily shape alone are reported beside it.
+- *Time above 180 and time in range from an estimate.* Each estimated value is the centre of a normal
+  distribution whose standard deviation is one number per recording: the root-mean-square difference between
+  the calibration readings and the daily shape built without their own clock day. The probabilities are
+  averaged. The plain count of crossings is reported beside it for the in-hindsight estimate.
+- *The plain fingerstick average.* All hidden fingersticks: their mean, the share above 180 and the share
+  within 70 to 180. The comparator is the average on the sensor's scale, by the same line the estimator
+  uses; the average as read from the meter is reported beside it.
+- *Comparisons reported*, for each of the three numbers: in hindsight against the stale report, against the
+  fingerstick average and against the shape alone; live against the stale report; the fingerstick average
+  against the stale report.
+- *Error by day:* RMSE of the control, the live and the in-hindsight estimate against the hidden sensor; the
+  distance of the day's mean from the report's mean and the share of patients beyond 20 mg/dL; the error of
+  the in-hindsight estimate's daily mean.
+- *Fingersticks per day:* over the whole recording (the cohort rule's quantity) and in the hidden window,
+  with quartiles, for the test cohort and beside it the development cohort; and the Spearman correlation
+  between hidden-window density and the live gain. This checks the guess in the fingerstick record that
+  test patients gained more because they test more.
+
+**Expiry** (`python -m chhaya.eval.expiry {shanghai,cgmacros,cases}`).
+
+- *Shanghai, by day.* The control of section F (half the average day, half the mean, from the first k days)
+  on every recording that passes the Gate 2 rule at k, at k = 3 and k = 5. No fingerstick is read, so the
+  cohort is wider than section F's. Reported: the control's RMSE, the distance of the day's report from the
+  stale report, the share of patients whose daily mean has moved by more than 20 mg/dL, day 0, slopes.
+- *CGMacros, by day.* `run_reveal` with its defaults at k = 3 and k = 5, exactly as Gate 2. The traces must
+  give back, per recording, the RMSE and the band coverage in `results/gate2/cgmacros-test/metrics.csv`
+  within 1e-6, or nothing is written. Reported by day: the twin, its control and the average day; the twin
+  against its control (paired); band coverage; the twin's daily mean against the stale report's mean; the
+  type 2 group beside the whole cohort.
+- *Case series.* Every Shanghai patient with more than one recording: eight patients, nine later wears,
+  development and test patients together, since nothing is fitted across patients. The earliest wear is the
+  reference; its daily shape, from all of its readings, is read at the later wear's clock times. Beside the
+  old shape's RMSE: what the later wear's own shape gives for a day it has not seen, and the same inside the
+  first wear. Treatment is stated per wear from the files (any insulin, pump, whether the agents list
+  changed). No test and no interval. Two wears are two sensors, so a difference between them includes the
+  difference between the sensors.
+
+**Band** (`python -m chhaya.eval.calibrate`).
+
+- The band's two half-widths about the estimate are multiplied by a factor from 0.50 to 2.00 in steps of
+  0.01. The single factor is the one whose mean coverage over development patients is closest to 80 % at
+  k = 5 (of two equally close, the one nearer 1).
+- A factor per day is fitted for the consecutive days reached by at least 10 development patients and at
+  least 80 % of them; later days use the last one.
+- The choice is made on development patients left out of the fit, one at a time. The factor per day is used
+  only if it brings each day's coverage closer to 80 % by at least 2 points on average **and** leaves no
+  fewer patients within 70 to 90 %. Otherwise the single factor is used.
+- Reported on test patients at k = 5, and at k = 3 with the same factor: mean coverage, its range, the number
+  of patients within 70 to 90 %, before and after, and coverage by day.
+- **Which band the product shows.** The recalibrated band is used only if, on test patients at k = 5, its mean
+  coverage is no further from 80 % than before and no fewer patients fall within 70 to 90 %. Otherwise the
+  band stays as Gate 2 scored it and the result is published as "the recalibration did not transfer".
+- `run_reveal` and the Gate 2 results folder are not changed. The factor is applied to cached traces.
+
+**Staleness alarm** (`python -m chhaya.eval.staleness`).
+
+- Cohort: that of section F. Primary k = 3; k = 5 is reported. The unit is the recording, as registered;
+  intervals resample patients.
+- *Drift:* the hidden-window sensor mean differs from the calibration mean by more than 20 mg/dL, in either
+  direction.
+- *Surprise:* a hidden fingerstick, mapped to the sensor's scale by the estimator's line, minus the daily
+  shape at its clock time, divided by the square root of (the spread defined above, squared, plus the
+  filter's fingerstick spread of 15 mg/dL, squared).
+- *The sum:* two-sided, with an allowance of half a standard deviation per fingerstick; a recording's score
+  is its maximum. The alarm fires at the first fingerstick where the sum is above the threshold.
+- *Threshold:* the smallest observed score that at most 10 % of the development recordings without drift lie
+  above.
+- *Reported on test recordings:* AUROC with its interval; sensitivity and false-alarm rate at the threshold;
+  the median number of days from the split to the alarm, among drifted recordings that alarmed.
+- *Beside it, with no bar:* the absolute difference between the mean of the mapped hidden fingersticks and
+  the calibration mean, with a threshold set the same way; the AUROC difference with its interval; and the
+  AUROC of the number of fingersticks alone, because a sum over more fingersticks can only grow.
+- The label and both scores look back over the same hidden window. Only "days to alarm" is prospective.
+
+**Guards on every command that reads test patients.** `--confirm`; committed code under `src/`; refusal when
+its results folder already holds a summary. Results folders hold aggregates; the case series holds one row
+per later wear with derived quantities and no glucose readings. Reveal traces are written under the data
+folder, which is not committed.
+
+**Order and cuts, unchanged:** the second pass of F, then expiry, then the band; the staleness alarm only if
+those are done by 16:00 on 10 Oct. Whatever is cut is stated as not done.

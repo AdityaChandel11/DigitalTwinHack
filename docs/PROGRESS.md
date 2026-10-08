@@ -11,7 +11,7 @@ When the next task names a different model, Claude stops and waits for the switc
 |---|---|
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
-| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4 (expiry, band, staleness) not written yet |
+| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4 (second pass of F, expiry, band, staleness) written 8 Oct, not started |
 | M4 Product (three screens, one decision) | Not started |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
@@ -20,14 +20,21 @@ When the next task names a different model, Claude stops and waits for the switc
 1. **Push when ready.** All of 8 Oct is merged into `main` locally (fast-forward, 202 tests pass there) and not
    pushed: `origin/main` is still at `985b2ad`. The once-only guards (`results/gate3/shanghai/`,
    `results/fingersticks/shanghai/`) are now on main, so `--confirm` is refused from any checkout of it.
-2. **Write Plan 4** (Opus 5.5, max for the design; it decides what we claim about "how long the report stays
-   true"). It must include, in this order of priority:
-   - the declared second pass of section F with the estimator frozen: error in mean glucose, time above 180
-     and time in range against the stale report and the plain fingerstick average; error by day since the
-     sensor; fingersticks per day in the cohort (the first run did not record it);
-   - expiry by day on both datasets and the case series of the eight re-recorded patients;
-   - band recalibration; the staleness alarm only if both are done by 16:00 on 10 Oct.
-   Cut order if 10 Oct arrives first: staleness, band, by-day expiry.
+2. **Execute Plan 4**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
+   Its code was written and run before the plan was (60 new tests; one run of each output on development
+   patients; no test patient read), so Tasks 1 to 5 are transcription.
+   - Task 0 first: the dated note that fixes how each output is computed goes into the registration before
+     any code is committed.
+   - Tasks 1 to 5 on **Sonnet 5.5, medium**; Task 6 (development runs, reviews) on **Opus 5.5, high**; Task 7
+     (the passes over test patients and their records) on **Opus 5.5, max**. Stop at each switch.
+   - Priority order: second pass of section F, expiry (by day on both datasets, case series), band; the
+     staleness alarm only if those are committed by 16:00 on 10 Oct. Cut order: staleness, band, by-day expiry.
+   - Nothing in `src/` that exists today is modified, so the scored estimators stay as they were. Each pass
+     over test patients first reproduces committed numbers and refuses to run twice.
+   - **One thing the development look already suggests** (not quotable): on development patients the twin's
+     advantage holds on every day that most patients reach (to day 7 at k = 3) and reverses only on the last
+     days of the wear, which half the patients or fewer reach. If test patients show the same, "the gain
+     lasts about five days" is wrong as worded and the expiry record corrects it.
 3. Before quoting any Clarke zone figure: `clarke_zones` matches the widely used reference implementation but
    has not been checked against the figure in the 1987 paper. Say in the README that the Clarke grid is used.
 

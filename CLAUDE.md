@@ -15,8 +15,9 @@ excursions better than the sensor week already does (headline revised 4 Oct and 
 - **Why this concept, and what everyone else is building:** [docs/WAR_ROOM.md](docs/WAR_ROOM.md) (read Phase 6).
 - **What to build, in order, with gates:** [docs/superpowers/plans/2026-10-02-chhaya-roadmap.md](docs/superpowers/plans/2026-10-02-chhaya-roadmap.md).
 - **Design from Milestone 3 on:** [docs/superpowers/specs/2026-10-04-chhaya-m3-design.md](docs/superpowers/specs/2026-10-04-chhaya-m3-design.md).
-- **Task-level plans being executed:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md),
-  then [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md).
+- **Task-level plans:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md) and
+  [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
+  are done. **Being executed:** [Plan 4, second pass of F, expiry, band, staleness](docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## Working agreement (solo project: Claude is the teammate)

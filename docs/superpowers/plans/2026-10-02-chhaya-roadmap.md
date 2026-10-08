@@ -11,7 +11,8 @@ Task-level plans:
 - Plan 1, core twin (done): [2026-10-02-chhaya-plan-1-core-twin.md](2026-10-02-chhaya-plan-1-core-twin.md)
 - Plan 2, label check and the excursion experiment: [2026-10-07-chhaya-plan-2-excursions.md](2026-10-07-chhaya-plan-2-excursions.md)
 - Plan 3, record prior and fingersticks: [2026-10-07-chhaya-plan-3-prior-and-fingersticks.md](2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
-- Plan 4 (expiry, band, staleness) and the Milestone 4 and 5 plans are written the day each starts.
+- Plan 4, second pass of the fingerstick experiment, expiry, band, staleness: [2026-10-08-chhaya-plan-4-expiry-band-staleness.md](2026-10-08-chhaya-plan-4-expiry-band-staleness.md)
+- The Milestone 4 and 5 plans are written the day each starts.
 
 ## Status (update this table whenever a milestone step finishes)
 
@@ -55,6 +56,13 @@ Last updated: 8 Oct 2026.
   is read strictly (before the minute). The report-level outputs of section F are a declared second pass in
   Plan 4 with the estimator frozen. Product: the retrospective reconstruction is the feature with the
   strongest evidence; the gain needs several fingersticks a day.
+- **8 Oct: Plan 4 written.** It adds seven modules and changes no existing source file. Its readings of the
+  registered text are in a third dated note to Amendment 3, committed before its code: time above 180 from an
+  estimate uses a normal spread measured on calibration days; a day since the sensor is a 24-hour block from
+  the split; each later day is read against "day 0" (one day of the wear against its other days); the band
+  factor per day must be reached by 80 % of the cohort and must not leave fewer patients within 70 to 90 %;
+  the recalibrated band is shown only if it transfers to held-out patients. Per-reading reveal traces are
+  cached under the data folder, never under `results/`.
 - 8 Oct: a dated note to Amendment 3 fixes how section M was coded (plain share for M2, and seven smaller
   readings of the text), written before the test run. `--confirm` on Gate 3 is pinned to the registered
   settings and refuses a second run.
