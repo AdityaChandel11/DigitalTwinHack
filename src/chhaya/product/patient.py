@@ -60,7 +60,7 @@ def wear_report(rec: Recording, k_days: float) -> dict:
         for key, value in zip(profile, q, strict=True):
             profile[key].append(_num(value))
     return {
-        "days": _num(k_days, 0) if float(k_days).is_integer() else _num(k_days),
+        "days": int(k_days) if float(k_days).is_integer() else _num(k_days),
         "mean": _num(g.mean()),
         "above_180": _num(100.0 * np.mean(g > 180.0)),
         "below_70": _num(100.0 * np.mean(g < 70.0)),

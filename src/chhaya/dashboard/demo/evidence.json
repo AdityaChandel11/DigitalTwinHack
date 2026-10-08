@@ -1,0 +1,583 @@
+{
+ "tally": {
+  "bars": 9,
+  "passed": 5,
+  "missed": 4,
+  "descriptive": 6
+ },
+ "fusion": "We fused the record and the sensor two ways and measured both; once a sensor week exists the record added nothing detectable. What adds something is the meal log and fingersticks.",
+ "results": [
+  {
+   "id": "gate2",
+   "grade": "pass",
+   "bars": [
+    "P1",
+    "P2",
+    "P3"
+   ],
+   "title": "The reveal",
+   "sub": "Gate 2",
+   "claim": "On 19 held-out patients, 5 days after the sensor comes off, Chhaya's estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05) and about 0.35 mg/dL closer than a control that uses no meals (p = 0.04). The gain comes from the meal log and is small. It was not seen to fade with days since the sensor: with three days of calibration the median favours the twin over its control on each of the seven following days (0.4 to 2.0 mg/dL; the interval excludes zero on three of them; 19 held-out participants), and it reverses only on the last days of the recording, which fewer than half of the participants reach.",
+   "bar_text": [
+    "Bar, written before the run. P1: the median over patients of (twin RMSE minus average-day RMSE) is below 0, and a one-sided Wilcoxon signed-rank test gives p < 0.05.",
+    "P2 passes only because its bar cannot discriminate: time in range is not a strength, and no time in range is shown from any estimate."
+   ],
+   "cohort": "CGMacros, free-living · 19 held-out participants",
+   "command": "python -m chhaya.eval.gate2 --dataset cgmacros --k 3 5 7",
+   "record": "docs/decisions/2026-10-04-gate2-corrected.md",
+   "figure": {
+    "type": "dots",
+    "title": "Distance from the hidden sensor",
+    "unit": "RMSE in mg/dL, lower is closer",
+    "min": 20,
+    "max": 25,
+    "items": [
+     {
+      "label": "Chhaya",
+      "emph": true,
+      "value": 21.94544067638834,
+      "text": "21.9",
+      "quote": [
+       "1.4 mg/dL"
+      ]
+     },
+     {
+      "label": "The patient's average day",
+      "emph": false,
+      "value": 23.30593565351698,
+      "text": "23.3",
+      "quote": []
+     }
+    ]
+   }
+  },
+  {
+   "id": "label",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "Which readings not to believe",
+   "sub": "Label check",
+   "claim": "Of 64 sensor readings below 70 mg/dL with a fingerstick within 10 minutes, 8 (12.5 %) were confirmed, and 0 of 9 at night; of 809 sensor readings above 180, 732 (90.5 %) were confirmed.",
+   "bar_text": [
+    "No bar. A check of the labels, run before any model was built on them. It is why there is no low-glucose estimate anywhere, and why a sensor low on screen reads \"sensor low, unconfirmed\"."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · all patients",
+   "command": "python -m chhaya.data.audit",
+   "record": "results/audit/label_validity.json",
+   "figure": {
+    "type": "counts",
+    "title": "Sensor readings confirmed by a fingerstick",
+    "unit": "taken within 10 minutes",
+    "items": [
+     {
+      "label": "sensor lows, below 70 mg/dL",
+      "emph": false,
+      "n": 8,
+      "of": 64,
+      "note": "At night, 0 of 9.",
+      "quote": [
+       "8 (12.5 %) were confirmed",
+       "0 of 9 at night"
+      ]
+     },
+     {
+      "label": "sensor highs, above 180 mg/dL",
+      "emph": false,
+      "n": 732,
+      "of": 809,
+      "note": "",
+      "quote": [
+       "of 809 sensor readings above 180, 732 (90.5 %)"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "gate3",
+   "grade": "miss",
+   "bars": [
+    "M1",
+    "M2",
+    "M3"
+   ],
+   "title": "Post-meal excursions without the sensor",
+   "sub": "Gate 3",
+   "claim": "On 47 held-out Shanghai patients (1,205 meals, 39 % followed by an excursion above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the patient's own excursion rate from the sensor week (0.59; difference 0.01, 95 % interval -0.09 to 0.14); with the sensor on, the same model reaches 0.76.",
+   "bar_text": [
+    "Bars, written before the run. M1: fused (sensor off) minus each of record only, sensor history only and fingersticks only, the lower end of the interval for the AUPRC difference is above 0 for all three. M2: fused minus the personal rate, lower end of the interval above 0. M3: calibration slope between 0.8 and 1.2.",
+    "All three missed. There is no meal alert, and no probability is shown."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · 47 held-out patients",
+   "command": "python -m chhaya.eval.gate3 --confirm",
+   "record": "docs/decisions/2026-10-08-gate3.md",
+   "figure": {
+    "type": "dots",
+    "title": "Predicting an excursion at meal time",
+    "unit": "AUPRC, higher is better",
+    "min": 0.2,
+    "max": 0.8,
+    "items": [
+     {
+      "label": "Record only",
+      "emph": false,
+      "value": 0.566018627609339,
+      "text": "0.57",
+      "quote": []
+     },
+     {
+      "label": "Sensor week only",
+      "emph": false,
+      "value": 0.6260482817863078,
+      "text": "0.63",
+      "quote": []
+     },
+     {
+      "label": "Fingersticks only",
+      "emph": false,
+      "value": 0.6419543432390826,
+      "text": "0.64",
+      "quote": [
+       "fingersticks only: 0.64"
+      ]
+     },
+     {
+      "label": "Fused, sensor off",
+      "emph": true,
+      "value": 0.59609433825759,
+      "text": "0.60",
+      "quote": [
+       "AUPRC 0.60"
+      ]
+     },
+     {
+      "label": "The patient's own rate",
+      "emph": false,
+      "value": 0.5871161355400678,
+      "text": "0.59",
+      "quote": [
+       "(0.59;"
+      ]
+     },
+     {
+      "label": "Sensor on",
+      "emph": false,
+      "value": 0.7601076586107972,
+      "text": "0.76",
+      "quote": [
+       "reaches 0.76"
+      ]
+     }
+    ],
+    "ref": {
+     "label": "event rate 0.39",
+     "value": 0.391701244813278,
+     "quote": [
+      "39 %"
+     ]
+    }
+   }
+  },
+  {
+   "id": "prior",
+   "grade": "miss",
+   "bars": [
+    "P1"
+   ],
+   "title": "The record as the twin's prior",
+   "sub": "Fusion, second test",
+   "claim": "On 20 held-out CGMacros patients with one day of sensor data, giving the twin the record's fasting glucose as its prior changed the error of the estimate by a median of 0.02 mg/dL (p = 0.16), and with three or more days by nothing measurable: the record, as it enters the twin today, is not worth any sensor days.",
+   "bar_text": [
+    "Bar, written before the run. At k = 1, the estimate with the record prior has lower RMSE than with the population prior: median paired difference below 0, p < 0.05.",
+    "Fusion is built and measured. It is not a gain."
+   ],
+   "cohort": "CGMacros, free-living · 20 held-out participants",
+   "command": "python -m chhaya.eval.fusion",
+   "record": "docs/decisions/2026-10-08-record-prior.md",
+   "figure": {
+    "type": "stat",
+    "title": "Change in the error of the estimate",
+    "unit": "with one day of sensor data, median, mg/dL",
+    "items": [
+     {
+      "label": "median change",
+      "emph": false,
+      "value": 0.021822484908662787,
+      "text": "0.02 mg/dL",
+      "quote": [
+       "0.02 mg/dL"
+      ]
+     },
+     {
+      "label": "p",
+      "emph": false,
+      "value": 0.1558971405029297,
+      "text": "p = 0.16",
+      "quote": [
+       "p = 0.16"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "sticks",
+   "grade": "pass",
+   "bars": [
+    "F1",
+    "F2"
+   ],
+   "title": "Fingersticks keep the report truer",
+   "sub": "Experiment F",
+   "claim": "On 29 held-out Shanghai patients, calibrated on three days of sensor data, fingersticks taken afterwards brought the running estimate 2.8 mg/dL closer to the hidden sensor than the patient's daily shape alone (median paired RMSE difference; 95 % interval 1.6 to 4.7; 86 % of patients; p = 4e-06) and 9.5 mg/dL closer in hindsight (interval 4.6 to 12.1); with one fingerstick a day the running gain was 0.3 mg/dL.",
+   "bar_text": [
+    "Bars, written before the run. F1: live estimate against the control, median paired RMSE difference below 0, p < 0.05. F2: the in-hindsight estimate against the control, the same test.",
+    "To be told with it: the filter was chosen on development patients by a criterion other than the plan's written rule (dated note in the registration, before the test run), and the estimate is still about 22 % off the next fingerstick where a real sensor is about 12 %."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · 29 held-out patients",
+   "command": "python -m chhaya.eval.fingersticks --confirm",
+   "record": "docs/decisions/2026-10-08-fingersticks.md",
+   "figure": {
+    "type": "dots",
+    "title": "Closer to the hidden sensor than the daily shape alone",
+    "unit": "mg/dL, with 95 % intervals",
+    "min": 0,
+    "max": 13,
+    "items": [
+     {
+      "label": "As fingersticks arrive",
+      "emph": true,
+      "value": 2.793093009572214,
+      "text": "2.8",
+      "quote": [
+       "2.8 mg/dL closer",
+       "1.6 to 4.7"
+      ],
+      "lo": 1.5989885909120893,
+      "hi": 4.6870357764690525
+     },
+     {
+      "label": "In hindsight",
+      "emph": true,
+      "value": 9.495101979488432,
+      "text": "9.5",
+      "quote": [
+       "9.5 mg/dL closer",
+       "4.6 to 12.1"
+      ],
+      "lo": 4.555244822957203,
+      "hi": 12.149911728664541
+     },
+     {
+      "label": "One fingerstick a day",
+      "emph": false,
+      "value": 0.32272006306218515,
+      "text": "0.3",
+      "quote": [
+       "0.3 mg/dL"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "report",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "Fingersticks at report level",
+   "sub": "A plain baseline beats our estimator",
+   "claim": "Descriptive, no bar; a plain baseline beats our estimator. On 29 held-out Shanghai patients under supervised care who were tested about six times a day, with the hidden sensor as the yardstick, a three-day sensor report missed the mean sensor glucose of the following days (up to eleven) by a median of 13.0 mg/dL. Chhaya's report rebuilt in hindsight from those fingersticks missed it by 8.9 (median paired difference 3.4, 95 % interval 1.6 to 8.9, 83 % of patients), but was no closer than the plain average of the same fingersticks converted to the sensor's scale by a line learned during the wear (6.4). The share of those converted readings above 180 mg/dL and within 70 to 180 was also closer to the sensor's time above 180 and time in range (3.1 against 8.8 points; 5.0 against 15.2). As read from the meter the same average lay 18.3 mg/dL from the sensor's mean; sensor-scale figures are not meter values. Lower testing frequencies were not measured, and this is not a recommendation to test at any frequency.",
+   "bar_text": [
+    "No bar. Registered as descriptive before the run. The figures on the patient screen therefore come from the plain converted average, not from our estimator."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · 29 held-out patients",
+   "command": "python -m chhaya.eval.fingersticks_report --confirm",
+   "record": "docs/decisions/2026-10-08-fingersticks-report.md",
+   "figure": {
+    "type": "dots",
+    "title": "Miss in mean glucose over the following days",
+    "unit": "median, mg/dL, lower is closer",
+    "min": 0,
+    "max": 20,
+    "items": [
+     {
+      "label": "Three-day sensor report",
+      "emph": false,
+      "value": 12.951861224202943,
+      "text": "13.0",
+      "quote": [
+       "median of 13.0 mg/dL"
+      ]
+     },
+     {
+      "label": "Chhaya, rebuilt from fingersticks",
+      "emph": true,
+      "value": 8.853675150841127,
+      "text": "8.9",
+      "quote": [
+       "missed it by 8.9"
+      ]
+     },
+     {
+      "label": "Plain average, sensor's scale",
+      "emph": false,
+      "value": 6.422579094751725,
+      "text": "6.4",
+      "quote": [
+       "(6.4)"
+      ]
+     },
+     {
+      "label": "Plain average, as read",
+      "emph": false,
+      "value": 18.337739726027408,
+      "text": "18.3",
+      "quote": [
+       "18.3 mg/dL from the sensor's mean"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "expiry",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "How long the report stays true",
+   "sub": "Expiry",
+   "claim": "Descriptive, no bar; \"report\" means mean glucose only, and a three-day report stands in for a fourteen-day one. On 47 held-out Shanghai patients under supervised care with treatment being adjusted, a day's mean sensor glucose lay a median of 13.5 mg/dL from a three-day sensor report's mean inside the wear and 11 to 16 on the four days after it; inside each patient that distance grew by 1.0 mg/dL per day (95 % interval 0.7 to 2.6) over at most eleven days, with glucose moving downward. On 19 held-out free-living CGMacros participants (7 with type 2 diabetes; medication not recorded) no growth was detected over seven days (0.1 mg/dL per day, interval -0.8 to 0.8). In a case series of eight Shanghai patients recorded again (nine later wears, five beginning within three days of the first sensor coming off and four 33 to 154 days after it), four wears in three patients had a mean more than 20 mg/dL lower, all four with a change of treatment in the files; of the five that had not moved, four had no change and one had, and the old daily profile fitted them no worse than a fresh one. No test; not a rule for when a patient should wear a sensor.",
+   "bar_text": [
+    "No bar. Registered as descriptive before the run. These data do not give a number of days."
+   ],
+   "cohort": "Both cohorts · 47 and 19 held-out; a case series of 8",
+   "command": "python -m chhaya.eval.expiry shanghai --confirm",
+   "record": "docs/decisions/2026-10-08-expiry.md",
+   "figure": {
+    "type": "dots",
+    "title": "Growth of the distance from the report",
+    "unit": "mg/dL per day, with 95 % intervals",
+    "min": -1,
+    "max": 3,
+    "items": [
+     {
+      "label": "Supervised care",
+      "emph": false,
+      "value": 1.0372564935064923,
+      "text": "1.0",
+      "quote": [
+       "1.0 mg/dL per day (95 % interval 0.7 to 2.6)"
+      ],
+      "lo": 0.6604832667332721,
+      "hi": 2.643937156593406
+     },
+     {
+      "label": "Free-living",
+      "emph": false,
+      "value": 0.09796626984126938,
+      "text": "0.1",
+      "quote": [
+       "0.1 mg/dL per day, interval -0.8 to 0.8"
+      ],
+      "lo": -0.7633928571428567,
+      "hi": 0.7589617148522647
+     }
+    ],
+    "ref": {
+     "label": "no growth",
+     "value": 0
+    }
+   }
+  },
+  {
+   "id": "band",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "The band",
+   "sub": "The recalibration did not transfer",
+   "claim": "On 19 held-out participants the 80 % band held 83.5 % of hidden readings on average and between 60 % and 98.5 % for an individual, with 10 of 19 participants within 70 to 90 %. A recalibration factor chosen on development patients (0.78) moved the average to 75.7 %, further from 80 % than before, so it is not used: the band is calibrated on average, not per patient.",
+   "bar_text": [
+    "Rule, written before the run. The recalibrated band is used only if, on held-out participants, mean coverage is no further from 80 % than before and no fewer participants fall within 70 to 90 %. It was further, so the band is drawn as Gate 2 scored it."
+   ],
+   "cohort": "CGMacros, free-living · 19 held-out participants",
+   "command": "python -m chhaya.eval.calibrate --confirm",
+   "record": "docs/decisions/2026-10-08-band.md",
+   "figure": {
+    "type": "dots",
+    "title": "Hidden readings inside the 80 % band",
+    "unit": "per cent; the line spans individuals",
+    "min": 50,
+    "max": 100,
+    "items": [
+     {
+      "label": "As scored, shown",
+      "emph": true,
+      "value": 83.46196236926166,
+      "text": "83.5",
+      "quote": [
+       "83.5 %",
+       "between 60 % and 98.5 %"
+      ],
+      "lo": 59.97045790251108,
+      "hi": 98.54809437386571
+     },
+     {
+      "label": "Recalibrated, not used",
+      "emph": false,
+      "value": 75.65016251933216,
+      "text": "75.7",
+      "quote": [
+       "75.7 %"
+      ]
+     }
+    ],
+    "ref": {
+     "label": "target 80",
+     "value": 80
+    }
+   }
+  },
+  {
+   "id": "stale",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "The prompt to consider a new sensor wear",
+   "sub": "A plain baseline does as well",
+   "claim": "Descriptive, no bar; a plain baseline does as well. On 32 held-out Shanghai recordings (29 patients under supervised care, tested about six times a day, for up to eleven days after a three-day sensor report), 11 of which drifted by more than 20 mg/dL in mean sensor glucose (9 downward, 2 upward), a running sum of fingerstick surprises, used only as a prompt to consider a new sensor wear, separated drifted from stable recordings with AUROC 0.82 (95 % interval 0.63 to 0.98), against 0.82 (0.61 to 0.97) for the plain fingerstick average compared with the report's mean (difference 0.00, interval -0.16 to 0.18): it was not shown to do better than that comparison. At a threshold set on development recordings so that at most 10 % of stable ones would raise it, the prompt was raised in 7 of 11 drifted recordings (64 %) and 2 of 21 stable ones (10 %); in those 7, a median of 2.6 days after the split. With a five-day report (24 recordings, 6 drifted) it was not shown to separate them (0.67, interval 0.35 to 0.92). The label and the score look back over the same days. It is not a finding about a patient's glucose, not advice on treatment and not a rule for when to wear a sensor, and it was not tested in outpatient care, at lower testing frequencies or over longer periods.",
+   "bar_text": [
+    "No bar. Registered as descriptive before the run. Not shown to do better than comparing the fingerstick average with the report. On a patient screen it appears only inside the tested range; everywhere else it lives here."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · 32 held-out recordings",
+   "command": "python -m chhaya.eval.staleness --confirm",
+   "record": "docs/decisions/2026-10-08-staleness.md",
+   "figure": {
+    "type": "dots",
+    "title": "Telling drifted from stable reports",
+    "unit": "AUROC with 95 % intervals",
+    "min": 0.5,
+    "max": 1,
+    "items": [
+     {
+      "label": "Running sum of fingerstick surprises",
+      "emph": true,
+      "value": 0.8181818181818182,
+      "text": "0.82",
+      "quote": [
+       "AUROC 0.82 (95 % interval 0.63 to 0.98)"
+      ],
+      "lo": 0.6280799240285406,
+      "hi": 0.9759644138755981
+     },
+     {
+      "label": "Fingerstick average against the report",
+      "emph": false,
+      "value": 0.8181818181818182,
+      "text": "0.82",
+      "quote": [
+       "0.82 (0.61 to 0.97)"
+      ],
+      "lo": 0.6076426862611074,
+      "hi": 0.972255291005291
+     }
+    ],
+    "counts": [
+     {
+      "label": "Raised in",
+      "text": "7 of 11 drifted",
+      "quote": [
+       "7 of 11 drifted recordings"
+      ]
+     },
+     {
+      "label": "False prompts",
+      "text": "2 of 21 stable",
+      "quote": [
+       "2 of 21 stable ones"
+      ]
+     }
+    ],
+    "ref": {
+     "label": "chance",
+     "value": 0.5
+    }
+   }
+  },
+  {
+   "id": "stickband",
+   "grade": "descriptive",
+   "bars": [],
+   "title": "The band of the fingerstick estimate",
+   "sub": "Wide, and right on average",
+   "claim": "Descriptive, no bar. On 29 held-out Shanghai patients under supervised care, calibrated on three days of sensor data and tested about six times a day, a band built from the fingerstick filter's own spread and each patient's spread during the sensor wear, with nothing fitted, held 83.6 % of hidden sensor readings around the running estimate (49.9 % to 98.9 % for an individual; 12 of 29 patients within 70 to 90 %) and 86.1 % around the estimate in hindsight (56.7 % to 100 %), at a half-width of about 45 mg/dL. It is calibrated on average, not per patient, and it is wide.",
+   "bar_text": [
+    "No bar. Registered as descriptive before its code was written. The band was chosen on development patients between two constructions with nothing fitted in either; held-out patients were scored once."
+   ],
+   "cohort": "ShanghaiT2DM, supervised care · 29 held-out patients",
+   "command": "python -m chhaya.eval.stickband --confirm",
+   "record": "docs/decisions/2026-10-09-stickband.md",
+   "figure": {
+    "type": "dots",
+    "title": "Hidden sensor readings inside the band",
+    "unit": "per cent; the line spans individuals",
+    "min": 40,
+    "max": 100,
+    "items": [
+     {
+      "label": "As fingersticks arrive",
+      "emph": true,
+      "value": 83.60234606306463,
+      "text": "83.6",
+      "quote": [
+       "83.6 % of hidden sensor readings"
+      ],
+      "lo": 49.858356940509914,
+      "hi": 98.89502762430939
+     },
+     {
+      "label": "In hindsight",
+      "emph": true,
+      "value": 86.13752283935386,
+      "text": "86.1",
+      "quote": [
+       "86.1 % around"
+      ],
+      "lo": 56.657223796033996,
+      "hi": 100.0
+     },
+     {
+      "label": "The filter's own spread, not used",
+      "emph": false,
+      "value": 61.825378351705936,
+      "text": "61.8",
+      "quote": [],
+      "lo": 0.84985835694051,
+      "hi": 94.51476793248945
+     }
+    ],
+    "ref": {
+     "label": "target 80",
+     "value": 80
+    }
+   }
+  }
+ ],
+ "limits": [
+  "No Indian data.",
+  "Shanghai is supervised care with treatment being adjusted.",
+  "Hidden windows are at most eleven days, and these data do not give a number of days for how long a report stays true: about 1 mg/dL per day, downward, in supervised care; none detected over a week in free-living participants; eight patients re-recorded up to 168 days later (a case series, not a rule).",
+  "The effect of the physiology is about 2 %.",
+  "Against the next fingerstick the estimate is about 22 % off where a real sensor is about 12 %.",
+  "No exogenous insulin, no drug kinetics, no counter-regulation in the model."
+ ],
+ "data": [
+  {
+   "name": "ShanghaiT2DM",
+   "what": "100 patients with type 2 diabetes, 109 recordings of 3 to 14 days, supervised care. Sensor every 15 minutes, fingersticks, diet text, drugs, laboratory values.",
+   "licence": "CC BY 4.0"
+  },
+  {
+   "name": "CGMacros",
+   "what": "45 free-living participants. Two sensors, a wrist band, meal macronutrients. No medication data.",
+   "licence": "CC BY-NC-SA 4.0, non-commercial"
+  }
+ ]
+}

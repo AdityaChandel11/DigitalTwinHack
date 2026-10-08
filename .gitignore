@@ -10,3 +10,6 @@ results/**/*.npz
 
 # design-mock fonts are copied locally from the environment; the build vendors them with their licence
 /docs/superpowers/specs/m4-mocks/fonts/
+
+# the local bundle holds per-reading arrays of real patients (rule 6)
+/artifacts/
