@@ -380,7 +380,7 @@ before anything else is computed.
 Written after the three confirmatory runs of Amendment 3 (sections M, P and F) were known and before any
 output below was computed for a test patient. No bar is added, changed or removed: everything here is
 descriptive, as registered. This note fixes how the registered words become code, so that those choices
-cannot be made after the numbers. Task-level plan: `docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md`.
+cannot be made after the numbers. Task-level plan: `docs/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md`.
 
 **What had been seen when this was written.**
 
@@ -645,7 +645,7 @@ patients show measured things only.
 **Added 8 Oct 2026, after two independent reviews of the code and one run on development patients, and before
 any test patient was scored by it.**
 
-*The reviews* (`mle-reviewer`, `python-reviewer`) found no path by which a hidden sensor reading reaches an
+*The reviews* found no path by which a hidden sensor reading reaches an
 estimate, an edge of the band, the patient's scale or the choice of construction, and none by which a test
 patient reaches the choice or the pooled map. Both compared the module's mean and spread with the exact
 Gaussian posterior of the filter's own model, computed by plain linear algebra, and found agreement to 1e-13;

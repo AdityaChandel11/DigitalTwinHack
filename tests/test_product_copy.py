@@ -13,7 +13,7 @@ REPORT = "docs/decisions/2026-10-08-fingersticks-report.md"
 EXPIRY = "docs/decisions/2026-10-08-expiry.md"
 BAND = "docs/decisions/2026-10-08-band.md"
 PRIOR = "docs/decisions/2026-10-08-record-prior.md"
-DESIGN = "docs/superpowers/specs/2026-10-04-chhaya-m3-design.md"
+DESIGN = "docs/specs/2026-10-04-chhaya-m3-design.md"
 
 
 def _norm(text: str) -> str:

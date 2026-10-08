@@ -2,8 +2,7 @@
 
 Last updated: 8 Oct 2026. Project: Chhaya, team SynapseX (IIT Kanpur), solo. Deadline 20 Oct 2026, 19:00 IST;
 internal deadline 18 Oct; feature freeze 15 Oct; **science stops at midnight on 10 Oct**.
-Claude is the teammate: propose, push back, name the model and effort before each task (`docs/MODEL_GUIDE.md`).
-When the next task names a different model, Claude stops and waits for the switch.
+Read this file first when resuming work.
 
 ## Where we are
 
@@ -12,35 +11,32 @@ When the next task names a different model, Claude stops and waits for the switc
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
 | M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
-| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. Plan 5: A1 to A4 and B1 to B4 done on 8 Oct. A5 run 9 Oct: the fingerstick band held 83.6 % of hidden readings on 29 held-out patients (86.1 % in hindsight), so Shanghai patients get an estimated trace with a band. **Plan 5, B5 to B8 and C1 to C5 done 9 Oct:** `python -m chhaya.build` and `python -m chhaya.dashboard` work end to end, with 49 patients in the local bundle (Mrs. R., 29 Shanghai, 19 CGMacros). Cut by the team lead on 9 Oct for budget: patient search, dark-theme polish, per-module code reviews. Built afterwards on 9 Oct: the meal what-if (Mrs. R. only; the reveal's own twin with one meal resized, reproduces the reveal at the logged amount) and the fonts' licence file (`static/fonts/OFL.txt`). **Next: D1 (one `healthcare-reviewer` pass on the wording), then hosting the exported demo copy** |
+| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. Plan 5: A1 to A4 and B1 to B4 done on 8 Oct. A5 run 9 Oct: the fingerstick band held 83.6 % of hidden readings on 29 held-out patients (86.1 % in hindsight), so Shanghai patients get an estimated trace with a band. **Plan 5, B5 to B8 and C1 to C5 done 9 Oct:** `python -m chhaya.build` and `python -m chhaya.dashboard` work end to end, with 49 patients in the local bundle (Mrs. R., 29 Shanghai, 19 CGMacros). Cut by the team lead on 9 Oct for budget: patient search, dark-theme polish, per-module code reviews. Built afterwards on 9 Oct: the meal what-if (Mrs. R. only; the reveal's own twin with one meal resized, reproduces the reveal at the logged amount) and the fonts' licence file (`static/fonts/OFL.txt`). **Next: D1 (one the clinical-wording review pass on the wording), then hosting the exported demo copy** |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here
 
-1. **GitHub.** `main` is on GitHub at `bdafe69` (all of 8 Oct up to the progress map). Plan 4 lives on the branch
-   `claude/plan-4-expiry-band-staleness-048969`, pushed 8 Oct, not yet merged into `main`. **Task 9 is committed: merge it now** (fast-forward, then push `main`).
-   Never run any `--confirm` command from a checkout that lacks the results folders of earlier passes: the
-   once-only guards read the folder in the checkout you run from.
-2. **Plan 4, what is left**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
+1. **GitHub.** `main` holds everything up to Milestone 4's dashboard. Never run any `--confirm` command from a checkout that lacks the results folders of earlier passes: the once-only guards read the folder in the checkout you run from.
+2. **Plan 4, what is left**: [docs/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
    Tasks 0 to 8 were done on 8 Oct (registration note, seven modules, independent reviews, four passes over
    held-out patients with one record each: `docs/decisions/2026-10-08-fingersticks-report.md`, `-expiry.md`,
    `-band.md`, `-staleness.md`). The staleness pass was run once (`results/staleness/shanghai/`, commit
    `1595e71`); `--confirm` is now refused for it from any checkout that has that folder.
-   - **Task 9 is done** (docs closed: roadmap, CLAUDE.md architecture and commands, README commands and limits,
+   - **Task 9 is done** (docs closed: roadmap, docs/PROJECT_GUIDE.md architecture and commands, README commands and limits,
      design limits). Nothing was cut.
    - **Next: Milestone 4**, the product (three screens, one decision). Artifact build first: it reads
      `chhaya.eval.traces`, `chhaya.eval.calibrate.rescale` (not called: the recalibration is not used) and
-     `chhaya.twin.staleness`. Write the M4 plan (Opus 5.5, max for the design), then build.
+     `chhaya.twin.staleness`. Write the M4 plan , then build.
    - **Decided 8 Oct at the M4 kickoff** (`docs/decisions/2026-10-08-m4-kickoff.md`): the headline clause
      "and when to wear a sensor again" is reworded to "and what we measured about when the report stops
      being true". On the patient screen the prompt appears only inside the tested range (profile from three
      or five sensor days, at least 4.6 fingersticks a day, first raised by day 11); otherwise "not
      computed".
-   - **Milestone 4, where it stands.** Mocks of the three screens: `docs/superpowers/specs/m4-mocks/`
-     (`python -m http.server 8765 --directory docs/superpowers/specs/m4-mocks`, then open
+   - **Milestone 4, where it stands.** Mocks of the three screens: `docs/specs/m4-mocks/`
+     (`python -m http.server 8765 --directory docs/specs/m4-mocks`, then open
      `http://localhost:8765`). Approved 8 Oct. Design:
-     `docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md`. Plan:
-     `docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md` (Parts A to D, with models, calendar and
+     `docs/specs/2026-10-08-chhaya-m4-product-design.md`. Plan:
+     `docs/plans/2026-10-11-chhaya-plan-5-product.md` (Parts A to D, with models, calendar and
      cut order). **Part A, the band of the fingerstick estimate, stands at Task A5.** Done on 8 Oct: the
      registration note (before the code), `chhaya.twin.stickband` and `chhaya.eval.stickband` test-first,
      two independent reviews (no leakage path; their findings fixed with tests), the run on development
@@ -48,18 +44,17 @@ When the next task names a different model, Claude stops and waits for the switc
      construction, 77.4 % coverage on development patients at k = 3 where the filter's own spread gives
      60.2 %; half-width about 45 mg/dL. **Left: the one pass over test patients**
      (`python -m chhaya.eval.stickband --confirm`), which needs the team lead's go and must run by 10 Oct,
-     16:00, from this checkout, on committed code; then its decision record, `healthcare-reviewer` on the
+     16:00, from this checkout, on committed code; then its decision record, the clinical-wording review on the
      screen sentence, and a tenth entry in `chhaya.product.claims`.
    - **Part B, the bundle:** B1 to B4 are done (`src/chhaya/product/`: `claims.py` and `claim_text.py`,
      `wording.py`, `names.py`, `record.py`, `treatment.py`, `synthetic.py`). Every claim and every sentence
      of safety wording is tested word for word against its record; the synthetic patient runs through the
      real reveal. Next: B5 (`patient.py`, one patient's bundle), B6 (`evidence.py`), B7 (`build.py` and the
      committed demo bundle), B8 (real patients), then Part C, the page.
-   - The README was rewritten on 8 Oct (results table, claims in full, what Chhaya is not); the model
-     table moved to `docs/MODEL_GUIDE.md`. A GitHub description and topics are drafted in the kickoff
+   - The README was rewritten on 8 Oct (results table, claims in full, what Chhaya is not). A GitHub description and topics are drafted in the kickoff
      record for the team lead to paste.
    - **What the four results change for the product** (Milestone 4; wording reviewed by
-     `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the staleness
+     the clinical-wording review, exact screen text in each record's "Consequences for the product"): the staleness
      output is a prompt to consider a new sensor wear, never called an alarm, never a finding about glucose or
      a reason to change or keep treatment, shown only inside the tested range and beside the plain comparison
      it did not beat, with "no prompt does not mean the report still holds" and "not computed" as visible as
@@ -99,7 +94,7 @@ When the next task names a different model, Claude stops and waits for the switc
     added the two-day sum and three guards; second addendum to the note), run on development recordings, then
     the one pass over 32 held-out recordings: it separated drifted from stable recordings (AUROC 0.82) and
     was not shown to do better than comparing the fingerstick average with the report (also 0.82). The record's
-    wording was reviewed by `healthcare-reviewer`; its findings moved the prompt to the Evidence screen in
+    wording was reviewed by the clinical-wording review; its findings moved the prompt to the Evidence screen in
     the product's own use case.
 
 ## What Chhaya is now (the headline)
@@ -198,14 +193,14 @@ estimate is still about 22 % off the next fingerstick where a real sensor is abo
 
 ## Where things are
 
-- Rules and conventions: CLAUDE.md. Roadmap, calendar and the twelve failure guards:
-  docs/superpowers/plans/2026-10-02-chhaya-roadmap.md. Design: docs/superpowers/specs/2026-10-04-chhaya-m3-design.md.
+- Rules and conventions: docs/PROJECT_GUIDE.md. Roadmap, calendar and the twelve failure guards:
+  docs/plans/2026-10-02-chhaya-roadmap.md. Design: docs/specs/2026-10-04-chhaya-m3-design.md.
 - Bars, amendments and the two dated notes of 8 Oct: docs/PREREGISTRATION.md. Decisions: docs/decisions/
   (`2026-10-08-gate3.md`, `2026-10-08-record-prior.md`, `2026-10-08-fingersticks.md`, and the four of Plan 4:
   `-fingersticks-report.md`, `-expiry.md`, `-band.md`, `-staleness.md`).
 - Code: src/chhaya/. Tests: tests/ (202 fast tests). Results: results/. Research scripts as run:
   scripts/research_2026-10-04/.
-- Not committed: .claude/, .agents/, skills-lock.json (local tooling), data/ (datasets), .venv/.
+- Not committed: local tooling settings, data/ (datasets), artifacts/ (real-patient bundle), .venv/.
 
 ## Waiting on the team lead
 

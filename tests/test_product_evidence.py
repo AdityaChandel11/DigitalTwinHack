@@ -47,7 +47,7 @@ def test_a_missing_results_file_names_the_file_and_the_command_that_writes_it(tm
 
 def test_each_limit_is_the_design_specs_own_sentence():
     spec = " ".join(
-        (REPO_ROOT / "docs/superpowers/specs/2026-10-04-chhaya-m3-design.md")
+        (REPO_ROOT / "docs/specs/2026-10-04-chhaya-m3-design.md")
         .read_text(encoding="utf-8")
         .split()
     )

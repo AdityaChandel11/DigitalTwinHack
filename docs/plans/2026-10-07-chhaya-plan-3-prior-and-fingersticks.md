@@ -1,14 +1,12 @@
 # Record Prior and Fingerstick Experiments Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Goal:** Run the two remaining pre-registered experiments of Amendment 3: the record as the twin's prior (section P, CGMacros) and fingersticks after the sensor comes off (section F, ShanghaiT2DM).
 
 **Architecture:** Section P needs one switch on the existing Gate 2 command and a small comparison module that reads two results folders. Section F needs a filter that turns fingersticks into a decaying deviation from the patient's daily shape, and an experiment module that scores it against the control on held-out patients and against the fingerstick itself.
 
 **Tech Stack:** Python 3.13, NumPy, pandas, SciPy (Wilcoxon), the existing JAX twin (section P only), pytest, ruff.
 
-**Spec:** `docs/superpowers/specs/2026-10-04-chhaya-m3-design.md`; bars in `docs/PREREGISTRATION.md`, Amendment 3, sections P and F.
+**Spec:** `docs/specs/2026-10-04-chhaya-m3-design.md`; bars in `docs/PREREGISTRATION.md`, Amendment 3, sections P and F.
 
 ## Global Constraints
 
@@ -878,7 +876,7 @@ git commit -m "decide: fingerstick filter design, chosen on development patients
 
 - [ ] **Step 3: Independent review**
 
-Run `mle-reviewer` on `src/chhaya/twin/assimilate.py` and `src/chhaya/eval/fingersticks.py` with this question: "Find any path by which a sensor reading after the split, a fingerstick taken later than the time being estimated (in the live estimate), or any test patient's data reaches an estimate, the sensor map or a filter constant." Run `python-reviewer` on both. Fix what they find, tests first.
+Run an independent code review on `src/chhaya/twin/assimilate.py` and `src/chhaya/eval/fingersticks.py` with this question: "Find any path by which a sensor reading after the split, a fingerstick taken later than the time being estimated (in the live estimate), or any test patient's data reaches an estimate, the sensor map or a filter constant." Run a code review on both. Fix what they find, tests first.
 
 - [ ] **Step 4: The one confirmatory run**
 

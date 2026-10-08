@@ -3,7 +3,7 @@
 A visual direction for the three screens, to be approved before the product is built. Not the product.
 
 ```bash
-python -m http.server 8765 --directory docs/superpowers/specs/m4-mocks
+python -m http.server 8765 --directory docs/specs/m4-mocks
 ```
 
 Then open `http://localhost:8765`. Add `?theme=dark` or `?theme=light` to fix the theme and `?reveal=1` to start

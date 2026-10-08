@@ -1,10 +1,5 @@
 # Chhaya Plan 5: the product (Milestone 4) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan
-> task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking. The team lead chose native execution on
-> 8 Oct ("go on, keep building", Opus 5.5 at xhigh for every task), in the session that wrote the plan, so
-> each task gives files, interfaces and the tests that define done, not a second copy of the code.
-
 **Goal:** A three-screen, offline dashboard served by one command from a pre-built bundle, plus the one
 science pass the product needs (a band for the fingerstick estimate), finished by the freeze on 15 Oct.
 
@@ -15,8 +10,8 @@ The browser never touches the model and nothing is fitted while the page runs.
 **Tech Stack:** Python 3.13 (stdlib `http.server`, numpy, pandas, the existing `chhaya` modules), plain
 HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest and ruff.
 
-**Spec:** `docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md` (read with the mocks in
-`docs/superpowers/specs/m4-mocks/` and `docs/decisions/2026-10-08-m4-kickoff.md`).
+**Spec:** `docs/specs/2026-10-08-chhaya-m4-product-design.md` (read with the mocks in
+`docs/specs/m4-mocks/` and `docs/decisions/2026-10-08-m4-kickoff.md`).
 
 ## Status
 
@@ -26,16 +21,16 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 | A2 the spread of the filter | Done 8 Oct; checked against the exact posterior |
 | A3 the experiment module | Done 8 Oct |
 | A4 reviews, development run, freeze | Done 8 Oct: no leakage path; `patient` frozen (addendum to the note) |
-| A5 the one held-out pass | Done 9 Oct: 83.6 % live, 86.1 % in hindsight, about 45 mg/dL each side (`docs/decisions/2026-10-09-stickband.md`). Left for D1: `healthcare-reviewer` on its screen sentence; for B6: the tenth entry in `claims.py` |
+| A5 the one held-out pass | Done 9 Oct: 83.6 % live, 86.1 % in hindsight, about 45 mg/dL each side (`docs/decisions/2026-10-09-stickband.md`). Left for D1: the clinical-wording review on its screen sentence; for B6: the tenth entry in `claims.py` |
 | B1 claims, B2 wording, B3 names, record, treatment, B4 the synthetic patient | Done 8 Oct. `copy.py` was named `wording.py`; `pseudonym` became `pseudonyms` (one call names a whole cohort, so no two patients share a name) |
 | B5 to B8 | Done 9 Oct. Local bundle: 49 patients; the build reproduces the committed prompt counts and the Gate 2 traces |
 | C1 to C5 | Done 9 Oct, in one `app.js` ported from the mock; checked at desktop and phone width, console clean |
 | C6, C7 | Cut 9 Oct (budget): patient search, dark-theme polish. The meal what-if was built after all, for Mrs. R. only |
-| D1, D2 | Not started. D1 is cut to one `healthcare-reviewer` pass on the wording |
+| D1, D2 | Not started. D1 is cut to one the clinical-wording review pass on the wording |
 
 ## Global Constraints
 
-- Rules 1 to 8 of CLAUDE.md. In particular: nothing under `results/` is written by the build; per-reading
+- Rules 1 to 8 of docs/PROJECT_GUIDE.md. In particular: nothing under `results/` is written by the build; per-reading
   arrays of real patients never enter git; held-out patients are read only with `--confirm` on committed code.
 - No existing module under `src/chhaya/` is changed. New code only.
 - On screen, never: a dose recommendation; a low-glucose estimate; time in range or time below range from an
@@ -64,18 +59,17 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 5. **A reader without a mouse or with reduced motion.** Every control and the chart are reachable by keyboard
    with a visible focus ring; the reveal is instant under reduced motion; values exist as a table. (Tasks C2, C6)
 
-## Calendar and models
+## Calendar
 
-| Day | Tasks | Recommended model (the team lead runs all of it on Opus 5.5, xhigh) |
-|---|---|---|
-| Fri 9 Oct | A1 to A4; B1 to B4 (done 8 Oct) | A: Opus 5.5, max for the note, high for code and review. B1 to B4: Sonnet 5.5, medium |
-| Sat 10 Oct | A5 by 16:00 (needs the team lead's go); B5 to B7 | A5: Opus 5.5, max. B5 (leakage test, prompt gating): Opus 5.5, high. B6: Sonnet 5.5, medium. B7: Sonnet 5.5, high |
-| Sun 11 Oct | B8; C1, C2 | B8: Opus 5.5, high (touches held-out patients). C1: Sonnet 5.5, medium. C2: Opus 5.5, high |
-| Mon 12 Oct | C3, C4, C5 | Sonnet 5.5, high; Opus 5.5, high for C3 |
-| Tue 13 Oct | C6, C7; D1. **18:00: Streamlit decision** | C6, C7: Sonnet 5.5, high. D1 reviews: Opus 5.5, high |
-| Wed 14 Oct | Clinician looks at it; fixes from D1 and from the clinician | Sonnet 5.5, high |
-| Thu 15 Oct | D2; clean-clone test; **freeze** | Sonnet 5.5, medium |
-
+| Day | Tasks |
+|---|---|
+| Fri 9 Oct | A1 to A4; B1 to B4 (done 8 Oct) |
+| Sat 10 Oct | A5 by 16:00 (needs the team lead's go); B5 to B7 |
+| Sun 11 Oct | B8; C1, C2 |
+| Mon 12 Oct | C3, C4, C5 |
+| Tue 13 Oct | C6, C7; D1. **18:00: Streamlit decision** |
+| Wed 14 Oct | Clinician looks at it; fixes from D1 and from the clinician |
+| Thu 15 Oct | D2; clean-clone test; **freeze** |
 **Cut order.** First the meal what-if (B7's `whatif`, C3's panel), then patient search (C6), then polish of
 the dark theme (C7). Then what-if for real patients and the table view of the small charts. If A5 has not run
 by 10 Oct, 16:00, Part A is dropped whole and B7 writes no estimated trace for Shanghai patients. Never cut:
@@ -143,7 +137,7 @@ the command `python -m chhaya.eval.stickband [--confirm]` writing `results/stick
 
 ### Task A4: Reviews, development run, freeze
 
-- [ ] `mle-reviewer` and `python-reviewer` on A2 and A3; fix findings test-first; record them in an addendum
+- [ ] two independent code reviews on A2 and A3; fix findings test-first; record them in an addendum
   to the note.
 - [ ] `python -m chhaya.eval.stickband` (development patients). Read the report; apply the choice rule; write
   the frozen construction into the addendum. Commit results and the addendum together.
@@ -153,7 +147,7 @@ the command `python -m chhaya.eval.stickband [--confirm]` writing `results/stick
 - [ ] **Stop and ask.** It scores held-out patients once and cannot be repeated.
 - [ ] `python -m chhaya.eval.stickband --confirm`; write `docs/decisions/2026-10-10-stickband.md` (what it is,
   the numbers, what a reader should weigh, consequences for the product with the exact sentence for the
-  screen, the claim to quote); `healthcare-reviewer` on that wording; update PROGRESS, roadmap, CLAUDE.md and
+  screen, the claim to quote); the clinical-wording review on that wording; update PROGRESS, roadmap, docs/PROJECT_GUIDE.md and
   `claims.py` (a tenth result) in the same commit.
 
 ---
@@ -348,14 +342,14 @@ the real run is marked `data`).
 
 ### Task D1: reviews
 
-- [ ] `healthcare-reviewer` on every screen's wording and states; `python-reviewer` on `product/`,
-  `build.py`, `dashboard/`; `mle-reviewer` on the bundle's leakage test and the `--real` guards. Fix
+- [ ] the clinical-wording review on every screen's wording and states; a code review on `product/`,
+  `build.py`, `dashboard/`; an independent code review on the bundle's leakage test and the `--real` guards. Fix
   test-first; list what was found and fixed in the commit message.
 
 ### Task D2: docs and the clean run
 
 - [ ] README: how to run the dashboard, a screenshot of the synthetic patient (labelled synthetic), the
-  Evidence tally. CLAUDE.md: architecture and commands. PROGRESS and the roadmap Status table. Remove
+  Evidence tally. docs/PROJECT_GUIDE.md: architecture and commands. PROGRESS and the roadmap Status table. Remove
   `m4-mocks/` once the page replaces it.
 - [ ] From a fresh clone in a second folder: `uv sync`, `uv run pytest -q`, `uv run python -m chhaya.build`,
   `uv run python -m chhaya.dashboard --no-open`; the page loads with the network unplugged.

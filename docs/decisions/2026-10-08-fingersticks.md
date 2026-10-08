@@ -48,7 +48,7 @@ k = 3; control RMSE 36.01 mg/dL. Live estimate, all fingersticks:
 
 ### What the reviews changed before the freeze
 
-Two independent reviews (`mle-reviewer`, `python-reviewer`) found no path for a hidden sensor value or a test
+Two independent reviews found no path for a hidden sensor value or a test
 patient's data into an estimate, the map or a constant, and confirmed the live filter is exact. They did find:
 
 - **A same-minute reading.** The live estimate at a minute was reading the fingerstick stamped at that minute,

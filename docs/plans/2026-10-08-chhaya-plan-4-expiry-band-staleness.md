@@ -1,7 +1,5 @@
 # Chhaya Plan 4: Expiry, Band, Staleness and the Second Pass of Section F Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 > **Status, 8 Oct 2026, later:** Tasks 0 to 8 are done, each pass over held-out patients run once with its record in `docs/decisions/2026-10-08-*.md`. Nothing was cut. Only Task 9 is left.
 
 > **Status, 8 Oct 2026:** Tasks 0 to 5 are done. The code blocks of Tasks 1 to 5 show each file as first committed. The independent reviews of Task 6 then changed all five modules (commits `d4df1a0` and `e4e0076`; the list is at the end of this plan, under "Changes made by the reviews of Task 6"). **The repository is the source of truth for those files, not the blocks below.** Tasks 7 to 9 are written against the reviewed code.
@@ -12,7 +10,7 @@
 
 **Tech Stack:** Python 3.13, NumPy, pandas, SciPy (normal distribution, Wilcoxon, Spearman), scikit-learn (AUROC only), the existing JAX twin (reveal traces only), pytest, ruff.
 
-**Spec:** `docs/superpowers/specs/2026-10-04-chhaya-m3-design.md` (experiments E, B, S and the last line of F); registered text in `docs/PREREGISTRATION.md`, Amendment 3, section F ("Also reported"), its note of 8 Oct ("Outputs deferred, declared") and "Descriptive, no bar". Task 0 of this plan adds the note that fixes how those words become code.
+**Spec:** `docs/specs/2026-10-04-chhaya-m3-design.md` (experiments E, B, S and the last line of F); registered text in `docs/PREREGISTRATION.md`, Amendment 3, section F ("Also reported"), its note of 8 Oct ("Outputs deferred, declared") and "Descriptive, no bar". Task 0 of this plan adds the note that fixes how those words become code.
 
 ## What decides what we claim
 
@@ -24,19 +22,6 @@ All four outputs are descriptive: Amendment 3 gives them no bar, so there is no 
 | "What keeps it true" (fingersticks) | Error of the report rebuilt from fingersticks against the stale report and against the logbook average | Expected from the development look: the rebuilt report does **not** beat a week-old sensor report on mean or time in range, and does beat the plain fingerstick average on time above 180. If so, that is what we say |
 | "With an honest band" | Coverage on held-out patients after a factor chosen on development patients | "Calibrated on average, N of M patients within 70 to 90 %" |
 | "When to wear a sensor again" | Alarm on fingerstick surprises against real drift | An AUROC with a wide interval, beside the plain fingerstick average. If cut: the dashboard shows days since the sensor and the README says the alarm is untested |
-
-## Model and effort per task
-
-From the table in README.md (Developer guide). **Stop at each switch and wait for the model picker.**
-
-| Task | Model and effort | Why |
-|---|---|---|
-| 0 Register the readings | Any (the text is in this plan) | The wording was decided when this plan was written, on Opus 5.5 at extra effort |
-| 1 to 5 Build the five modules | **Sonnet 5.5, medium** | Specified work: every file is given in full and was run before this plan was written |
-| 6 Development runs, reviews | **Opus 5.5, high** | Review of evaluation code; a reviewer miss is silent |
-| 7 Passes over test patients, decision records | **Opus 5.5, max** | Reading a result decides what we claim |
-| 8 Staleness | Sonnet 5.5, medium to build; Opus 5.5, high to review; Opus 5.5, max to read | As above |
-| 9 Close Milestone 3 | Sonnet 5.5, medium | Docs |
 
 ## Calendar and cut rules
 
@@ -61,7 +46,7 @@ Cut order if time runs out, as registered: staleness first, then the band, then 
 - `uv run ruff check src tests` and `uv run ruff format src tests` clean; line length 110.
 - Docs and code change in the same commit. Each output gets `docs/decisions/<date>-<topic>.md` and a line in the roadmap Status table in the commit that adds its results.
 
-**Running from a Claude worktree** (no `.venv`, no `data/` there): use the main checkout's interpreter.
+**Running from a git worktree** (no `.venv`, no `data/` there): use the main checkout's interpreter.
 
 ```bash
 PY="/c/Users/prath/OneDrive/Desktop/Digital Twin Hack/.venv/Scripts/python.exe"
@@ -121,7 +106,7 @@ Append the text below to `docs/PREREGISTRATION.md`. If the commit is made on 9 O
 Written after the three confirmatory runs of Amendment 3 (sections M, P and F) were known and before any
 output below was computed for a test patient. No bar is added, changed or removed: everything here is
 descriptive, as registered. This note fixes how the registered words become code, so that those choices
-cannot be made after the numbers. Task-level plan: `docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md`.
+cannot be made after the numbers. Task-level plan: `docs/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md`.
 
 **What had been seen when this was written.**
 
@@ -272,7 +257,7 @@ those are done by 16:00 on 10 Oct. Whatever is cut is stated as not done.
 - [ ] **Step 2: Commit**
 
 ```bash
-git add docs/PREREGISTRATION.md docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md docs/PROGRESS.md docs/superpowers/plans/2026-10-02-chhaya-roadmap.md CLAUDE.md
+git add docs/PREREGISTRATION.md docs/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md docs/PROGRESS.md docs/plans/2026-10-02-chhaya-roadmap.md docs/PROJECT_GUIDE.md
 git commit -m "register: readings for the descriptive outputs and the second pass of section F; Plan 4"
 ```
 
@@ -2762,11 +2747,9 @@ git add src/chhaya/eval/calibrate.py tests/test_calibrate.py
 git commit -m "feat: band recalibration chosen on development patients, with a rule for whether it is used"
 ```
 
-**Stop here. Task 6 wants Opus 5.5 at high effort.**
-
 ---
 
-### Task 6: Development runs and independent review (Opus 5.5, high)
+### Task 6: Development runs and independent review
 
 **Files:**
 - Create: `results/fingersticks/shanghai-dev-report/`, `results/expiry/shanghai-dev/`, `results/expiry/cases-dev/`, `results/expiry/cgmacros-dev/`, `results/calibrate/cgmacros-dev/` (each: `summary.json`, `report.md`, `provenance.json`; the last also `band.json`)
@@ -2802,11 +2785,11 @@ If every line matches, go on. If one differs, the committed code is not the code
 
 - [ ] **Step 3: Independent review**
 
-Dispatch `mle-reviewer` on the five new modules (`descriptive`, `fingersticks_report`, `traces`, `expiry`, `calibrate`) with this question, verbatim:
+Dispatch an independent code review on the five new modules (`descriptive`, `fingersticks_report`, `traces`, `expiry`, `calibrate`) with this question, verbatim:
 
 > Find any path by which (a) a sensor reading from after the split reaches a stated report, a daily shape, a stale report, a spread, a surprise, an alarm score or a band factor; (b) a test patient's data reaches a band factor or its design choice, an alarm threshold or the pooled sensor map; (c) a pass with `--confirm` could write results from an estimator or cohort other than the committed one; (d) a statistic is taken over recordings where Amendment 3 says patients, or over readings where it says patients; (e) a by-day number mixes patients with different days in a way the report does not disclose. For each finding give the file, the line and a failing test.
 
-Dispatch `python-reviewer` on the same files. Fix what they find, test first, one commit per finding. A finding that changes a number in Step 2's table means the development runs are repeated and the note gets a dated line.
+Dispatch a code review on the same files. Fix what they find, test first, one commit per finding. A finding that changes a number in Step 2's table means the development runs are repeated and the note gets a dated line.
 
 The staleness modules do not exist yet; they are reviewed in Task 8.
 
@@ -2819,18 +2802,16 @@ git add results/fingersticks/shanghai-dev-report results/expiry results/calibrat
 git commit -m "results: development runs of the descriptive outputs; band design frozen on development patients"
 ```
 
-**Stop here. Task 7 wants Opus 5.5 at max effort.**
-
 ---
 
-### Task 7: The passes over test patients, one record each (Opus 5.5, max)
+### Task 7: The passes over test patients, one record each
 
 Each pass is run once. Whatever it prints is the result. Order is priority order: if the day ends early, what is done is the more important part.
 
 **Files:**
 - Create: `results/fingersticks/shanghai-report/`, `results/expiry/shanghai/`, `results/expiry/cases/`, `results/expiry/cgmacros/`, `results/calibrate/cgmacros/`
 - Create: `docs/decisions/<date>-fingersticks-report.md`, `docs/decisions/<date>-expiry.md`, `docs/decisions/<date>-band.md`
-- Modify: `docs/superpowers/plans/2026-10-02-chhaya-roadmap.md` (Status table, row M3), `docs/PROGRESS.md`
+- Modify: `docs/plans/2026-10-02-chhaya-roadmap.md` (Status table, row M3), `docs/PROGRESS.md`
 
 - [ ] **Step 1: Second pass of section F**
 
@@ -2893,15 +2874,15 @@ Write `docs/decisions/<date>-expiry.md`:
 3. **CGMacros, by day**: the twin against its control on each day, with intervals; band coverage by day; the type 2 group. **Read only the days that at least 80 % of the cohort reaches as evidence about days since the sensor.** On development patients the later days were the last days of the sensor for the few patients still recording, and both the twin's advantage and the band's coverage fell there at k = 3 and at k = 5 on the same day of the wear. Say whether the test patients show the same.
 4. **Case series**: the table of nine later wears; for each, days since the first sensor, the old shape's error beside the fresh shape's, whether the mean moved by more than 20 mg/dL, and treatment at both wears. Counts only as a summary: "J of 9 later wears had moved; K of those J had a treatment change". No test.
 5. **What it means for "how long the report stays true".** One paragraph. The honest forms are: "the report's mean drifts by about X mg/dL per day (interval), so after D days a typical patient is Y from it", or "no ageing was detectable within the days observed".
-6. **What it means for the Gate 2 sentence.** The current claim says the meal log's gain "lasts about five days". If the test patients show the gain on every day that most of the cohort reaches, at k = 3 as far as day 7, that clause is wrong as worded: write the corrected sentence here, and change it in `docs/PROGRESS.md` and `CLAUDE.md` with a pointer to this record. The Gate 2 record itself is not edited.
+6. **What it means for the Gate 2 sentence.** The current claim says the meal log's gain "lasts about five days". If the test patients show the gain on every day that most of the cohort reaches, at k = 3 as far as day 7, that clause is wrong as worded: write the corrected sentence here, and change it in `docs/PROGRESS.md` and `docs/PROJECT_GUIDE.md` with a pointer to this record. The Gate 2 record itself is not edited.
 7. **What a reader should weigh.** Three-day and five-day reports stand in for a fourteen-day one; supervised care with treatment being adjusted; day 0 uses k - 1 days; two wears are two sensors; a case series of eight patients.
 8. **The claim to quote**, of this shape:
    "On N held-out Shanghai patients a day's mean glucose lay a median of A mg/dL from a three-day sensor report's mean inside the wear and B on day 7; inside each patient that distance grew by S mg/dL per day (95 % interval L to U), and P % of patients had moved by more than 20 mg/dL by day 7. In eight patients recorded again 12 to 168 days later, J of nine later wears had moved by more than 20 mg/dL."
 
-Run `healthcare-reviewer` on sections 5 and 8 of this record before committing: the wording must not read as advice on when a given patient should wear a sensor.
+Run the clinical-wording review on sections 5 and 8 of this record before committing: the wording must not read as advice on when a given patient should wear a sensor.
 
 ```bash
-git add results/expiry docs CLAUDE.md
+git add results/expiry docs docs/PROJECT_GUIDE.md
 git commit -m "results: expiry by day on held-out patients and the case series of re-recorded patients"
 ```
 
@@ -2941,7 +2922,7 @@ git commit -m "results: band recalibration on held-out patients"
 - Consumes: Task 1 (`MOVED_MGDL`, `check_committed`, `pooled_line`, `profile_sigma`, `provenance`, `table`, `write_outputs`); `chhaya.eval.fingersticks.estimates` (keys used: `z`, the surprises on the sensor's scale in time order; `ft`; `cbg`; `map`), `why_not`, `REGISTERED_K`; `chhaya.twin.assimilate.FilterConfig().obs_sd`.
 - Produces: `chhaya.twin.staleness`: `KAPPA = 0.5`, `surprise_scale(profile_sd, fingerstick_sd) -> float`, `cusum(z, kappa=KAPPA) -> np.ndarray`, `first_alarm(t, stat, threshold) -> float | None` (the three functions the dashboard's artifact build will call). `chhaya.eval.staleness`: `score_recording(rec, k_days, pooled) -> dict | None`, `threshold(scores, drifted, rate=0.10) -> float`, `boot_auroc(df, n_boot=2000, seed=SEED) -> dict`, `alarms(rows, name, h) -> dict`, `run(scored, dev_recs, k_list, confirmatory, n_boot=2000) -> dict`; the commands `python -m chhaya.eval.staleness [--confirm]`.
 
-- [ ] **Step 1: Write the failing tests** (Sonnet 5.5, medium)
+- [ ] **Step 1: Write the failing tests**
 
 Create `tests/test_staleness.py`:
 
@@ -3394,7 +3375,7 @@ git add src/chhaya/twin/staleness.py src/chhaya/eval/staleness.py tests/test_sta
 git commit -m "feat: staleness alarm on fingerstick surprises, thresholds from development recordings"
 ```
 
-- [ ] **Step 6: Development run and review** (Opus 5.5, high)
+- [ ] **Step 6: Development run and review**
 
 ```bash
 uv run python -m chhaya.eval.staleness
@@ -3404,9 +3385,9 @@ Must read, at k = 3: 25 recordings of 24 patients, 8 drifted (7 downwards), thre
 
 The code blocks above were written before the reviews of Task 6. Three things to follow from the reviewed code instead: build the provenance before computing and pass it to `write_outputs` (as `expiry.run` does), so nothing is written after `summary.json`; `paired_summary` now reports `frac_larger` for a "greater" comparison; `profile_sigma` leaves the scored day out of both halves of the shape. None of these changes a signature the staleness modules use.
 
-Dispatch `mle-reviewer` on both staleness modules: "Find any path by which a hidden sensor reading reaches a surprise, a score or a threshold; any path by which a test recording reaches a threshold; and any way the AUROC could be inflated by recording length or by the number of fingersticks beyond what `auroc_of_fingerstick_count` discloses." Dispatch `python-reviewer`. Fix, test first. Commit `results/staleness/shanghai-dev`.
+Dispatch an independent code review on both staleness modules: "Find any path by which a hidden sensor reading reaches a surprise, a score or a threshold; any path by which a test recording reaches a threshold; and any way the AUROC could be inflated by recording length or by the number of fingersticks beyond what `auroc_of_fingerstick_count` discloses." Dispatch a code review. Fix, test first. Commit `results/staleness/shanghai-dev`.
 
-- [ ] **Step 7: The pass over test recordings, and its record** (Opus 5.5, max)
+- [ ] **Step 7: The pass over test recordings, and its record**
 
 `git status --porcelain -- src` prints nothing, then, once:
 
@@ -3418,7 +3399,7 @@ Write `docs/decisions/<date>-staleness.md`: what this is; recordings, patients, 
 
 "On N held-out recordings, D of which drifted by more than 20 mg/dL, an alarm on fingerstick surprises separated drifted from stable recordings with AUROC A (95 % interval L to U), against B for the plain fingerstick average; at a threshold set for 10 % false alarms on development recordings it caught S % with F % false alarms, a median of T days after the sensor came off."
 
-Run `healthcare-reviewer` on the record: the alarm must be described as a prompt to consider a new sensor wear, never as a finding about the patient's glucose and never as advice on treatment.
+Run the clinical-wording review on the record: the alarm must be described as a prompt to consider a new sensor wear, never as a finding about the patient's glucose and never as advice on treatment.
 
 ```bash
 git add results/staleness docs
@@ -3430,13 +3411,13 @@ git commit -m "results: staleness alarm on held-out recordings"
 ### Task 9: Close Milestone 3
 
 **Files:**
-- Modify: `docs/superpowers/plans/2026-10-02-chhaya-roadmap.md`, `docs/PROGRESS.md`, `CLAUDE.md`, `README.md`, `docs/superpowers/specs/2026-10-04-chhaya-m3-design.md`
+- Modify: `docs/plans/2026-10-02-chhaya-roadmap.md`, `docs/PROGRESS.md`, `docs/PROJECT_GUIDE.md`, `README.md`, `docs/specs/2026-10-04-chhaya-m3-design.md`
 
 - [ ] **Step 1: Roadmap and progress**
 
 In the roadmap Status table set M3 to done, with one clause per output and its record. In `docs/PROGRESS.md`: the milestone table; "Start here" now points at Milestone 4 (artifact build first; it reads `chhaya.eval.traces`, `chhaya.eval.calibrate.rescale` and, if Task 8 ran, `chhaya.twin.staleness`); the clause table ("How long it stays true", "When to wear a sensor again"); add each record's claim to "The claims to quote".
 
-- [ ] **Step 2: CLAUDE.md**
+- [ ] **Step 2: docs/PROJECT_GUIDE.md**
 
 Add the seven modules to the Architecture block, the new commands to Commands, and move "Plan 4's descriptive outputs" from "Not yet verified" to the run list with one sentence per record. If Task 7, Step 5 corrected "lasts about five days", correct it in the Gate 2 paragraph too.
 
@@ -3458,7 +3439,7 @@ Use these sentences, in the README limits and in the roadmap:
 uv run pytest -q
 uv run ruff check src tests && uv run ruff format --check src tests
 git diff --name-status bdafe69 HEAD -- src
-git add docs CLAUDE.md README.md
+git add docs docs/PROJECT_GUIDE.md README.md
 git commit -m "docs: Milestone 3 closed; progress map, verified facts and commands after Plan 4"
 ```
 
@@ -3475,7 +3456,7 @@ Expected: every test passes (274 with Task 8, 265 without), ruff is clean, and t
 
 ## Changes made by the reviews of Task 6 (8 Oct 2026)
 
-`mle-reviewer` and `python-reviewer` read the five modules of Tasks 1 to 5. Neither found a path by which a sensor reading from after the split, or a test patient, reaches an estimate, a shape, a spread or a fitted value. They found the defects below. Each was fixed with a test that failed first; commits `d4df1a0` and `e4e0076`. No test patient had been read.
+two independent code reviews read the five modules of Tasks 1 to 5. Neither found a path by which a sensor reading from after the split, or a test patient, reaches an estimate, a shape, a spread or a fitted value. They found the defects below. Each was fixed with a test that failed first; commits `d4df1a0` and `e4e0076`. No test patient had been read.
 
 | Finding | Where | What changed |
 |---|---|---|

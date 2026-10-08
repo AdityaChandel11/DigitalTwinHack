@@ -3,7 +3,7 @@
 Date: 8 Oct 2026. Follows `2026-10-04-chhaya-m3-design.md` ("Product (Milestone 4)") and supersedes that
 section where they differ. Decisions behind it: `docs/decisions/2026-10-08-m4-kickoff.md`. Visual direction,
 approved by the team lead on 8 Oct with three changes that are already in it (white page by default, clinical
-colour on the sensor, pseudonyms): `docs/superpowers/specs/m4-mocks/`.
+colour on the sensor, pseudonyms): `docs/specs/m4-mocks/`.
 
 ## What it is
 
@@ -201,8 +201,8 @@ that band and that sentence. If not, they show measured things only.
   outside the bundle and static folders is served).
 - The page: run it, drive it in the browser at desktop, tablet and phone width in both themes, read the
   console, and compare each number on the Evidence screen with `results/`.
-- Reviews: `python-reviewer` on the Python, `healthcare-reviewer` on every screen's wording before the
-  freeze, `mle-reviewer` on the band pass and on the bundle's leakage test.
+- Reviews: a code review on the Python, the clinical-wording review on every screen's wording before the
+  freeze, an independent code review on the band pass and on the bundle's leakage test.
 
 ## Cut order
 

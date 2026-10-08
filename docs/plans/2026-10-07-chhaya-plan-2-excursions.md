@@ -1,14 +1,12 @@
 # Label Check and Excursion Experiment (Gate 3) Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Goal:** Regenerate the sensor-against-fingerstick label check from a repo command, and run the pre-registered post-meal excursion experiment (Amendment 3, sections L and M) on ShanghaiT2DM.
 
 **Architecture:** A pairing module turns fingersticks and sensor readings into pairs. A feature module turns each `Recording` into one row per eligible meal with a label and four feature groups (record, sensor history, fingersticks, sensor on). A gate module fits one logistic model per arm on development patients and scores test patients once, with patient-level bootstrap intervals and a verdict.
 
 **Tech Stack:** Python 3.13, pandas, NumPy, scikit-learn (logistic regression, imputer, scaler, metrics), LightGBM for one sensitivity run, pytest, ruff.
 
-**Spec:** `docs/superpowers/specs/2026-10-04-chhaya-m3-design.md`; bars in `docs/PREREGISTRATION.md`, Amendment 3, sections L and M.
+**Spec:** `docs/specs/2026-10-04-chhaya-m3-design.md`; bars in `docs/PREREGISTRATION.md`, Amendment 3, sections L and M.
 
 ## Global Constraints
 
@@ -20,7 +18,7 @@
 - Glucose in mg/dL everywhere in these modules. Always pass `encoding="utf-8"` when writing text.
 - `uv run ruff check src tests` and `uv run ruff format src tests` clean; line length 110.
 - Bootstrap: 2,000 resamples of patients, seed `chhaya.config.SEED`, 95 % percentile interval.
-- From a Claude worktree, run with the main checkout's interpreter (see the memory note "Running from a worktree"); otherwise `uv run`.
+- From a git worktree, run with the main checkout's interpreter; otherwise `uv run`.
 
 ## Review Focus
 
@@ -980,7 +978,7 @@ Do **not** change features, the learner or the label because of what this run sh
 
 - [ ] **Step 6: Independent review before the confirmatory run**
 
-Run the `mle-reviewer` agent on `src/chhaya/eval/events.py` and `src/chhaya/eval/gate3.py` with this question: "Find any path by which a sensor reading at or after the meal time, or any test patient's data, reaches a feature, an imputation value, a scaler, a threshold or a fitted coefficient outside the sensor-on arm." Run `python-reviewer` on the same files. Fix what they find, tests first.
+Run an independent code review on `src/chhaya/eval/events.py` and `src/chhaya/eval/gate3.py` with this question: "Find any path by which a sensor reading at or after the meal time, or any test patient's data, reaches a feature, an imputation value, a scaler, a threshold or a fitted coefficient outside the sensor-on arm." Run a code review on the same files. Fix what they find, tests first.
 
 - [ ] **Step 7: The one confirmatory run**
 

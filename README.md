@@ -77,7 +77,7 @@ uv run python -m chhaya.dashboard        # opens http://127.0.0.1:8765, no datas
 
 ## Why you can trust the numbers
 
-These rules are what separate this from a model validated on its own simulator. They are in [CLAUDE.md](CLAUDE.md) and enforced by tests.
+These rules are what separate this from a model validated on its own simulator. They are in [docs/PROJECT_GUIDE.md](docs/PROJECT_GUIDE.md) and enforced by tests.
 
 1. **No leakage.** In the hidden window the twin may read meals, a wrist band and fingersticks, never the sensor. Every evaluation asserts that scored readings lie after the calibration split, and every feature builder has a test that changes the hidden sensor and checks that nothing else moves.
 2. **Split by patient, never by row.** One half of the patients tunes every setting; the other half is scored once, by a command that needs `--confirm` and committed code.
@@ -225,7 +225,7 @@ Some of what went into this project is deliberately not in the repository. Each 
 | **The two datasets** (`data/`) | Everything: calibration, scoring, the label check | Not ours to redistribute. CGMacros is CC BY-NC-SA, non-commercial; ShanghaiT2DM is CC BY 4.0 but we fetch both by script, with checksums, rather than copy them. `python -m chhaya.data.download` brings them in |
 | **Per-reading traces of real patients** (`data/derived/traces`, `artifacts/`) | The held-out patients on the local dashboard, and the by-day results | Per-reading data of real people is patient data, not an aggregate. Only derived aggregates are committed (`results/`). The committed demo bundle and any hosted copy carry the synthetic patient only |
 | **Real names** | Nowhere | The datasets contain none. Names on screen are pseudonyms given by Chhaya, with the dataset's own identifier beside them, and the dashboard says so |
-| **The coding assistant's local setup** (`.claude/`, `.agents/`, `skills-lock.json`) | Building and reviewing the code with Claude (Anthropic) under the rules in `CLAUDE.md` | It is tooling, not method: third-party skill files with their own licences, and local settings. The rules the assistant worked under are public in `CLAUDE.md`, and every decision it helped make is in `docs/decisions/` |
+| **Local tooling settings** | Writing and reviewing the code with AI-assistant tools | Editor and tool configuration and third-party helper files with their own licences: tooling, not method. Every decision they helped with is written up in `docs/decisions/`, and the rules the work followed are public in `docs/PROJECT_GUIDE.md` |
 
 ## Limits
 
@@ -246,8 +246,8 @@ Code: MIT. Datasets are downloaded by the user and never redistributed; only der
 - `results/` every reported number, as written by the commands above
 - `docs/PREREGISTRATION.md` the bars, fixed before each run, with dated amendments
 - `docs/decisions/` one record per result, each with its "claim to quote"
-- `docs/superpowers/` the roadmap, designs and task-level plans
-- `CLAUDE.md` the project's rules and conventions
+- `docs/` the roadmap, designs and task-level plans
+- `docs/PROJECT_GUIDE.md` the project's rules and conventions
 
 ## Team
 

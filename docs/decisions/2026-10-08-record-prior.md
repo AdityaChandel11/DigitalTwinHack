@@ -94,7 +94,7 @@ Also reported, as registered:
   AUROC 0.82 on held-out patients. It is a baseline table, not the headline.
 - **Dashboard (M4):** no "sensor days saved by the record" figure. The record screen shows the record as the
   twin's starting point and says its measured effect is nil.
-- **CLAUDE.md** now says, beside "Fusion is Bayesian", that the measured effect is nil.
+- **docs/PROJECT_GUIDE.md** now says, beside "Fusion is Bayesian", that the measured effect is nil.
 
 ## The claim to quote
 

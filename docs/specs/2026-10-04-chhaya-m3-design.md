@@ -56,8 +56,8 @@ Definitions and bars are in Amendment 3; this is the build view.
 | B | Band recalibration | CGMacros | `chhaya.eval.calibrate` | `results/calibrate/` |
 | S | Staleness alarm on real drift | Shanghai | `chhaya.twin.staleness` | `results/staleness/` |
 
-Order: L and M are Plan 2 (`docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md`); P and F are Plan 3
-(`docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md`); E, B and S are Plan 4, written
+Order: L and M are Plan 2 (`docs/plans/2026-10-07-chhaya-plan-2-excursions.md`); P and F are Plan 3
+(`docs/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md`); E, B and S are Plan 4, written
 the day Plan 3 finishes. Cut from the end if 10 Oct arrives first: S, then B, then E.
 
 ### Rules every experiment module follows
@@ -67,7 +67,7 @@ the day Plan 3 finishes. Cut from the end if 10 Oct arrives first: S, then B, th
   patients, scores test patients once, writes `summary.json`, `report.md`, `provenance.json`).
 - A leakage test for every feature builder: change the hidden sensor readings and assert that every feature
   outside the sensor-on arm is unchanged.
-- Results folders hold aggregates only (rule 6 in CLAUDE.md): no per-meal rows, no per-patient lab values.
+- Results folders hold aggregates only (rule 6 in docs/PROJECT_GUIDE.md): no per-meal rows, no per-patient lab values.
 - Sensor lows are never a training label. A sensor low on screen reads "sensor low, unconfirmed".
 
 ## Product (Milestone 4)

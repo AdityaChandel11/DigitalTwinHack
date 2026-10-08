@@ -1,7 +1,7 @@
 """Every sentence of reviewed wording the dashboard shows, in one place.
 
 Each constant is copied from the "Consequences for the product" section of a decision record, where
-`healthcare-reviewer` read it; `tests/test_product_copy.py` compares them word for word. A `{gap}` is filled by
+the clinical-wording review read it; `tests/test_product_copy.py` compares them word for word. A `{gap}` is filled by
 `fill` from the patient's bundle. Change a sentence in its record first, with a review, then here.
 """
 

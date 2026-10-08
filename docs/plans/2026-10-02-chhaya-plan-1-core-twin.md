@@ -1,14 +1,12 @@
 # Chhaya Plan 1 — Core Twin, Data Truth and the Reveal — Implementation Plan
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
-
 **Goal:** A tested Python package that loads both open datasets, calibrates a physiological glucose–insulin twin on the first *k* days of a patient's sensor data, estimates the hidden days without the sensor, and prints a pre-registered go/no-go verdict on real patients.
 
 **Architecture:** Loaders turn each dataset into one `Recording` type. `build_inputs` turns a `Recording` into arrays; a JAX ODE (E-DES core plus circadian and exercise terms) is calibrated by bounded least squares with the health record as prior, and a Laplace ensemble gives the uncertainty band. The reveal experiment scores the twin against the patient's own average day on readings it never saw.
 
 **Tech Stack:** Python 3.13, uv, JAX (float64, CPU), SciPy, pandas, pytest, ruff.
 
-**Spec:** [docs/WAR_ROOM.md](../../WAR_ROOM.md) (Phase 4 Finalist A, Phase 6), the brief at [docs/brief/Digital_Twin_Challenge_2026_Content.txt](../../brief/Digital_Twin_Challenge_2026_Content.txt), and the roadmap [2026-10-02-chhaya-roadmap.md](2026-10-02-chhaya-roadmap.md) (milestones M1 and M2). Project rules: [CLAUDE.md](../../../CLAUDE.md).
+**Spec:** [docs/WAR_ROOM.md](../WAR_ROOM.md) (Phase 4 Finalist A, Phase 6), the brief at [docs/brief/Digital_Twin_Challenge_2026_Content.txt](../brief/Digital_Twin_Challenge_2026_Content.txt), and the roadmap [2026-10-02-chhaya-roadmap.md](2026-10-02-chhaya-roadmap.md) (milestones M1 and M2). Project rules: [docs/PROJECT_GUIDE.md](../../docs/PROJECT_GUIDE.md).
 
 **Provenance of the code below.** Every source and test file in this plan was written and run before the plan was: 67 tests pass in about 30 s, `ruff check` and `ruff format` are clean, on this machine (Python 3.13.7, JAX 0.11.0). The loaders were tested against files built from the documented column names, **not** against the real downloads — Tasks 9 and 10 are the first contact with real data, and are where surprises will be.
 
@@ -77,7 +75,7 @@ Tasks 1–6 need no downloaded data. Tasks 7–8 depend only on Task 2's `Record
 
 - [x] **Step 1: keep the environment and data out of OneDrive.** Skipped: OneDrive is signed out on this machine, so nothing syncs. Optional, if that changes:
 
-In PowerShell, then restart the terminal or the Claude app so the variables are picked up:
+In PowerShell, then restart the terminal or the app so the variables are picked up:
 
 ```powershell
 [Environment]::SetEnvironmentVariable("UV_PROJECT_ENVIRONMENT", "C:\dev\chhaya-venv", "User")
@@ -291,10 +289,10 @@ Expected: `4 passed`, `All checks passed!`, and no file listed as needing reform
 
 - [ ] **Step 11: Commit, then branch**
 
-`.claude/`, `.agents/` and `skills-lock.json` are deliberately left out. `docs/` (including the War Room) is public by decision.
+Local tooling settings are deliberately left out. `docs/` (including the War Room) is public by decision.
 
 ```bash
-git add pyproject.toml uv.lock .gitignore LICENSE README.md CLAUDE.md src tests docs
+git add pyproject.toml uv.lock .gitignore LICENSE README.md src tests docs
 git commit -m "chore: scaffold chhaya package with units and patient split"
 git switch -c core-twin
 ```
@@ -2832,7 +2830,7 @@ print('worst five:'); print(d.nlargest(5, 'twin_rmse')[['rec_id', 'group', 'twin
 "
 ```
 
-Invoke the `scientific-critical-thinking` skill and the `mle-reviewer` agent on `results/gate2/cgmacros/` and `src/chhaya/eval/`. Ask specifically: is there any path by which a hidden reading reaches the estimate; is the average-day baseline given a fair chance; does the conclusion hold in the T2D group or only in healthy participants.
+Run an independent critical review of `results/gate2/cgmacros/` and `src/chhaya/eval/`. Ask specifically: is there any path by which a hidden reading reaches the estimate; is the average-day baseline given a fair chance; does the conclusion hold in the T2D group or only in healthy participants.
 
 - [ ] **Step 5: Record the Gate 2 decision**
 
@@ -2845,7 +2843,7 @@ git commit -m "results: first sensor-off reveal on CGMacros and the Gate 2 decis
 
 - [ ] **Step 6: Merge**
 
-Use the `superpowers:finishing-a-development-branch` skill to bring `core-twin` into `main`.
+Bring `core-twin` into `main`.
 
 ---
 

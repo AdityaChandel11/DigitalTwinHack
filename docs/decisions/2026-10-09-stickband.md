@@ -46,7 +46,7 @@ day is in `results/stickband/shanghai/report.md`.
 
 By the rule fixed in the note (mean within 70 to 90 %), the band is drawn on Shanghai patients' estimated
 trace and may be called an 80 % band. The trace drawn for days already past is the in-hindsight estimate.
-Beside it, pending `healthcare-reviewer` (Plan 5, Task D1):
+Beside it, pending the clinical-wording review (Plan 5, Task D1):
 
 > "80 % band; on held-out patients tested about six times a day it held 86 % of sensor readings on average
 > and between 57 % and 100 % for an individual. About 45 mg/dL each side: a rough estimate, on the sensor's
