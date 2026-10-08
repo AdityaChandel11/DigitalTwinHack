@@ -38,6 +38,7 @@ When the next task names a different model, Claude stops and waits for the switc
      8 of 25 recordings drifted, 7 downward. Expect "not shown to be better than the plain average", and say so.
    - Then **Task 9** (Sonnet 5.5, medium) closes Milestone 3 (architecture and commands in CLAUDE.md, README
      command list, limits); its staleness line is the "not done" sentence only if the pass is cut.
+     **End Task 9's report with the reminder to merge to `main` and push** (see "Waiting on the team lead").
    - **What the three results change for the product** (Milestone 4; wording reviewed by
      `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the report
      since the sensor is an estimated, "sensor-equivalent" mean and share of fingerstick readings above 180,
@@ -164,7 +165,8 @@ estimate is still about 22 % off the next fingerstick where a real sensor is abo
 
 ## Waiting on the team lead
 
-- Merge the Plan 4 branch into `main` and push, after Task 9 (the repo is public at submission).
+- **Merge the Plan 4 branch into `main` and push, right after Task 9** (you asked to be reminded: GitHub's `main`
+  page shows only `bdafe69` until then; the merge is a fast-forward while `main` is still at `bdafe69`).
 - Three questions to the organisers (rubric; video minimum and live Q&A; non-commercial data).
 - Read the RSSDI glucose-monitoring consensus before it is cited.
 - One clinician to look at the dashboard on 13 or 14 Oct.
