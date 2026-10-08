@@ -93,6 +93,7 @@
   <div class="under-list">
     <p class="small">This describes how old the sensor report is, not how unwell a patient is or who should be seen first. A patient with no recorded change may still have changed.</p>
     <p class="small">A patient with no prompt may still have changed.</p>
+    <p class="small">Names are pseudonyms given by Chhaya for display. The datasets contain no names; the code beside each name is the dataset's own identifier.</p>
   </div>
 
   <p class="design-note"><b>Design note, not part of the product.</b> Rows other than Mrs. R. are placeholders. In the build they are every held-out patient of both cohorts, none left out. The three states of each column always carry an icon and words, never a colour of urgency, a count or a default ranking.</p>
@@ -145,7 +146,7 @@
       <div><dt>Time</dt><dd id="ro-time">&nbsp;</dd></div>
       <div><dt><i class="key est"></i>Estimated</dt><dd id="ro-est">&nbsp;</dd></div>
       <div><dt><i class="key band"></i>80 % band</dt><dd id="ro-band">&nbsp;</dd></div>
-      <div><dt><i class="key"></i>Sensor</dt><dd id="ro-truth"><small>hidden</small></dd></div>
+      <div><dt><i class="key s-in"></i>Sensor</dt><dd id="ro-truth"><small>hidden</small></dd></div>
     </dl>
 
     <div class="chart" id="hero-chart" tabindex="0" role="group" aria-label="Glucose over the day. Estimated glucose with its 80 percent band, meals and fingersticks. Use the left and right arrow keys to read values."></div>
@@ -160,7 +161,10 @@
         <li><i class="key band"></i>80 % band</li>
         <li><i class="key est"></i>Estimated glucose</li>
         <li><i class="key avg"></i>Average day of the sensor wear</li>
-        <li><i class="key"></i>Sensor, revealed</li>
+        <li><i class="key s-in"></i>Sensor, within 70 to 180</li>
+        <li><i class="key s-hi"></i>Sensor, above 180</li>
+        <li><i class="key s-lo"></i>Sensor low, unconfirmed</li>
+        <li><i class="key range"></i>Target range, 70 to 180 mg/dL</li>
         <li><i class="key stick"></i>Fingerstick, as read from the meter</li>
         <li><i class="key meal"></i>Logged meal, grams of carbohydrate</li>
       </ul>
@@ -228,7 +232,7 @@
           <span class="eyebrow">27 Sep – 2 Oct</span>
         </div>
         <div class="mini" id="agp-chart" role="img" aria-label="Daily profile of the sensor wear: median glucose with the range of the middle half of readings, by time of day."></div>
-        <p class="small" style="margin-bottom:12px">Median, middle half and 5th to 95th percentile of the readings, by time of day.</p>
+        <p class="small" style="margin-bottom:12px">Median, middle half and 5th to 95th percentile of the readings, by time of day. Teal inside the target range, amber above 180.</p>
         <dl class="trio">
           <div><dt>Mean glucose</dt><dd>163 mg/dL</dd></div>
           <div><dt>Readings above 180</dt><dd>31 %</dd></div>

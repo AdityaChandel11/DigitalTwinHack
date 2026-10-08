@@ -25,8 +25,7 @@
   setTop();
 
   $('#theme-btn').addEventListener('click', () => {
-    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
-    root.dataset.theme = dark ? 'light' : 'dark';
+    root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
   });
 
   const VIEWS = ['clinic', 'patient', 'evidence'];
@@ -49,16 +48,16 @@
   const COHORT = { syn: 'Synthetic demo', sup: 'Supervised care', free: 'Free-living' };
   const FEW = 'fewer fingersticks than in the tested recordings';
   const ROWS = [
-    { name: 'Mrs. R.', cohort: 'syn', wearDays: 5, days: 6, tx: ['changed', 2], prompt: ['raised', 3], fpd: 6.2 },
-    { name: 'Patient S-03', cohort: 'sup', wearDays: 3, days: 9, tx: ['changed', 1], prompt: ['not-raised'], fpd: 6.4 },
-    { name: 'Patient S-08', cohort: 'sup', wearDays: 3, days: 11, tx: ['none'], prompt: ['raised', 4], fpd: 5.9 },
-    { name: 'Patient S-12', cohort: 'sup', wearDays: 5, days: 4, tx: ['changed', 3], prompt: ['not-raised'], fpd: 6.8 },
-    { name: 'Patient S-19', cohort: 'sup', wearDays: 3, days: 7, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 2.3 },
-    { name: 'Patient S-27', cohort: 'sup', wearDays: 14, days: 5, tx: ['none'], prompt: ['not-computed', 'a sensor wear of a length that was not tested'], fpd: 6.1 },
-    { name: 'Patient S-31', cohort: 'sup', wearDays: 3, days: 38, tx: ['changed', 9], prompt: ['not-computed', 'more than 11 days since the sensor'], fpd: 5.2 },
-    { name: 'Participant F-02', cohort: 'free', wearDays: 5, days: 5, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
-    { name: 'Participant F-07', cohort: 'free', wearDays: 3, days: 7, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
-    { name: 'Participant F-11', cohort: 'free', wearDays: 5, days: 3, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
+    { name: 'Mrs. R.', pid: 'demo', cohort: 'syn', wearDays: 5, days: 6, tx: ['changed', 2], prompt: ['raised', 3], fpd: 6.2 },
+    { name: 'Mr. Chen', pid: 'S-03', cohort: 'sup', wearDays: 3, days: 9, tx: ['changed', 1], prompt: ['not-raised'], fpd: 6.4 },
+    { name: 'Mrs. Zhao', pid: 'S-08', cohort: 'sup', wearDays: 3, days: 11, tx: ['none'], prompt: ['raised', 4], fpd: 5.9 },
+    { name: 'Mr. Liu', pid: 'S-12', cohort: 'sup', wearDays: 5, days: 4, tx: ['changed', 3], prompt: ['not-raised'], fpd: 6.8 },
+    { name: 'Ms. Huang', pid: 'S-19', cohort: 'sup', wearDays: 3, days: 7, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 2.3 },
+    { name: 'Mr. Wu', pid: 'S-27', cohort: 'sup', wearDays: 14, days: 5, tx: ['none'], prompt: ['not-computed', 'a sensor wear of a length that was not tested'], fpd: 6.1 },
+    { name: 'Mrs. Sun', pid: 'S-31', cohort: 'sup', wearDays: 3, days: 38, tx: ['changed', 9], prompt: ['not-computed', 'more than 11 days since the sensor'], fpd: 5.2 },
+    { name: 'Ms. Rivera', pid: 'F-02', cohort: 'free', wearDays: 5, days: 5, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
+    { name: 'Mr. Brooks', pid: 'F-07', cohort: 'free', wearDays: 3, days: 7, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
+    { name: 'Ms. Nguyen', pid: 'F-11', cohort: 'free', wearDays: 5, days: 3, tx: ['not-recorded'], prompt: ['not-computed', FEW], fpd: 0 },
   ];
   const TX = { changed: ['delta', 'Changed'], none: ['minus', 'No change recorded'], 'not-recorded': ['slash', 'Not recorded'] };
   const PR = { raised: ['flag', 'Raised'], 'not-raised': ['minus', 'Not raised'], 'not-computed': ['slash', 'Not computed'] };
@@ -73,17 +72,18 @@
   }
 
   function drawClinic() {
-    const val = { name: r => r.name, days: r => r.days, tx: r => ORDER[r.tx[0]], prompt: r => ORDER[r.prompt[0]], fpd: r => r.fpd };
+    const surname = r => r.name.replace(/^(Mr|Mrs|Ms)\.\s+/, '');
+    const val = { name: surname, days: r => r.days, tx: r => ORDER[r.tx[0]], prompt: r => ORDER[r.prompt[0]], fpd: r => r.fpd };
     const rows = ROWS.filter(r => list.cohort === 'all' || r.cohort === list.cohort).sort((a, b) => {
       const x = val[list.key](a), y = val[list.key](b);
-      return (x < y ? -1 : x > y ? 1 : a.name.localeCompare(b.name)) * list.dir;
+      return (x < y ? -1 : x > y ? 1 : surname(a).localeCompare(surname(b))) * list.dir;
     });
     $('#clinic-table tbody').innerHTML = rows
       .map(r => {
         const removed = addDays(TODAY, -r.days);
         const wear = span(addDays(removed, -r.wearDays), removed);
         return `<tr tabindex="0" aria-label="Open ${r.name}">
-          <td class="c-name" data-label="Patient"><span class="pname">${r.name}</span><span class="tag${r.cohort === 'syn' ? ' tag-syn' : ''}">${COHORT[r.cohort]}</span></td>
+          <td class="c-name" data-label="Patient"><span class="pname">${r.name}</span><span class="under"><span class="tag${r.cohort === 'syn' ? ' tag-syn' : ''}">${COHORT[r.cohort]}</span><span class="pid">${r.pid}</span></span></td>
           <td data-label="Sensor wear"><span><span class="nw">${wear}</span><span class="dim blk">${r.wearDays} days</span></span></td>
           <td class="r" data-label="Days since the sensor"><span class="days">${r.days}</span></td>
           <td data-label="Treatment changed since the sensor (from the record)">${stateCell(TX, r.tx, removed)}</td>
@@ -197,6 +197,16 @@
     box.prepend(svg);
     return { svg, X, Y, W, H, m };
   }
+  // clip regions for the three glucose zones, so one path can be drawn in each zone's colour
+  function zones(svg, id, { Y, W, H }) {
+    const span = { hi: [0, Y(180)], in: [Y(180), Y(70)], lo: [Y(70), H] };
+    for (const z in span) {
+      const c = S('clipPath', { id: `${id}-${z}` });
+      c.append(S('rect', { x: 0, y: span[z][0], width: W, height: span[z][1] - span[z][0] }));
+      svg.append(c);
+    }
+  }
+  const ZONES = ['in', 'hi', 'lo'];
   const line = (ts, vs, X, Y) => ts.map((t, i) => `${i ? 'L' : 'M'}${X(t).toFixed(1)} ${Y(vs[i]).toFixed(1)}`).join('');
   const band = (ts, lo, hi, X, Y) =>
     `${line(ts, hi, X, Y)}${ts.map((_, k) => { const i = ts.length - 1 - k; return `L${X(ts[i]).toFixed(1)} ${Y(lo[i]).toFixed(1)}`; }).join('')}Z`;
@@ -228,12 +238,12 @@
     const clipRect = S('rect', { x: m.l, y: 0, width: 0, height: H });
     clip.append(clipRect);
     svg.append(clip);
+    zones(svg, 'hz', f);
     const sensor = S('g', { 'clip-path': 'url(#hero-clip)' });
-    sensor.append(S('path', { d: line(TS, d.truth, X, Y), class: 'c-truth' }));
+    const dTruth = line(TS, d.truth, X, Y);
+    for (const z of ZONES) sensor.append(S('path', { d: dTruth, class: `c-truth t-${z}`, 'clip-path': `url(#hz-${z})` }));
     let lowNote = null;
     if (d.low) {
-      const idx = TS.map((_, i) => i).filter(i => i >= d.low.a - 1 && i <= d.low.b + 1);
-      sensor.append(S('path', { d: line(idx.map(i => TS[i]), idx.map(i => d.truth[i]), X, Y), class: 'c-low' }));
       lowNote = S('g');
       const x0 = X(TS[d.low.at]), y0 = Y(d.truth[d.low.at]);
       const xe = X(TS[d.low.b]) + 26, ye = Y(88);
@@ -300,6 +310,7 @@
     n.cEst.setAttribute('cx', x); n.cEst.setAttribute('cy', Y(d.est[i]));
     n.cTruth.setAttribute('cx', x); n.cTruth.setAttribute('cy', Y(d.truth[i]));
     n.cTruth.style.display = seen ? '' : 'none';
+    n.cTruth.setAttribute('class', `c-dot-truth${d.truth[i] > 180 ? ' hi' : d.truth[i] < 70 ? ' lo' : ''}`);
     const px = clamp(x, 23, W - 23);
     n.cPill.setAttribute('x', px - 23); n.cText.setAttribute('x', px);
     n.cText.textContent = hhmm(t);
@@ -367,12 +378,19 @@
   function drawAgp() {
     const box = $('#agp-chart');
     if (!box.clientWidth) return;
-    const { svg, X, Y } = frame(box, { yTicks: [70, 180, 300], xStep: 360, m: { l: 30, r: 8, t: 8, b: 24 } });
+    const f = frame(box, { yTicks: [70, 180, 300], xStep: 360, m: { l: 30, r: 8, t: 8, b: 24 } });
+    const { svg, X, Y } = f;
     const med = TS.map(t => basal(t) + 0.94 * mealPart(t, AVG, 66));
     const sp = TS.map(t => 15 + 0.1 * mealPart(t, AVG, 66));
-    svg.append(S('path', { d: band(TS, med.map((v, i) => v - 2.2 * sp[i]), med.map((v, i) => v + 2.4 * sp[i]), X, Y), class: 'c-agp-o' }));
-    svg.append(S('path', { d: band(TS, med.map((v, i) => v - sp[i]), med.map((v, i) => v + sp[i]), X, Y), class: 'c-agp-i' }));
-    svg.append(S('path', { d: line(TS, med, X, Y), class: 'c-truth' }));
+    zones(svg, 'az', f);
+    const outer = band(TS, med.map((v, i) => v - 2.2 * sp[i]), med.map((v, i) => v + 2.4 * sp[i]), X, Y);
+    const inner = band(TS, med.map((v, i) => v - sp[i]), med.map((v, i) => v + sp[i]), X, Y);
+    const mid = line(TS, med, X, Y);
+    for (const z of ZONES) {
+      svg.append(S('path', { d: outer, class: `c-agp-o z-${z}`, 'clip-path': `url(#az-${z})` }));
+      svg.append(S('path', { d: inner, class: `c-agp-i z-${z}`, 'clip-path': `url(#az-${z})` }));
+    }
+    for (const z of ZONES) svg.append(S('path', { d: mid, class: `c-truth t-${z}`, 'clip-path': `url(#az-${z})` }));
   }
 
   function drawWhatIf() {
@@ -526,7 +544,7 @@
     palRows = ROWS.filter(r => r.name.toLowerCase().includes(q));
     palSel = clamp(palSel, 0, Math.max(0, palRows.length - 1));
     palList.innerHTML = palRows.length
-      ? palRows.map((r, i) => `<li role="option" aria-selected="${i === palSel}" data-i="${i}"><b>${r.name}</b><span class="tag${r.cohort === 'syn' ? ' tag-syn' : ''}">${COHORT[r.cohort]}</span><span class="dim">${r.days} days since the sensor</span></li>`).join('')
+      ? palRows.map((r, i) => `<li role="option" aria-selected="${i === palSel}" data-i="${i}"><b>${r.name}</b><span class="tag${r.cohort === 'syn' ? ' tag-syn' : ''}">${COHORT[r.cohort]}</span><span class="pid">${r.pid}</span><span class="dim">${r.days} days since the sensor</span></li>`).join('')
       : '<li class="pal-empty">No patient matches. Clear the search to see everyone.</li>';
   }
   const palOpen = () => { palIn.value = ''; palSel = 0; palRender(); pal.showModal(); palIn.focus(); };
