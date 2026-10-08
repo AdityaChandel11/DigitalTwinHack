@@ -160,9 +160,9 @@ the command `python -m chhaya.eval.stickband [--confirm]` writing `results/stick
   bars passed, 4 missed, 5 descriptive.
 - [ ] Implement from the mock's `EV` array; commit.
 
-### Task B2: `copy.py`, the reviewed wording
+### Task B2: `wording.py`, the reviewed wording
 
-**Files:** Create `src/chhaya/product/copy.py`; Test `tests/test_product_copy.py`.
+**Files:** Create `src/chhaya/product/wording.py`; Test `tests/test_product_wording.py`.
 
 **Interfaces.** Produces module constants (`LIMITS`, `BAND`, `DAYS_NOTE`, `TREATMENT_CHANGED`,
 `SINCE_SENSOR`, `NOT_ESTIMATED`, `PROMPT`, `PROMPT_ABOUT`, `PROMPT_NONE`, `PROMPT_NOT_COMPUTED`,
@@ -224,7 +224,7 @@ and (if Part A ran) `chhaya.eval.stickband.band_of`. Produces
 - [ ] Tests: **leakage**: change the hidden sensor readings and assert that only `days[].sensor` and
   `days[].inside_band` differ in the bundle; a gap of more than 30 minutes in the sensor becomes a `null` in
   the arrays, not an interpolated value; `since` is `withheld` below 4.6 fingersticks a day and `outside`
-  after day 11, each with its reason from `copy.NOT_COMPUTED_REASONS`; `prompt` is `not_computed` for a wear
+  after day 11, each with its reason from `wording.NOT_COMPUTED_REASONS`; `prompt` is `not_computed` for a wear
   that is neither 3 nor 5 days, for fewer than 4.6 a day, and when first raised after day 11, and a prompt
   raised by day 11 stays raised with its day; no key of the bundle is named or valued with `tir`, `tbr`,
   `gmi` or `hba1c_est`; every number is finite or `null` (`json.dumps(..., allow_nan=False)` succeeds);
@@ -305,7 +305,7 @@ the real run is marked `data`).
 
 - [ ] `static/js/views/patient.js`: every panel of the spec from `patients/<id>.json`, each with its absent
   state (Review Focus 2); the hero's inline note when the prompt is raised; wording only from the bundle's
-  `copy` block. Verify at 1440, 820 and 375 px in both themes; console clean.
+  `wording` block. Verify at 1440, 820 and 375 px in both themes; console clean.
 
 ### Task C4: clinic list. Task C5: Evidence
 

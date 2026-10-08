@@ -41,7 +41,7 @@ New code, with no change to any existing module under `src/chhaya/`:
 src/chhaya/
   product/
     claims.py      the nine results: grade, bars, claim to quote, command, record path, figure spec
-    copy.py        every sentence of reviewed on-screen wording, as templates with named gaps
+    wording.py        every sentence of reviewed on-screen wording, as templates with named gaps
     names.py       pseudonym for a patient id (deterministic); honorific from the recorded sex
     record.py      Recording.static -> FHIR-shaped JSON
     synthetic.py   the recording of the synthetic demo patient "Mrs. R."
@@ -124,7 +124,7 @@ patients whose prompt reads "not computed", and on the Evidence screen.
   its bundle except the `sensor` arrays and the band share moves.
 - `evidence.py` reads numbers only from `results/`; `claims.py` holds wording only. A test checks every
   claim against its decision record and every figure value against the claim that quotes it.
-- `copy.py` is tested against the "Consequences for the product" sections, sentence by sentence.
+- `wording.py` is tested against the "Consequences for the product" sections, sentence by sentence.
 
 ## The three screens
 
