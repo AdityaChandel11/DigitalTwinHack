@@ -1,0 +1,173 @@
+{
+  "confirmatory": true,
+  "design": {
+    "design": "single",
+    "factor": 0.78,
+    "by_day": {
+      "1": 0.77,
+      "2": 0.74,
+      "3": 0.7,
+      "4": 0.71,
+      "5": 0.69
+    },
+    "left_out_day_gap": {
+      "single": 0.029746450993870632,
+      "by_day": 0.0019940638892283367
+    },
+    "left_out_patients_within": {
+      "single": 17,
+      "by_day": 14
+    },
+    "n_patients": 25,
+    "target": 0.8
+  },
+  "use_recalibrated_band": false,
+  "by_k": [
+    {
+      "k_days": 5.0,
+      "n_patients": 19,
+      "before_differs_from_gate2_by": 0.0,
+      "before": {
+        "mean_coverage": 0.8346196236926166,
+        "min": 0.5997045790251108,
+        "max": 0.985480943738657,
+        "patients_within": 10
+      },
+      "after": {
+        "mean_coverage": 0.7565016251933215,
+        "min": 0.4017725258493353,
+        "max": 0.9618874773139746,
+        "patients_within": 11
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 19,
+          "before": 0.8602327391058291,
+          "after": 0.80012026032824
+        },
+        {
+          "day": 2,
+          "n_patients": 18,
+          "before": 0.8200231481481483,
+          "after": 0.7401620370370371
+        },
+        {
+          "day": 3,
+          "n_patients": 18,
+          "before": 0.8883101851851851,
+          "after": 0.8206018518518517
+        },
+        {
+          "day": 4,
+          "n_patients": 18,
+          "before": 0.8148148148148149,
+          "after": 0.7337962962962963
+        },
+        {
+          "day": 5,
+          "n_patients": 18,
+          "before": 0.8385416666666665,
+          "after": 0.7430555555555556
+        },
+        {
+          "day": 6,
+          "n_patients": 9,
+          "before": 0.8618609806990088,
+          "after": 0.7932554371814935
+        },
+        {
+          "day": 7,
+          "n_patients": 2,
+          "before": 0.578125,
+          "after": 0.4322916666666667
+        },
+        {
+          "day": 8,
+          "n_patients": 1,
+          "before": 0.7708333333333334,
+          "after": 0.7395833333333334
+        }
+      ]
+    },
+    {
+      "k_days": 3.0,
+      "n_patients": 19,
+      "before_differs_from_gate2_by": 0.0,
+      "before": {
+        "mean_coverage": 0.8568148940661516,
+        "min": 0.7080200501253133,
+        "max": 0.9824120603015075,
+        "patients_within": 14
+      },
+      "after": {
+        "mean_coverage": 0.7816255436752609,
+        "min": 0.5872641509433962,
+        "max": 0.9290240811153359,
+        "patients_within": 12
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 19,
+          "before": 0.8523457350272232,
+          "after": 0.7871642468239565
+        },
+        {
+          "day": 2,
+          "n_patients": 18,
+          "before": 0.8859953703703703,
+          "after": 0.822337962962963
+        },
+        {
+          "day": 3,
+          "n_patients": 19,
+          "before": 0.8873443689869835,
+          "after": 0.8329088851160158
+        },
+        {
+          "day": 4,
+          "n_patients": 18,
+          "before": 0.8553240740740741,
+          "after": 0.7806712962962963
+        },
+        {
+          "day": 5,
+          "n_patients": 18,
+          "before": 0.9241898148148147,
+          "after": 0.855324074074074
+        },
+        {
+          "day": 6,
+          "n_patients": 18,
+          "before": 0.8344907407407408,
+          "after": 0.7384259259259259
+        },
+        {
+          "day": 7,
+          "n_patients": 18,
+          "before": 0.8576388888888888,
+          "after": 0.7673611111111112
+        },
+        {
+          "day": 8,
+          "n_patients": 9,
+          "before": 0.8490642931664059,
+          "after": 0.770726746519
+        },
+        {
+          "day": 9,
+          "n_patients": 2,
+          "before": 0.5104166666666667,
+          "after": 0.4166666666666667
+        },
+        {
+          "day": 10,
+          "n_patients": 1,
+          "before": 0.7083333333333334,
+          "after": 0.6666666666666666
+        }
+      ]
+    }
+  ]
+}
