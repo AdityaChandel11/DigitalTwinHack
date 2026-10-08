@@ -95,10 +95,10 @@ def deviation_sd(
     return _posterior(t_obs, np.zeros(t_obs.shape), t_eval, cfg, smooth, strictly_before)[1]
 
 
-def band(est, sd, scale: float = 1.0, z: float = Z80) -> tuple[np.ndarray, np.ndarray]:
-    """Low and high edge of a symmetric band: `est` minus and plus `z * scale * sd`."""
+def band(est, sd, scale: float = 1.0, quantile: float = Z80) -> tuple[np.ndarray, np.ndarray]:
+    """Low and high edge of a symmetric band: `est` minus and plus `quantile * scale * sd`."""
     if not scale > 0.0:
         raise ValueError(f"scale must be positive, got {scale}")
     est = np.asarray(est, dtype=float)
-    half = z * scale * np.asarray(sd, dtype=float)
+    half = quantile * scale * np.asarray(sd, dtype=float)
     return est - half, est + half

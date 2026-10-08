@@ -137,3 +137,82 @@ def test_a_day_that_few_patients_reach_is_marked():
     days = sb.by_day(rows)
     assert [d["few_patients"] for d in days] == [False, True]  # six patients on day 1, one on day 2
     assert days[1]["share_of_cohort"] == pytest.approx(1 / 6)
+
+
+# ---------- second review, 8 Oct: tests that would have passed on wrong code ----------
+def _grid(seed: int = 11, pid: str | None = None, days: int = 8):
+    """Starts at midnight, fingersticks every four hours on the grid: positions in the gap are easy to name."""
+    rec = make_recording(days=days, seed=seed)
+    sticks = rec.cgm[rec.cgm["t_min"] % 240 == 0].reset_index(drop=True)
+    pid = pid or f"grid-{seed}"
+    return dataclasses.replace(rec, fingersticks=sticks, rec_id=pid, patient_id=pid)
+
+
+def test_the_live_band_is_not_narrowed_at_a_fingersticks_own_minute():
+    # F1 read fingersticks stamped strictly before the minute, so the band must too
+    b = sb.band_of(_grid(), 3, POOLED, "filter", "live")
+    assert (b["hi"] - b["est"])[b["t"] % 240 == 0].min() > 31.5
+
+
+def test_in_the_middle_of_a_gap_hindsight_is_narrower_than_live_by_more_than_half_a_mgdl():
+    live, hind = (sb.band_of(_grid(), 3, POOLED, "filter", w) for w in sb.ESTIMATES)
+    mid = (live["t"] % 240 == 120) & (
+        live["t"] < live["t"].max() - 240
+    )  # not the gap after the last fingerstick
+    assert ((live["hi"] - live["est"]) - (hind["hi"] - hind["est"]))[mid].min() > 0.5
+
+
+def test_the_choice_takes_the_filter_when_it_is_clearly_closer_to_80():
+    assert (
+        sb.choose({"filter": {"mean": 81.0, "n_within": 3}, "patient": {"mean": 88.0, "n_within": 9}})
+        == "filter"
+    )
+
+
+def test_by_day_averages_a_patients_recordings_first_and_counts_who_reaches_each_day():
+    recs = [_grid(seed=1, pid="a"), _grid(seed=2, pid="a"), _grid(seed=3, pid="b"), _grid(seed=5, pid="c")]
+    recs.append(_grid(seed=6, pid="d", days=6))  # three hidden days only
+    block = sb.run(recs, recs, [3.0], confirmatory=False, frozen=None)["by_k"][0]
+    assert block["n_recordings"] == 5 and block["n_patients"] == 4
+    by = {d["day"]: d for d in block["by_day"]}
+    assert [by[d]["n_patients"] for d in (1, 3, 4, 5)] == [4, 4, 3, 3]
+    assert by[3]["share_of_cohort"] == 1.0 and by[4]["share_of_cohort"] == 0.75
+    rows = [
+        sb.score_recording(r, 3.0, block_pooled) for r in recs for block_pooled in [sb.pooled_line(recs, 3.0)]
+    ]
+    day1 = {r["rec_id"] + str(i): r["days"][0]["live_filter_cov"] for i, r in enumerate(rows)}
+    a = (rows[0]["days"][0]["live_filter_cov"] + rows[1]["days"][0]["live_filter_cov"]) / 2.0
+    others = [rows[i]["days"][0]["live_filter_cov"] for i in (2, 3, 4)]
+    assert by[1]["live_filter_cov"] == pytest.approx((a + sum(others)) / 4.0) and len(day1) == 5
+
+
+# a single flat recording makes the pooled line degenerate, which is the case under test
+@pytest.mark.filterwarnings("ignore:Polyfit may be poorly conditioned")
+def test_an_error_row_names_the_patient_and_all_failing_says_so():
+    block = sb.run([_grid(seed=1, pid="ok"), _flat()], [_grid(seed=1, pid="ok"), _flat()], [3.0], False, None)
+    assert block["by_k"][0]["errors"][0]["patient_id"] == "flat"
+    with pytest.raises(ValueError, match="could not be given a band"):
+        sb.run([_flat()], [_flat()], [3.0], confirmatory=False, frozen=None)
+
+
+def test_a_failure_at_a_later_k_does_not_lose_the_primary_result(monkeypatch):
+    dev = [_grid(seed=s, pid=f"dev-{s}") for s in (1, 2, 3)]
+    test = [_grid(seed=9, pid="test-9")]
+    chosen = sb.run(dev, dev, [3.0], confirmatory=False, frozen=None)["by_k"][0]["choice"]["chosen"]
+    real = sb._score_all
+
+    def fails_on_test_patients_at_k5(recs, k_days, pooled):
+        if k_days == 5.0 and recs is test:
+            raise RuntimeError("disk full")
+        return real(recs, k_days, pooled)
+
+    monkeypatch.setattr(sb, "_score_all", fails_on_test_patients_at_k5)
+    blocks = sb.run(test, dev, [3.0, 5.0], confirmatory=True, frozen=chosen)["by_k"]
+    assert blocks[0]["n_patients"] == 1 and "bands" in blocks[0]
+    assert blocks[1] == {"k_days": 5.0, "primary": False, "error": "RuntimeError('disk full')"}
+    assert "could not be computed" in sb._report({"confirmatory": True, "frozen": chosen, "by_k": blocks})
+
+
+def test_the_registered_filter_has_no_slow_level():
+    with pytest.raises(SystemExit):
+        sb.check_frozen(FilterConfig(slow=True))

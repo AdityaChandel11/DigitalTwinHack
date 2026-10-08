@@ -158,7 +158,7 @@ def by_day(rows: list[dict]) -> list[dict]:
     if not flat:
         return []
     df = pd.DataFrame(flat)
-    cohort = df["patient_id"].nunique()
+    cohort = df["patient_id"].nunique()  # patients with at least one scored day, as in `summarise_days`
     out = []
     for d, g in df.groupby("day"):
         per = g.drop(columns="day").groupby("patient_id").mean()
@@ -181,7 +181,7 @@ def _score_all(recs: list[Recording], k_days: float, pooled: tuple[float, float]
         try:
             row = score_recording(rec, k_days, pooled)
         except BandUnavailable as err:
-            errors.append({"rec_id": rec.rec_id, "error": str(err)})
+            errors.append({"rec_id": rec.rec_id, "patient_id": rec.patient_id, "error": str(err)})
             continue
         if row is not None:
             rows.append(row)
@@ -195,6 +195,22 @@ def _bands_block(rows: list[dict]) -> dict:
 def _outside(recs: list[Recording], k_days: float) -> dict[str, int]:
     """Why recordings are outside section F's cohort at this k, and how many for each reason."""
     return dict(Counter(why for why in (why_not(r, k_days) for r in recs) if why))
+
+
+def _block(scored: list[Recording], k: float, d: dict, confirmatory: bool) -> dict:
+    """What is reported at one k: the test recordings scored now, or the development rows already in hand."""
+    rows, errors = _score_all(scored, k, d["pooled"]) if confirmatory else (d["rows"], d["errors"])
+    block: dict = {
+        "k_days": k,
+        "n_recordings": len(rows),
+        "n_patients": len({r["patient_id"] for r in rows}),
+        "errors": errors,
+        "outside": _outside(scored, k),
+    }
+    if rows:
+        block["bands"] = _bands_block(rows)
+        block["by_day"] = by_day(rows)
+    return block
 
 
 def run(
@@ -229,30 +245,33 @@ def run(
             {"pooled": pooled, "rows": rows, "errors": errors, "bands": _bands_block(rows) if rows else None}
         )
     if dev[0]["bands"] is None:
-        raise ValueError("no development recording in the cohort: the construction cannot be chosen")
+        failed = dev[0]["errors"]
+        raise ValueError(
+            f"all {len(failed)} development recordings in the cohort could not be given a band "
+            f"({failed[0]['error']}): the construction cannot be chosen"
+            if failed
+            else "no development recording in the cohort: the construction cannot be chosen"
+        )
     chosen = choose(dev[0]["bands"]["live"])
     if confirmatory and chosen != frozen:
         raise ValueError(f"development patients choose {chosen!r}, the code has {frozen!r} frozen")
     for i, (k, d) in enumerate(zip(k_list, dev, strict=True)):
-        rows, errors = _score_all(scored, k, d["pooled"]) if confirmatory else (d["rows"], d["errors"])
-        block: dict = {
-            "k_days": k,
-            "primary": i == 0,
-            "n_recordings": len(rows),
-            "n_patients": len({r["patient_id"] for r in rows}),
-            "errors": errors,
-            "outside": _outside(scored, k),
-            "choice": {
-                "on": "live",
-                "at_k": k_list[0],
-                "chosen": chosen,
-                "development": d["bands"],
-                "development_errors": d["errors"],
-            },
+        try:
+            block = _block(scored, k, d, confirmatory)
+        except Exception as err:
+            if i == 0:
+                raise
+            # the primary result is already in hand and the test patients have been read: do not lose it
+            result["by_k"].append({"k_days": k, "primary": False, "error": repr(err)})
+            continue
+        block["primary"] = i == 0
+        block["choice"] = {
+            "on": "live",
+            "at_k": k_list[0],
+            "chosen": chosen,
+            "development": d["bands"],
+            "development_errors": d["errors"],
         }
-        if rows:
-            block["bands"] = _bands_block(rows)
-            block["by_day"] = by_day(rows)
         result["by_k"].append(block)
     return result
 
@@ -277,6 +296,9 @@ def _report(result: dict) -> str:
     for block in result["by_k"]:
         role = "primary" if block["primary"] else "reported"
         lines += ["", f"## k = {block['k_days']:g} days ({role})", ""]
+        if "error" in block:
+            lines.append(f"This calibration length could not be computed: {block['error']}.")
+            continue
         choice = block["choice"]
         outside = "; ".join(f"{why}: {n}" for why, n in block["outside"].items()) or "none"
         lines.append(
@@ -335,6 +357,8 @@ def main() -> None:
     out_dir: Path = FOLDER / ("shanghai" if args.confirm else "shanghai-dev")
     check_frozen(FilterConfig())
     if args.confirm:
+        if FROZEN is None:
+            raise SystemExit("no construction is frozen: run the development pass and write its choice first")
         check_committed(_git("status", "--porcelain", "--", "src"))
         refuse_second_pass(out_dir)
     prov = provenance(args.confirm, k=list(REGISTERED_K), frozen=FROZEN)
