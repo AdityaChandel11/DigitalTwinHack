@@ -1,8 +1,9 @@
 # Chhaya
 
 **A Type 2 diabetes digital twin that turns one sensor wear into the patient's shadow: how long that report stays
-true, which of its readings not to believe, what keeps it true, and when to wear a sensor again. Every number is
-scored once on held-out patients against a bar written beforehand, and the misses are published too.**
+true, which of its readings not to believe, what keeps it true, and what we measured about when the report
+stops being true. Every number is scored once on held-out patients against a bar written beforehand, and the
+misses are published too.**
 
 Submission to the Happiest Health Digital Twin Challenge 2026.
 

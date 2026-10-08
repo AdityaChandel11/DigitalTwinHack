@@ -2,11 +2,13 @@
 
 Chhaya (Hindi for "shadow") is our entry to the Happiest Health **Digital Twin Challenge 2026**: a Type 2 diabetes
 digital twin that turns one sensor wear into the patient's shadow. It tells the doctor **how long that sensor report
-stays true, which of its readings not to believe, what keeps it true (meal log, fingersticks), and when to wear a
-sensor again**, with an honest band, and every claim is scored once on held-out patients against a bar written
-beforehand, misses published. It does not claim to replace a sensor, to alarm on lows, or to predict post-meal
-excursions better than the sensor week already does (headline revised 4 Oct and again 8 Oct after Gate 3; see
-`docs/decisions/2026-10-04-plan-revision.md` and `docs/decisions/2026-10-08-gate3.md`).
+stays true, which of its readings not to believe, what keeps it true (meal log, fingersticks), and what we
+measured about when the report stops being true**, with an honest band, and every claim is scored once on
+held-out patients against a bar written beforehand, misses published. It does not claim to replace a sensor, to alarm on lows, or to predict post-meal
+excursions better than the sensor week already does, and it gives no rule for when to wear a sensor again
+(headline revised 4 Oct, 8 Oct after Gate 3 and 8 Oct at the M4 kickoff; see
+`docs/decisions/2026-10-04-plan-revision.md`, `docs/decisions/2026-10-08-gate3.md` and
+`docs/decisions/2026-10-08-m4-kickoff.md`).
 
 - **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
 - **Where we are and what is next: [docs/PROGRESS.md](docs/PROGRESS.md). Read it first.**
@@ -18,7 +20,9 @@ excursions better than the sensor week already does (headline revised 4 Oct and 
 - **Task-level plans:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md) and
   [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
   and [Plan 4, second pass of F, expiry, band, staleness](docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md)
-  are done (Milestone 3 closed 8 Oct). Milestone 4 plan is written the day it starts.
+  are done (Milestone 3 closed 8 Oct). Milestone 4 started 8 Oct: decisions in
+  `docs/decisions/2026-10-08-m4-kickoff.md`, design mocks in `docs/superpowers/specs/m4-mocks/`; its spec and
+  Plan 5 follow the approval of the mocks.
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## Working agreement (solo project: Claude is the teammate)

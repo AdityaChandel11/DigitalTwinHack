@@ -6,9 +6,11 @@ Date: 4 Oct 2026. Supersedes the Milestone 3 and 4 sections of the roadmap as wr
 ## What we are building, in one sentence
 
 Chhaya turns one sensor wear into the patient's shadow: it tells the doctor **how long that sensor report stays
-true, which of its readings not to believe, what keeps it true, and when to wear a sensor again**, with an
-honest band. (Revised 8 Oct: the clause "and it predicts post-meal excursions without the sensor" is removed;
-Gate 3 did not support it. See `docs/decisions/2026-10-08-gate3.md`.)
+true, which of its readings not to believe, what keeps it true, and what we measured about when the report
+stops being true**, with an honest band. (Revised 8 Oct: the clause "and it predicts post-meal excursions
+without the sensor" is removed; Gate 3 did not support it. See `docs/decisions/2026-10-08-gate3.md`. Revised
+again 8 Oct at the M4 kickoff: "and when to wear a sensor again" is reworded, because the prompt is outside
+its tested range in the product's own use case. See `docs/decisions/2026-10-08-m4-kickoff.md`.)
 
 ## Who it is for, and the one decision
 

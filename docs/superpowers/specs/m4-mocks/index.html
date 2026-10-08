@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chhaya design mock</title>
+<link rel="preload" href="fonts/SourceSans3VF-Upright.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/SourceSerif4VF-Roman.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="mock.css">
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-search" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5"/><path d="M8 2.5v11a5.5 5.5 0 0 0 0-11z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-info" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 7.2v3.6M8 5.1v.1"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 16 16"><path d="M3.5 14V2.5M3.5 3h8l-1.8 2.8L11.5 8.5h-8"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M5.5 8h5"/></symbol>
+  <symbol id="i-slash" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M3.8 12.2 12.2 3.8"/></symbol>
+  <symbol id="i-delta" viewBox="0 0 16 16"><path d="M8 3 13.5 12.5h-11z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 16 16"><path d="M3 8.5 6.5 12 13 4.5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8"/></symbol>
+  <symbol id="i-span" viewBox="0 0 16 16"><path d="M2.5 5v6M13.5 5v6M2.5 8h11"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 16 16"><path d="M6 3.5 10.5 8 6 12.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 16 16"><path d="M9.5 3.5 5 8l4.5 4.5"/></symbol>
+  <symbol id="i-sort" viewBox="0 0 10 14"><path d="M5 12V2M1.5 5.5 5 2l3.5 3.5"/></symbol>
+  <symbol id="i-file" viewBox="0 0 16 16"><path d="M4 2h5l3 3v9H4zM9 2v3h3"/></symbol>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top">
+  <div class="top-in">
+    <a class="brand" href="#clinic" aria-label="Chhaya, clinic list">
+      <svg viewBox="0 0 26 26" aria-hidden="true"><circle class="b-shadow" cx="15.5" cy="15.5" r="8.5"/><circle class="b-ink" cx="10.5" cy="10.5" r="8.5"/></svg>
+      Chhaya
+    </a>
+    <nav class="tabs" aria-label="Screens">
+      <a href="#clinic" data-view="clinic">Clinic list</a>
+      <a href="#patient" data-view="patient">Patient</a>
+      <a href="#evidence" data-view="evidence">Evidence</a>
+    </nav>
+    <div class="top-tools">
+      <button class="find" id="find-btn" type="button" aria-label="Find a patient"><svg class="ic"><use href="#i-search"/></svg><span>Find a patient</span><kbd>Ctrl K</kbd></button>
+      <button class="icon-btn" id="theme-btn" type="button" aria-label="Switch between light and dark"><svg class="ic"><use href="#i-theme"/></svg></button>
+    </div>
+  </div>
+  <div class="limits" role="note" aria-label="Limits of this prototype">
+    <p><svg class="ic"><use href="#i-info"/></svg><span>Research prototype; evaluated on a Chinese cohort in supervised care and a US free-living cohort; estimates, not measurements; not for dosing.</span></p>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============================== 1. Clinic list ============================== -->
+<section class="view" id="view-clinic" aria-labelledby="h-clinic">
+  <div class="view-head">
+    <div>
+      <h1 id="h-clinic">Clinic list</h1>
+      <p class="lede">How old each patient's sensor report is. Listed by name; nothing on this screen ranks patients.</p>
+    </div>
+    <div class="filters">
+      <div class="seg" role="group" aria-label="Cohort" id="cohort-seg"></div>
+      <label class="sort-sel">Sort by
+        <select id="sort-sel">
+          <option value="name">Patient</option>
+          <option value="days">Days since the sensor</option>
+          <option value="tx">Treatment changed</option>
+          <option value="prompt">Prompt</option>
+          <option value="fpd">Fingersticks a day</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table class="list" id="clinic-table">
+      <thead>
+        <tr>
+          <th scope="col" data-key="name"><button type="button">Patient<svg class="ic arrow"><use href="#i-sort"/></svg></button></th>
+          <th scope="col">Sensor wear</th>
+          <th scope="col" class="r" data-key="days"><button type="button">Days since the sensor<svg class="ic arrow"><use href="#i-sort"/></svg></button></th>
+          <th scope="col" class="w-tx" data-key="tx"><button type="button">Treatment changed since the sensor (from the record)<svg class="ic arrow"><use href="#i-sort"/></svg></button></th>
+          <th scope="col" data-key="prompt"><button type="button">Prompt to consider a new sensor wear<svg class="ic arrow"><use href="#i-sort"/></svg></button></th>
+          <th scope="col" class="r" data-key="fpd"><button type="button">Fingersticks a day<svg class="ic arrow"><use href="#i-sort"/></svg></button></th>
+          <th scope="col"><span class="vh">Open</span></th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="under-list">
+    <p class="small">This describes how old the sensor report is, not how unwell a patient is or who should be seen first. A patient with no recorded change may still have changed.</p>
+    <p class="small">A patient with no prompt may still have changed.</p>
+  </div>
+
+  <p class="design-note"><b>Design note, not part of the product.</b> Rows other than Mrs. R. are placeholders. In the build they are every held-out patient of both cohorts, none left out. The three states of each column always carry an icon and words, never a colour of urgency, a count or a default ranking.</p>
+</section>
+
+<!-- ============================== 2. Patient ============================== -->
+<section class="view" id="view-patient" aria-labelledby="h-patient" hidden>
+  <a class="back" href="#clinic"><svg class="ic"><use href="#i-back"/></svg>Clinic list</a>
+  <div class="pt-head">
+    <div>
+      <h1 id="h-patient">Mrs. R. <span class="chip chip-syn">Synthetic demo patient</span></h1>
+      <p class="meta">58 years · type 2 diabetes for 9 years · metformin, basal insulin · HbA1c 8.1 % (65 mmol/mol) on 20 Sep</p>
+    </div>
+    <a class="btn" href="#patient" id="record-btn"><svg class="ic"><use href="#i-file"/></svg>Record, FHIR-shaped JSON</a>
+  </div>
+
+  <div class="summary">
+    <div class="sum-days">
+      <div class="big">6</div>
+      <div>
+        <p class="big-label">days since<br>the sensor</p>
+        <p class="sub">Sensor removed 2 Oct 2026</p>
+      </div>
+    </div>
+    <dl class="facts">
+      <div><dt>Sensor wear</dt><dd>27 Sep – 2 Oct<span>5 days</span></dd></div>
+      <div><dt>Fingersticks since</dt><dd>37<span>6.2 a day</span></dd></div>
+      <div><dt>Treatment <small>(from the record)</small></dt><dd>Changed<span>4 Oct</span></dd></div>
+    </dl>
+    <p class="small note">Measured over at most 11 days: about 1 mg/dL per day, downward, in supervised care with treatment being adjusted; none detected over 7 days in free-living participants (7 of 19 with type 2 diabetes). Beyond 11 days: eight patients. A cohort figure, not this patient's; not to be multiplied by the days shown.</p>
+  </div>
+
+  <section class="hero" aria-labelledby="h-hero">
+    <div class="hero-head">
+      <div>
+        <h2 id="h-hero">Today's shadow <span class="chip chip-est">estimated</span></h2>
+        <p id="hero-sub">Estimated from the sensor wear of 27 Sep – 2 Oct and the meal log. No sensor is being worn. That report may be out of date: see the prompt of 5 Oct below.</p>
+      </div>
+      <div class="hero-ctl">
+        <div class="seg" role="group" aria-label="Day" id="day-seg">
+          <button type="button" aria-pressed="false" data-day="0">Day 1</button>
+          <button type="button" aria-pressed="false" data-day="1">Day 3</button>
+          <button type="button" aria-pressed="true" data-day="2">Day 6, today</button>
+        </div>
+        <button class="btn btn-primary" id="reveal-btn" type="button" aria-pressed="false">Reveal the sensor</button>
+      </div>
+    </div>
+
+    <dl class="readout" id="readout" aria-live="polite">
+      <div><dt>Time</dt><dd id="ro-time">&nbsp;</dd></div>
+      <div><dt><i class="key est"></i>Estimated</dt><dd id="ro-est">&nbsp;</dd></div>
+      <div><dt><i class="key band"></i>80 % band</dt><dd id="ro-band">&nbsp;</dd></div>
+      <div><dt><i class="key"></i>Sensor</dt><dd id="ro-truth"><small>hidden</small></dd></div>
+    </dl>
+
+    <div class="chart" id="hero-chart" tabindex="0" role="group" aria-label="Glucose over the day. Estimated glucose with its 80 percent band, meals and fingersticks. Use the left and right arrow keys to read values."></div>
+
+    <div class="scrub" id="scrub">
+      <label class="vh" for="reveal-range">Reveal the sensor up to a time of day</label>
+      <input type="range" id="reveal-range" min="0" max="100" step="1" value="0" aria-valuetext="sensor hidden">
+    </div>
+
+    <div class="chart-foot">
+      <ul class="legend">
+        <li><i class="key band"></i>80 % band</li>
+        <li><i class="key est"></i>Estimated glucose</li>
+        <li><i class="key avg"></i>Average day of the sensor wear</li>
+        <li><i class="key"></i>Sensor, revealed</li>
+        <li><i class="key stick"></i>Fingerstick, as read from the meter</li>
+        <li><i class="key meal"></i>Logged meal, grams of carbohydrate</li>
+      </ul>
+      <div class="cov"><b id="cov-out">–</b><span id="cov-label">of the day's readings inside the band, shown after the reveal</span></div>
+      <p class="small">80 % band; on held-out participants it held 83.5 % of readings on average and between 60 % and 98.5 % for an individual.</p>
+      <p class="small">Mrs. R. is synthetic, so the sensor revealed here is simulated. On the held-out patients the revealed trace is the real sensor that was hidden from the estimate.</p>
+      <details class="tbl">
+        <summary>Show these values as a table</summary>
+        <div class="scroll"><table id="hero-table"></table></div>
+      </details>
+    </div>
+  </section>
+
+  <div class="pt-grid">
+    <div class="stack">
+
+      <section class="panel" aria-labelledby="h-since">
+        <div class="panel-head">
+          <h2 id="h-since">Since the sensor, from fingersticks</h2>
+          <span class="chip chip-est">estimated</span>
+          <span class="eyebrow">sensor-equivalent, estimated from 37 fingersticks over 6 days</span>
+        </div>
+        <div class="pair">
+          <div class="h"></div><div class="h est">Sensor-equivalent</div><div class="h">As read from the meter</div>
+          <div class="k">Mean glucose</div><div class="v est">141 <small>mg/dL</small></div><div class="v">158 <small>mg/dL</small></div>
+          <div class="k">Share of fingerstick readings above 180 mg/dL</div><div class="v est">14 <small>%</small></div><div class="v">27 <small>%</small></div>
+        </div>
+        <p class="small">Sensor-equivalent, not meter values: this patient's sensor read lower than the meter. Converted with the line learned during the wear of 27 Sep – 2 Oct; another sensor may read differently. A share of readings taken at about 07:00, 09:45, 12:50, 15:15, 19:50 and 22:10, not time above range; nights are not sampled. In 29 supervised-care patients tested about six times a day, for up to 11 days, the median miss was 6 mg/dL (mean) and 3 points (above 180); half of patients were missed by more. Not measured with fewer fingersticks. Says nothing about low glucose. Not for dosing.</p>
+        <p class="small">Time in range and low glucose since the sensor are not estimated. This screen says nothing about hypoglycaemia.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="h-sticks">
+        <div class="panel-head">
+          <h2 id="h-sticks">Fingersticks</h2>
+          <span class="chip chip-meas">as read</span>
+          <span class="eyebrow" id="sticks-day">today, mg/dL</span>
+        </div>
+        <ul class="sticks" id="sticks-list"></ul>
+
+        <div class="prompt">
+          <div class="prompt-state"><svg class="ic"><use href="#i-flag"/></svg>Prompt raised on 5 Oct</div>
+          <p class="prompt-text">The sensor report may be out of date. A running comparison of fingersticks with the daily pattern of the sensor wear of 27 Sep – 2 Oct crossed its preset threshold on 5 Oct. This concerns the report, not this patient's glucose. Consider whether a new sensor wear is due.</p>
+          <dl class="compare" aria-label="The plain comparison">
+            <div><dt>Sensor report, mean</dt><dd>163 mg/dL</dd></div>
+            <div><dt>Fingerstick average, sensor-equivalent</dt><dd>141 mg/dL</dd></div>
+            <div><dt>Difference</dt><dd>22 mg/dL lower</dd></div>
+          </dl>
+          <p class="small">A prompt to consider a new sensor wear. It is not a finding about this patient's glucose and not a reason to change or to keep treatment. In 32 recordings of supervised-care patients tested about six times a day, for up to 11 days, it was raised in 7 of 11 whose sensor mean had moved by more than 20 mg/dL and in 2 of 21 where it had not. It was not shown to tell the two apart better than comparing the fingerstick average with the report's mean. In 9 of those 11 the mean had moved downward, in patients whose treatment was being adjusted by staff; 2 moved upward. Whether the prompt is raised when glucose rises is not known. It does not say which way. Not tested in outpatient care, with fewer fingersticks or over longer periods. It neither indicates nor rules out low glucose. Not a rule for when to wear a sensor.</p>
+        </div>
+
+        <p class="design-note"><b>Design note.</b> The other two states take the same box, at the same size and weight:</p>
+        <ul class="states">
+          <li><svg class="ic"><use href="#i-minus"/></svg><span><b>No prompt.</b> No prompt does not mean the report still holds, nor that glucose is unchanged or in range. 4 of 11 recordings whose sensor mean had moved raised none.</span></li>
+          <li><svg class="ic"><use href="#i-slash"/></svg><span><b>Not computed: fewer fingersticks than in the tested recordings.</b> Not a recommendation to test at any frequency.</span></li>
+        </ul>
+      </section>
+
+    </div>
+    <div class="stack">
+
+      <section class="panel" aria-labelledby="h-report">
+        <div class="panel-head">
+          <h2 id="h-report">Last sensor report</h2>
+          <span class="chip chip-meas">measured</span>
+          <span class="eyebrow">27 Sep – 2 Oct</span>
+        </div>
+        <div class="mini" id="agp-chart" role="img" aria-label="Daily profile of the sensor wear: median glucose with the range of the middle half of readings, by time of day."></div>
+        <p class="small" style="margin-bottom:12px">Median, middle half and 5th to 95th percentile of the readings, by time of day.</p>
+        <dl class="trio">
+          <div><dt>Mean glucose</dt><dd>163 mg/dL</dd></div>
+          <div><dt>Readings above 180</dt><dd>31 %</dd></div>
+          <div><dt>Readings below 70</dt><dd>1 %<small>sensor low, unconfirmed</small></dd></div>
+        </dl>
+      </section>
+
+      <section class="panel" aria-labelledby="h-tx">
+        <div class="panel-head"><h2 id="h-tx">Treatment changed since the sensor</h2><span class="eyebrow">from the record, 4 Oct</span></div>
+        <p class="small">Treatment changed since the sensor. In a case series the sensor mean had moved by more than 20 mg/dL in 4 of 5 repeat wears after a change (3 of 4 patients) and in 0 of 4 without. No recorded change does not mean the report still holds.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="h-wi">
+        <div class="panel-head"><h2 id="h-wi">Meal what-if</h2><span class="chip chip-sim">simulation</span><span class="eyebrow">lunch, today</span></div>
+        <div class="wi-ctl">
+          <label for="wi-range">Carbohydrate</label>
+          <input type="range" id="wi-range" min="20" max="100" step="5" value="40">
+          <output id="wi-out" for="wi-range">40 g</output>
+        </div>
+        <div class="mini" id="wi-chart" role="img" aria-label="Estimated glucose after lunch as logged, and simulated with the chosen amount of carbohydrate."></div>
+        <p class="small" id="wi-text"></p>
+        <p class="small">A simulation on the virtual patient of a meal the doctor enters. It is not a prediction for this patient and not advice. There are no dose, drug or activity options.</p>
+        <p class="design-note"><b>Design note.</b> This wording has not been through clinical review yet. First feature to be cut if time runs short.</p>
+      </section>
+
+      <section class="panel" aria-labelledby="h-keep">
+        <div class="panel-head"><h2 id="h-keep">What keeps the report true</h2></div>
+        <ul class="keep">
+          <li><b>The meal log</b><p class="small">On 19 held-out patients, 5 days after the sensor comes off, Chhaya's estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05) and about 0.35 mg/dL closer than a control that uses no meals (p = 0.04). The gain comes from the meal log and is small.</p></li>
+          <li><b>Fingersticks</b><p class="small">In 29 supervised-care patients who were already tested about six times a day, the plain average of their fingersticks, converted to the sensor's scale, lay a median of 6 mg/dL from the sensor's mean over the following days; a three-day sensor report lay 13 (a fourteen-day report would be closer). Not measured at lower testing frequencies. This describes those patients; it is not a recommendation to test at any frequency.</p></li>
+        </ul>
+      </section>
+
+      <section class="panel" aria-labelledby="h-rec" id="record-panel">
+        <div class="panel-head"><h2 id="h-rec">Record</h2><span class="chip chip-syn">Synthetic</span><span class="eyebrow">FHIR-shaped JSON, excerpt</span></div>
+<pre class="record" tabindex="0">{ "resourceType": "Bundle", "meta": { "tag": <span class="syn">"synthetic"</span> },
+  "entry": [
+    { "resourceType": "Patient", "id": "mrs-r", "birthDate": "1968" },
+    { "resourceType": "Condition", "code": "Type 2 diabetes mellitus",
+      "onsetDateTime": "2017" },
+    { "resourceType": "Observation", "code": "HbA1c",
+      "valueQuantity": { "value": 65, "unit": "mmol/mol" },
+      "effectiveDateTime": "2026-09-20" },
+    { "resourceType": "MedicationStatement",
+      "medication": "insulin glargine", "note": "changed 2026-10-04" },
+    { "resourceType": "Observation", "code": "genetic marker",
+      "valueString": <span class="syn">"synthetic field, off in every experiment"</span> } ] }</pre>
+        <p class="small" style="margin-top:12px">The record sets the twin's starting point. Its measured effect on the estimate is nil: see Evidence, the record as the twin's prior.</p>
+      </section>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 3. Evidence ============================== -->
+<section class="view" id="view-evidence" aria-labelledby="h-evidence" hidden>
+  <div class="view-head">
+    <div>
+      <h1 id="h-evidence">Evidence</h1>
+      <p class="lede">Every result, beside the bar that was written before the run. Each was scored once on patients the model had never seen. Misses are shown as plainly as passes.</p>
+    </div>
+  </div>
+
+  <div class="tally">
+    <div><b>5</b><span>of 9 bars passed <span class="badge pass" style="margin-left:4px"><svg class="ic"><use href="#i-check"/></svg>Passed</span></span></div>
+    <div><b>4</b><span>of 9 bars missed <span class="badge miss" style="margin-left:4px"><svg class="ic"><use href="#i-x"/></svg>Missed</span></span></div>
+    <div><b>5</b><span>results with no bar <span class="badge desc" style="margin-left:4px"><svg class="ic"><use href="#i-span"/></svg>Descriptive</span></span></div>
+  </div>
+
+  <blockquote class="pull">We fused the record and the sensor two ways and measured both; once a sensor week exists the record added nothing detectable. What adds something is the meal log and fingersticks.<cite>Fusion, in one sentence</cite></blockquote>
+
+  <div class="ev-wrap">
+    <nav class="ev-nav" id="ev-nav" aria-label="Results"></nav>
+    <div id="ev-list"></div>
+  </div>
+
+  <div class="ev-tail">
+    <section class="panel" aria-labelledby="h-lim">
+      <div class="panel-head"><h2 id="h-lim">Limits</h2></div>
+      <ul class="limits-list">
+        <li>No Indian data.</li>
+        <li>Shanghai is supervised care with treatment being adjusted.</li>
+        <li>Hidden windows are at most eleven days, and these data do not give a number of days for how long a report stays true: about 1 mg/dL per day, downward, in supervised care; none detected over a week in free-living participants; eight patients re-recorded up to 168 days later (a case series, not a rule).</li>
+        <li>The effect of the physiology is about 2 %.</li>
+        <li>The shadow is about one and a half times as far from a fingerstick as a real sensor is.</li>
+        <li>No exogenous insulin, no drug kinetics, no counter-regulation in the model.</li>
+      </ul>
+    </section>
+    <section class="panel" aria-labelledby="h-prov">
+      <div class="panel-head"><h2 id="h-prov">Data and licences</h2></div>
+      <table class="prov">
+        <tr><th scope="row">ShanghaiT2DM</th><td>100 patients with type 2 diabetes, 109 recordings of 3 to 14 days, supervised care. Sensor every 15 minutes, fingersticks, diet text, drugs, laboratory values. CC BY 4.0.</td></tr>
+        <tr><th scope="row">CGMacros</th><td>45 free-living participants. Two sensors, a wrist band, meal macronutrients. No medication data. CC BY-NC-SA 4.0, non-commercial.</td></tr>
+        <tr><th scope="row">Held out</th><td>Patients are split once, by a hash of the patient identifier. Settings are tuned on one half and every figure on this screen is from the other.</td></tr>
+        <tr><th scope="row">Regenerate</th><td>Nothing is redistributed: <code>python -m chhaya.data.download</code> fetches both datasets, and each result names the command that regenerates it.</td></tr>
+      </table>
+    </section>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">Chhaya · SynapseX, IIT Kanpur · design mock of 8 Oct 2026. Patient data on these screens is synthetic. Evidence figures are quoted from the decision records of 4 and 8 Oct.</footer>
+
+<dialog class="palette" id="palette" aria-label="Find a patient">
+  <div class="pal-in"><svg class="ic"><use href="#i-search"/></svg><input id="pal-input" type="text" placeholder="Find a patient" autocomplete="off" spellcheck="false" aria-controls="pal-list"></div>
+  <ul class="pal-list" id="pal-list" role="listbox"></ul>
+  <div class="pal-foot"><span>Enter to open</span><span>Up and down to move</span><span>Esc to close</span></div>
+</dialog>
+
+<script src="mock.js"></script>
+</body>
+</html>

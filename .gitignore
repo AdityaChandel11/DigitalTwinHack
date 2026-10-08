@@ -7,3 +7,6 @@ __pycache__/
 .ruff_cache/
 .env
 results/**/*.npz
+
+# design-mock fonts are copied locally from the environment; the build vendors them with their licence
+/docs/superpowers/specs/m4-mocks/fonts/

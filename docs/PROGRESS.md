@@ -12,7 +12,7 @@ When the next task names a different model, Claude stops and waits for the switc
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
 | M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
-| M4 Product (three screens, one decision) | **Next.** Plan written the day it starts |
+| M4 Product (three screens, one decision) | **Started 8 Oct.** Kickoff decisions recorded; design mocks of the three screens built and checked in the browser; **waiting for the team lead to approve the direction**, then the spec and Plan 5 |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here
@@ -31,15 +31,19 @@ When the next task names a different model, Claude stops and waits for the switc
    - **Next: Milestone 4**, the product (three screens, one decision). Artifact build first: it reads
      `chhaya.eval.traces`, `chhaya.eval.calibrate.rescale` (not called: the recalibration is not used) and
      `chhaya.twin.staleness`. Write the M4 plan (Opus 5.5, max for the design), then build.
-   - **For the team lead to decide before Milestone 4:** whether "and when to wear a sensor again" stays in
-     the headline as worded. What stands behind it is the expiry record ("not a rule for when a patient
-     should wear a sensor") and a prompt that, in the product's own use case (an outpatient, weeks after a
-     fourteen-day report, testing less often), is outside everything tested and so is shown on the Evidence
-     screen only. On the patient screen it appears only inside the tested range (profile from three or five
-     sensor days, at least 4.6 fingersticks a day, first raised by day 11); otherwise "not computed". See the
-     staleness record's "Consequences for the product". Claude's suggestion: reword the clause to "and what
-     we measured about when the report stops being true", or keep it and say on the first screen that the
-     prompt is evidence, not a feature.
+   - **Decided 8 Oct at the M4 kickoff** (`docs/decisions/2026-10-08-m4-kickoff.md`): the headline clause
+     "and when to wear a sensor again" is reworded to "and what we measured about when the report stops
+     being true". On the patient screen the prompt appears only inside the tested range (profile from three
+     or five sensor days, at least 4.6 fingersticks a day, first raised by day 11); otherwise "not
+     computed".
+   - **Milestone 4, where it stands.** Mocks of the three screens: `docs/superpowers/specs/m4-mocks/`
+     (`python -m http.server 8765 --directory docs/superpowers/specs/m4-mocks`, then open
+     `http://localhost:8765`). Next, in order: (1) the team lead approves or corrects the direction; (2) the
+     M4 design spec and `docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md`; (3) **before science
+     stops on 10 Oct:** one descriptive pass that gives the fingerstick estimate a band and scores its
+     coverage once on held-out Shanghai patients (dated note to Amendment 3 first). If it is not done by
+     10 Oct, 16:00, Shanghai patients show measured things only and the estimated trace is drawn on
+     CGMacros patients and the synthetic demo patient only.
    - **What the four results change for the product** (Milestone 4; wording reviewed by
      `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the staleness
      output is a prompt to consider a new sensor wear, never called an alarm, never a finding about glucose or
@@ -87,7 +91,8 @@ When the next task names a different model, Claude stops and waits for the switc
 ## What Chhaya is now (the headline)
 
 One sensor wear turned into the patient's shadow: **how long that sensor report stays true, which of its
-readings not to believe, what keeps it true, and when to wear a sensor again**, with an honest band. Every
+readings not to believe, what keeps it true, and what we measured about when the report stops being true**,
+with an honest band. Every
 number is scored once on held-out patients against a bar written beforehand, misses published. It does not
 replace a sensor and has no low-glucose alarm and no meal alert.
 
@@ -99,7 +104,7 @@ What stands behind each clause today:
 | With an honest band | Gate 2 coverage; band recalibration | Done. 83.5 % on average, 60 to 98.5 % per patient; the recalibration did not transfer and is not used |
 | Which readings not to believe | Label check: 8 of 64 sensor lows confirmed, 732 of 809 highs | Done |
 | What keeps it true | Meal log (Gate 2); fingersticks (F1, F2); second pass of F at report level | Both pass. At report level a plain baseline wins: the fingerstick average converted to the sensor's scale beats our estimate. Measured at about six fingersticks a day only |
-| When to wear a sensor again | Staleness alarm on 32 held-out recordings | Done. A prompt, not a rule: it told moved from unmoved reports (AUROC 0.82, interval 0.63 to 0.98; raised in 7 of 11 drifted and 2 of 21 stable recordings) and was not shown to do better than comparing the fingerstick average with the report (0.82). Supervised care, about six fingersticks a day, at most eleven days, 9 of 11 drifts downward; not tested where the product would be used, so in the product's use case it is on the Evidence screen only. **This clause of the headline is the weakest; see "Start here"** |
+| What we measured about when the report stops being true | Staleness alarm on 32 held-out recordings | Done. A prompt, not a rule: it told moved from unmoved reports (AUROC 0.82, interval 0.63 to 0.98; raised in 7 of 11 drifted and 2 of 21 stable recordings) and was not shown to do better than comparing the fingerstick average with the report (0.82). Supervised care, about six fingersticks a day, at most eleven days, 9 of 11 drifts downward; not tested where the product would be used, so in the product's use case it is on the Evidence screen only. **Reworded 8 Oct at the M4 kickoff: the headline no longer promises a rule** |
 | Fusion of record and sensor | Gate 3 (M1) and record prior (P1) | Both missed: built and measured, no gain |
 
 ## The claims to quote (and nothing bigger)
