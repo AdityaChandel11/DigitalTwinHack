@@ -1,0 +1,152 @@
+{
+  "confirmatory": true,
+  "false_alarm_target": 0.1,
+  "by_k": [
+    {
+      "k_days": 3.0,
+      "primary": true,
+      "n_recordings": 32,
+      "n_patients": 29,
+      "n_drifted": 11,
+      "n_drifted_down": 9,
+      "median_abs_drift": 12.248982040913411,
+      "median_fingersticks": 32.0,
+      "auroc": {
+        "n_resamples_used": 2000,
+        "score": {
+          "auroc": 0.8181818181818182,
+          "lo": 0.6280799240285406,
+          "hi": 0.9759644138755981
+        },
+        "early": {
+          "auroc": 0.8354978354978355,
+          "lo": 0.6623917748917749,
+          "hi": 0.975
+        },
+        "plain": {
+          "auroc": 0.8181818181818182,
+          "lo": 0.6076426862611074,
+          "hi": 0.972255291005291
+        },
+        "n_sticks": {
+          "auroc": 0.5930735930735931,
+          "lo": 0.37604166666666666,
+          "hi": 0.796875
+        },
+        "diff": {
+          "difference": 0.0,
+          "lo": -0.16080510992275707,
+          "hi": 0.18079545454545443
+        }
+      },
+      "score": {
+        "threshold": 5.407162753872864,
+        "sensitivity": 0.6363636363636364,
+        "false_alarm_rate": 0.09523809523809523,
+        "n_alarms": 9,
+        "drifted_alarmed": 7,
+        "n_drifted": 11,
+        "quiet_alarmed": 2,
+        "n_quiet": 21,
+        "median_days_to_alarm": 2.5833333333333335
+      },
+      "early": {
+        "threshold": 2.299363263719985,
+        "sensitivity": 0.7272727272727273,
+        "false_alarm_rate": 0.19047619047619047,
+        "n_alarms": 12,
+        "drifted_alarmed": 8,
+        "n_drifted": 11,
+        "quiet_alarmed": 4,
+        "n_quiet": 21
+      },
+      "plain": {
+        "threshold": 44.90034971998267,
+        "sensitivity": 0.2727272727272727,
+        "false_alarm_rate": 0.0,
+        "n_alarms": 3,
+        "drifted_alarmed": 3,
+        "n_drifted": 11,
+        "quiet_alarmed": 0,
+        "n_quiet": 21
+      },
+      "development": {
+        "n_recordings": 25,
+        "n_without_drift": 17
+      }
+    },
+    {
+      "k_days": 5.0,
+      "primary": false,
+      "n_recordings": 24,
+      "n_patients": 21,
+      "n_drifted": 6,
+      "n_drifted_down": 6,
+      "median_abs_drift": 11.19356111918934,
+      "median_fingersticks": 25.5,
+      "auroc": {
+        "n_resamples_used": 1998,
+        "score": {
+          "auroc": 0.6666666666666666,
+          "lo": 0.3478703703703704,
+          "hi": 0.9199999999999999
+        },
+        "early": {
+          "auroc": 0.7407407407407407,
+          "lo": 0.4955182072829131,
+          "hi": 0.9376420454545455
+        },
+        "plain": {
+          "auroc": 0.7314814814814815,
+          "lo": 0.40440476190476193,
+          "hi": 1.0
+        },
+        "n_sticks": {
+          "auroc": 0.4907407407407407,
+          "lo": 0.23800125313283207,
+          "hi": 0.7444861111111112
+        },
+        "diff": {
+          "difference": -0.06481481481481488,
+          "lo": -0.48697667464114835,
+          "hi": 0.30000000000000004
+        }
+      },
+      "score": {
+        "threshold": 5.606803886480232,
+        "sensitivity": 0.3333333333333333,
+        "false_alarm_rate": 0.05555555555555555,
+        "n_alarms": 3,
+        "drifted_alarmed": 2,
+        "n_drifted": 6,
+        "quiet_alarmed": 1,
+        "n_quiet": 18,
+        "median_days_to_alarm": 2.880208333333333
+      },
+      "early": {
+        "threshold": 3.206171078689164,
+        "sensitivity": 0.0,
+        "false_alarm_rate": 0.1111111111111111,
+        "n_alarms": 2,
+        "drifted_alarmed": 0,
+        "n_drifted": 6,
+        "quiet_alarmed": 2,
+        "n_quiet": 18
+      },
+      "plain": {
+        "threshold": 26.947098515753225,
+        "sensitivity": 0.3333333333333333,
+        "false_alarm_rate": 0.05555555555555555,
+        "n_alarms": 3,
+        "drifted_alarmed": 2,
+        "n_drifted": 6,
+        "quiet_alarmed": 1,
+        "n_quiet": 18
+      },
+      "development": {
+        "n_recordings": 21,
+        "n_without_drift": 15
+      }
+    }
+  ]
+}

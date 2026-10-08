@@ -11,7 +11,7 @@ When the next task names a different model, Claude stops and waits for the switc
 |---|---|
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
-| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry and band **done on held-out patients, 8 Oct** (all descriptive, no bar); the staleness alarm is the only part left |
+| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Only Task 9, the closing of the docs, is left |
 | M4 Product (three screens, one decision) | Not started |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
@@ -22,25 +22,30 @@ When the next task names a different model, Claude stops and waits for the switc
    Never run any `--confirm` command from a checkout that lacks the results folders of earlier passes: the
    once-only guards read the folder in the checkout you run from.
 2. **Plan 4, what is left**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
-   Tasks 0 to 7 were done on 8 Oct (registration note, five modules, two independent reviews, the three passes
-   over held-out patients with one record each: `docs/decisions/2026-10-08-fingersticks-report.md`, `-expiry.md`,
-   `-band.md`). **Task 8, the staleness alarm, is built, reviewed and run on development recordings (commits
-   `9ed5af7`, `7adc06c`, `25a6921`); only its test pass is left.**
-   - **Task 8, step 7 (Opus 5.5, max): the one pass over test recordings, then its record.** Before it:
-     `git status --porcelain -- src` prints nothing and `results/staleness/shanghai/` does not exist. Run
-     `python -m chhaya.eval.staleness --confirm` once from the worktree (use the main checkout's interpreter and
-     `CHHAYA_DATA_DIR`, see the memory note on running from a worktree). Write
-     `docs/decisions/2026-10-08-staleness.md` (template: the other three Plan 4 records and the plan's Task 8,
-     step 7), run `healthcare-reviewer` on it (the alarm is a prompt to consider a new sensor wear, never a
-     finding about glucose or advice on treatment), update this file, the roadmap row 3.7 and CLAUDE.md, commit.
-     What the development look shows (in-sample, not quotable): AUROC 0.72 for the alarm, 0.76 for the same sum
-     over the first two days, 0.73 for the plain fingerstick average, 0.56 for the fingerstick count alone;
-     8 of 25 recordings drifted, 7 downward. Expect "not shown to be better than the plain average", and say so.
-   - Then **Task 9** (Sonnet 5.5, medium) closes Milestone 3 (architecture and commands in CLAUDE.md, README
-     command list, limits); its staleness line is the "not done" sentence only if the pass is cut.
-     **End Task 9's report with the reminder to merge to `main` and push** (see "Waiting on the team lead").
-   - **What the three results change for the product** (Milestone 4; wording reviewed by
-     `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the report
+   Tasks 0 to 8 were done on 8 Oct (registration note, seven modules, independent reviews, four passes over
+   held-out patients with one record each: `docs/decisions/2026-10-08-fingersticks-report.md`, `-expiry.md`,
+   `-band.md`, `-staleness.md`). The staleness pass was run once (`results/staleness/shanghai/`, commit
+   `1595e71`); `--confirm` is now refused for it from any checkout that has that folder.
+   - **Next: Task 9** (Sonnet 5.5, medium) closes Milestone 3: the seven modules and the new commands in
+     CLAUDE.md, the README command list, the design's limits, the roadmap. Nothing was cut, so none of the
+     "not done" sentences of its Step 4 is used; the README limits take the staleness record's caveats
+     instead. **End Task 9's report with the reminder to merge to `main` and push** (see "Waiting on the
+     team lead").
+   - **For the team lead to decide before Milestone 4:** whether "and when to wear a sensor again" stays in
+     the headline as worded. What stands behind it is the expiry record ("not a rule for when a patient
+     should wear a sensor") and a prompt that, in the product's own use case (an outpatient, weeks after a
+     fourteen-day report, testing less often), is outside everything tested and so is shown on the Evidence
+     screen only. On the patient screen it appears only inside the tested range (profile from three or five
+     sensor days, at least 4.6 fingersticks a day, first raised by day 11); otherwise "not computed". See the
+     staleness record's "Consequences for the product". Claude's suggestion: reword the clause to "and what
+     we measured about when the report stops being true", or keep it and say on the first screen that the
+     prompt is evidence, not a feature.
+   - **What the four results change for the product** (Milestone 4; wording reviewed by
+     `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the staleness
+     output is a prompt to consider a new sensor wear, never called an alarm, never a finding about glucose or
+     a reason to change or keep treatment, shown only inside the tested range and beside the plain comparison
+     it did not beat, with "no prompt does not mean the report still holds" and "not computed" as visible as
+     the prompt; the report
      since the sensor is an estimated, "sensor-equivalent" mean and share of fingerstick readings above 180,
      from the plain fingerstick average converted to the sensor's scale, beside the same figures as read from
      the meter, not from the estimator; no time in range and no time below range from any source; days since
@@ -72,6 +77,12 @@ When the next task names a different model, Claude stops and waits for the switc
    each over held-out patients: the second pass of section F (a plain baseline beats our estimator at report
    level), expiry (these data do not give a number of days; "lasts about five days" corrected) and the
    band (the recalibration did not transfer).
+10. 8 Oct, Plan 4, Task 8: the staleness alarm built, reviewed twice (the reviews fixed the threshold rule and
+    added the two-day sum and three guards; second addendum to the note), run on development recordings, then
+    the one pass over 32 held-out recordings: it separated drifted from stable recordings (AUROC 0.82) and
+    was not shown to do better than comparing the fingerstick average with the report (also 0.82). The record's
+    wording was reviewed by `healthcare-reviewer`; its findings moved the prompt to the Evidence screen in
+    the product's own use case.
 
 ## What Chhaya is now (the headline)
 
@@ -88,7 +99,7 @@ What stands behind each clause today:
 | With an honest band | Gate 2 coverage; band recalibration | Done. 83.5 % on average, 60 to 98.5 % per patient; the recalibration did not transfer and is not used |
 | Which readings not to believe | Label check: 8 of 64 sensor lows confirmed, 732 of 809 highs | Done |
 | What keeps it true | Meal log (Gate 2); fingersticks (F1, F2); second pass of F at report level | Both pass. At report level a plain baseline wins: the fingerstick average converted to the sensor's scale beats our estimate. Measured at about six fingersticks a day only |
-| When to wear a sensor again | Staleness alarm | Plan 4, first to be cut |
+| When to wear a sensor again | Staleness alarm on 32 held-out recordings | Done. A prompt, not a rule: it told moved from unmoved reports (AUROC 0.82, interval 0.63 to 0.98; raised in 7 of 11 drifted and 2 of 21 stable recordings) and was not shown to do better than comparing the fingerstick average with the report (0.82). Supervised care, about six fingersticks a day, at most eleven days, 9 of 11 drifts downward; not tested where the product would be used, so in the product's use case it is on the Evidence screen only. **This clause of the headline is the weakest; see "Start here"** |
 | Fusion of record and sensor | Gate 3 (M1) and record prior (P1) | Both missed: built and measured, no gain |
 
 ## The claims to quote (and nothing bigger)
@@ -137,6 +148,19 @@ What stands behind each clause today:
   19 participants within 70 to 90 %. A recalibration factor chosen on development patients (0.78) moved the
   average to 75.7 %, further from 80 % than before, so it is not used: the band is calibrated on average,
   not per patient. (`docs/decisions/2026-10-08-band.md`)
+- **Staleness alarm** (`docs/decisions/2026-10-08-staleness.md`): descriptive, no bar; a plain baseline does
+  as well. On 32 held-out Shanghai recordings (29 patients under supervised care, tested about six times a
+  day, for up to eleven days after a three-day sensor report), 11 of which drifted by more than 20 mg/dL in
+  mean sensor glucose (9 downward, 2 upward), a running sum of fingerstick surprises, used only as a prompt
+  to consider a new sensor wear, separated drifted from stable recordings with AUROC 0.82 (95 % interval
+  0.63 to 0.98), against 0.82 (0.61 to 0.97) for the plain fingerstick average compared with the report's
+  mean (difference 0.00, interval -0.16 to 0.18): it was not shown to do better than that comparison. At a
+  threshold set on development recordings so that at most 10 % of stable ones would raise it, the prompt was
+  raised in 7 of 11 drifted recordings (64 %) and 2 of 21 stable ones (10 %); in those 7, a median of 2.6
+  days after the split. With a five-day report (24 recordings, 6 drifted) it was not shown to separate them
+  (0.67, interval 0.35 to 0.92). The label and the score look back over the same days. It is not a finding
+  about a patient's glucose, not advice on treatment and not a rule for when to wear a sensor, and it was
+  not tested in outpatient care, at lower testing frequencies or over longer periods.
 - **Gate 3 (missed its bars):** on 47 held-out Shanghai patients (1,205 meals, 39 % followed by an excursion
   above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal
   time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the
@@ -158,7 +182,8 @@ estimate is still about 22 % off the next fingerstick where a real sensor is abo
 - Rules and conventions: CLAUDE.md. Roadmap, calendar and the twelve failure guards:
   docs/superpowers/plans/2026-10-02-chhaya-roadmap.md. Design: docs/superpowers/specs/2026-10-04-chhaya-m3-design.md.
 - Bars, amendments and the two dated notes of 8 Oct: docs/PREREGISTRATION.md. Decisions: docs/decisions/
-  (`2026-10-08-gate3.md`, `2026-10-08-record-prior.md`, `2026-10-08-fingersticks.md`).
+  (`2026-10-08-gate3.md`, `2026-10-08-record-prior.md`, `2026-10-08-fingersticks.md`, and the four of Plan 4:
+  `-fingersticks-report.md`, `-expiry.md`, `-band.md`, `-staleness.md`).
 - Code: src/chhaya/. Tests: tests/ (202 fast tests). Results: results/. Research scripts as run:
   scripts/research_2026-10-04/.
 - Not committed: .claude/, .agents/, skills-lock.json (local tooling), data/ (datasets), .venv/.

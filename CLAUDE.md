@@ -190,7 +190,6 @@ Not yet verified:
 - How many snacks go unlogged in CGMacros (snacks that are logged carry the label `snack`).
 - Whether the E-DES Michaelis constant (0.63 mmol/L) suits T2D; it is a population setting to revisit on
   dev patients.
-- The staleness alarm (Plan 4, Task 8): not built, not tested.
 
 Run on 8 Oct 2026 on held-out patients, one decision record each in `docs/decisions/2026-10-08-*.md`:
 **Gate 3 missed** (fusing record, sensor week and fingersticks predicts a post-meal excursion no better than
@@ -209,7 +208,15 @@ these data do not give a number of days: about 1 mg/dL per day, downward, over a
 care; no ageing detected over a week in free-living participants; in nine repeat wears of eight patients the four
 whose mean had moved all had a treatment change in the files (three patients; a case series, not a rule). **Band**
 (`2026-10-08-band.md`): 83.5 % coverage on average, 60 to 98.5 % per patient; the recalibration factor (0.78) did
-not transfer and is not used. Quote only each record's "claim to quote", whole: its caveats are part of it.
+not transfer and is not used. **Staleness alarm** (`2026-10-08-staleness.md`): on 32 held-out recordings, 11
+drifted by more than 20 mg/dL (9 downward), a running sum of fingerstick surprises separated drifted from stable
+recordings with AUROC 0.82 (interval 0.63 to 0.98) and **was not shown to do better than comparing the fingerstick
+average with the report** (also 0.82); at its development threshold it was raised in 7 of 11 drifted and 2 of 21
+stable recordings; with a five-day report it was not shown to separate them. It is a prompt to consider a new
+sensor wear, never called an alarm on screen, never a finding about glucose, advice on treatment or a rule for
+when to wear a sensor. It was not tested in outpatient care, at lower testing frequencies or beyond eleven days,
+so in the product's own use case it is shown on the Evidence screen only. Quote only each record's "claim to quote",
+whole: its caveats are part of it.
 - What the RSSDI glucose-monitoring consensus says about intermittent sensor use; read it before citing it.
 
 Known model gaps: no counter-regulation (deep hypoglycaemia dynamics are not trustworthy), no drug

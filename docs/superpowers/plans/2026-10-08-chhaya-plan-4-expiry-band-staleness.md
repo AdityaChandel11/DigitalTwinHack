@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Status, 8 Oct 2026, later:** Tasks 0 to 8 are done, each pass over held-out patients run once with its record in `docs/decisions/2026-10-08-*.md`. Nothing was cut. Only Task 9 is left.
+
 > **Status, 8 Oct 2026:** Tasks 0 to 5 are done. The code blocks of Tasks 1 to 5 show each file as first committed. The independent reviews of Task 6 then changed all five modules (commits `d4df1a0` and `e4e0076`; the list is at the end of this plan, under "Changes made by the reviews of Task 6"). **The repository is the source of truth for those files, not the blocks below.** Tasks 7 to 9 are written against the reviewed code.
 
 **Goal:** Produce the last evidence of Milestone 3: what the frozen fingerstick estimator says at the level a doctor reads, how fast a sensor report stops being true (by day on both datasets and in the eight re-recorded patients), a recalibrated band, and, if time allows, the staleness alarm.

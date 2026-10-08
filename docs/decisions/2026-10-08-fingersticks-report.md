@@ -187,6 +187,9 @@ experiment, and it says the same.
   fourteen-day report would be closer). Not measured at lower testing frequencies. This describes those
   patients; it is not a recommendation to test at any frequency."
 - The meter-to-sensor line of each patient becomes part of the artifact bundle.
+- *Added 8 Oct with the staleness record:* "below the cohort's testing frequency" above names no number. The
+  gate proposed there for both outputs is 4.6 fingersticks a day, the lower quartile of this cohort in the
+  hidden window. It is a product gate, not a measured boundary.
 
 ## The claim to quote
 
