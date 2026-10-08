@@ -216,3 +216,8 @@ def test_a_failure_at_a_later_k_does_not_lose_the_primary_result(monkeypatch):
 def test_the_registered_filter_has_no_slow_level():
     with pytest.raises(SystemExit):
         sb.check_frozen(FilterConfig(slow=True))
+
+
+def test_the_construction_development_patients_chose_is_the_one_frozen_in_the_code():
+    # docs/PREREGISTRATION.md, addendum of 8 Oct to the note on the band: 77.4 % against 60.2 % at k = 3
+    assert sb.FROZEN == "patient"

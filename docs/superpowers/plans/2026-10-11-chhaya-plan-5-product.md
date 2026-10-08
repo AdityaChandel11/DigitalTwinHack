@@ -18,6 +18,18 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 **Spec:** `docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md` (read with the mocks in
 `docs/superpowers/specs/m4-mocks/` and `docs/decisions/2026-10-08-m4-kickoff.md`).
 
+## Status
+
+| Task | State |
+|---|---|
+| A1 register the pass | Done 8 Oct (`5943bbc`) |
+| A2 the spread of the filter | Done 8 Oct; checked against the exact posterior |
+| A3 the experiment module | Done 8 Oct |
+| A4 reviews, development run, freeze | Done 8 Oct: no leakage path; `patient` frozen (addendum to the note) |
+| A5 the one held-out pass | **Waiting for the team lead's go.** Must run by 10 Oct, 16:00 |
+| B1 claims, B2 wording, B3 names, record, treatment, B4 the synthetic patient | Done 8 Oct. `copy.py` was named `wording.py`; `pseudonym` became `pseudonyms` (one call names a whole cohort, so no two patients share a name) |
+| B5 to B8, C1 to C7, D1, D2 | Not started |
+
 ## Global Constraints
 
 - Rules 1 to 8 of CLAUDE.md. In particular: nothing under `results/` is written by the build; per-reading

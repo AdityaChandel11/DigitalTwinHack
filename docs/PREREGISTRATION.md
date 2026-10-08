@@ -641,3 +641,53 @@ closed by any file of an earlier one.
 **Cut rule.** Science stops at midnight on 10 Oct. If the pass over test patients has not been run by 10 Oct
 2026, 16:00, it is not run, the module stays in the repository with its development figures, and Shanghai
 patients show measured things only.
+
+**Added 8 Oct 2026, after two independent reviews of the code and one run on development patients, and before
+any test patient was scored by it.**
+
+*The reviews* (`mle-reviewer`, `python-reviewer`) found no path by which a hidden sensor reading reaches an
+estimate, an edge of the band, the patient's scale or the choice of construction, and none by which a test
+patient reaches the choice or the pooled map. Both compared the module's mean and spread with the exact
+Gaussian posterior of the filter's own model, computed by plain linear algebra, and found agreement to 1e-13;
+the mean is the frozen estimator's. What changed (commits `265c8e1` and `c07b61b`), each with a test that failed
+first or that fails on the wrong code the earlier tests let through:
+
+- Tests: the exact posterior, for the live, strictly-before and in-hindsight spreads, with two fingersticks
+  in one minute; leakage over extreme and random hidden values, both calibration lengths, a gap and readings
+  off the 15-minute grid, and with hidden rows removed; the patient's scale read on the clock of the day; the
+  choice made once, on the live estimate at the first k; the band at a fingerstick's own minute; hindsight
+  narrower than live in the middle of a gap; by-day shares with recordings of different lengths.
+- A recording that cannot be given a band has its own error and keeps a row that names the patient; any other
+  error stops the run. Everything the development recordings decide is computed for every k before a test
+  recording is scored, and a failure at k = 5 leaves a row with its error and keeps the result at k = 3.
+- The report names the two estimates and the scale, says how many recordings were outside the cohort and why,
+  marks both constructions as chosen or not chosen (also by day), and marks a day that fewer than six patients
+  reach.
+
+*Readings of the note, fixed as coded.* A reading on an edge of the band is inside it, and a patient at exactly
+70 or 90 % is within 70 to 90 %. A recording with no spread about its daily shape in the calibration window
+cannot be given the `patient` band; it is left out of both constructions, so the two are always compared on the
+same recordings, and it is reported as a row with its reason. The share of the cohort that reaches a day is
+taken over patients with at least one scored day.
+
+*What the development run showed* (`results/stickband/shanghai-dev/`; in-sample for the choice). Percent of
+hidden sensor readings inside the band, mean over patients, then the smallest and the largest patient, patients
+within 70 to 90 %, and the median half-width in mg/dL:
+
+| k | estimate | `filter` | `patient` |
+|---|---|---|---|
+| 3 (25 recordings, 24 patients) | live | 60.2 (24.6 to 88.4; 9 of 24; 30.3) | 77.4 (46.3 to 98.8; 15 of 24; 44.8) |
+| 3 | in hindsight | 62.1 (22.2 to 86.9; 9 of 24; 28.1) | 78.7 (42.8 to 97.6; 12 of 24; 40.0) |
+| 5 (21 recordings, 20 patients) | live | 63.8 (32.7 to 89.8; 8 of 20; 30.3) | 79.7 (46.0 to 94.1; 15 of 20; 40.8) |
+| 5 | in hindsight | 65.4 (30.3 to 89.6; 10 of 20; 28.2) | 80.3 (38.2 to 94.7; 13 of 20; 36.7) |
+
+No recording failed. Coverage of the `patient` band by day, live, k = 3: 81 % on days 1 and 2, 79 % on day 3,
+then 71 to 78 % on days 4 to 11, with half the cohort left by day 10. That was seen and nothing was changed
+because of it.
+
+*The choice.* At k = 3 on the live estimate the two constructions lie 19.8 and 2.6 points from 80 %. By the
+rule above the frozen construction is **`patient`**, written into the code (`FROZEN = "patient"`). The filter's
+own spread is too narrow on its own: the error of the estimate is larger than the filter's model of it.
+
+Nothing had been computed for any test patient, by any code, when this was written. Nothing else in the note
+changes.

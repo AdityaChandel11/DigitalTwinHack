@@ -45,8 +45,8 @@ TARGET = 80.0  # percent of hidden readings an 80 % band should hold
 WITHIN = (70.0, 90.0)  # both ends count as within
 TIE_POINTS = 1.0  # two constructions this close to the target are tied
 REGISTERED_SPREADS = (25.0, 15.0)  # the filter's deviation and fingerstick spreads, mg/dL
-# the construction development patients chose; written with the addendum to the note, before the test pass
-FROZEN: str | None = None
+# the construction development patients chose on 8 Oct (addendum to the note), before the test pass
+FROZEN: str | None = "patient"
 FOLDER = RESULTS_DIR / "stickband"
 
 

@@ -12,7 +12,7 @@ When the next task names a different model, Claude stops and waits for the switc
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
 | M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
-| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. **Next: Plan 5, Task A1** |
+| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. Plan 5: A1 to A4 and B1 to B4 done on 8 Oct. **Next: Task A5 (needs the team lead's go), then B5** |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here
@@ -41,9 +41,20 @@ When the next task names a different model, Claude stops and waits for the switc
      `http://localhost:8765`). Approved 8 Oct. Design:
      `docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md`. Plan:
      `docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md` (Parts A to D, with models, calendar and
-     cut order). **Start at Part A** (the band of the fingerstick estimate): it is science and must be
-     run by 10 Oct, 16:00, or it is dropped and Shanghai patients show measured things only. Task A5, the
-     one held-out pass, needs the team lead's go. Part B (the bundle) can run beside it.
+     cut order). **Part A, the band of the fingerstick estimate, stands at Task A5.** Done on 8 Oct: the
+     registration note (before the code), `chhaya.twin.stickband` and `chhaya.eval.stickband` test-first,
+     two independent reviews (no leakage path; their findings fixed with tests), the run on development
+     patients (`results/stickband/shanghai-dev/`) and the addendum that freezes the choice: the `patient`
+     construction, 77.4 % coverage on development patients at k = 3 where the filter's own spread gives
+     60.2 %; half-width about 45 mg/dL. **Left: the one pass over test patients**
+     (`python -m chhaya.eval.stickband --confirm`), which needs the team lead's go and must run by 10 Oct,
+     16:00, from this checkout, on committed code; then its decision record, `healthcare-reviewer` on the
+     screen sentence, and a tenth entry in `chhaya.product.claims`.
+   - **Part B, the bundle:** B1 to B4 are done (`src/chhaya/product/`: `claims.py` and `claim_text.py`,
+     `wording.py`, `names.py`, `record.py`, `treatment.py`, `synthetic.py`). Every claim and every sentence
+     of safety wording is tested word for word against its record; the synthetic patient runs through the
+     real reveal. Next: B5 (`patient.py`, one patient's bundle), B6 (`evidence.py`), B7 (`build.py` and the
+     committed demo bundle), B8 (real patients), then Part C, the page.
    - The README was rewritten on 8 Oct (results table, claims in full, what Chhaya is not); the model
      table moved to `docs/MODEL_GUIDE.md`. A GitHub description and topics are drafted in the kickoff
      record for the team lead to paste.
