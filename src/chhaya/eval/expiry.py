@@ -49,7 +49,7 @@ from chhaya.eval.gate2 import _git
 from chhaya.eval.gate3 import refuse_second_run
 from chhaya.eval.metrics import rmse
 from chhaya.eval.reveal import why_skipped
-from chhaya.eval.traces import load_traces, require_gate2
+from chhaya.eval.traces import load_traces, require_gate2, trace_provenance
 
 BIN = 30
 K_LIST = (3.0, 5.0)
@@ -335,7 +335,7 @@ def run(what: str, confirm: bool, out_dir: Path) -> dict:
                     f"no {split} traces at k = {k:g}: run python -m chhaya.eval.traces --split {split}"
                 )
             if confirm:
-                require_gate2(traces)
+                require_gate2(traces, k)
             result["by_k"].append(cgmacros_block(traces, k))
         note = "The twin (`twin`), its control with no meals (`control`) and the raw average day, by day since the sensor."
         cols = [
@@ -364,7 +364,8 @@ def run(what: str, confirm: bool, out_dir: Path) -> dict:
             recs = recs if confirm else [r for r in recs if is_dev_patient(r.patient_id)]
             result = {"confirmatory": confirm, **cases_block(recs)}
             report = _cases_report(result)
-    write_outputs(out_dir, result, report, provenance(confirm, output=what, k=list(K_LIST)))
+    built = trace_provenance("cgmacros", split) if what == "cgmacros" else None
+    write_outputs(out_dir, result, report, provenance(confirm, output=what, k=list(K_LIST), traces=built))
     return result
 
 

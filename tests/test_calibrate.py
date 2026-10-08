@@ -26,16 +26,32 @@ def _items(spread: float = 10.0, n: int = 12, **kw):
     return [cb.prepare(_trace(f"p{i}", spread, seed=i, **kw)) for i in range(n)]
 
 
-def test_the_factor_a_reading_needs_is_the_factor_at_which_the_rescaled_band_reaches_it():
+def test_coverage_under_a_factor_is_the_coverage_of_the_rescaled_band():
     tr = _trace("p", 14.0)
     item = cb.prepare(tr)
     for f in (0.7, 1.0, 1.6):
         lo, hi = cb.rescale(tr, f)
-        assert np.mean(item["need"] <= f) == coverage(tr["truth"], lo, hi)
+        assert np.mean(cb.inside(item, f)) == coverage(tr["truth"], lo, hi)
     assert cb.rescale(tr, 1.0)[0] == pytest.approx(tr["lo"]) and cb.rescale(tr, 1.0)[1] == pytest.approx(
         tr["hi"]
     )
     assert item["day"].min() == 1 and item["day"].max() == 5
+
+
+def test_the_unchanged_band_is_the_band_gate2_scored_even_when_the_estimate_lies_outside_it():
+    t = 3 * 1440 + np.arange(0, 3 * 1440, 15.0)
+    twin = np.full(t.size, 150.0)
+    lo, hi = twin + 5.0, twin + 45.0  # the estimate sits below its own band
+    truth = twin + np.tile([-20.0, 2.0, 30.0, 60.0], t.size // 4)
+    tr = {"patient_id": "p", "k_days": 3.0, "t": t, "truth": truth, "twin": twin, "lo": lo, "hi": hi}
+    item = cb.prepare(tr)
+    assert coverage(truth, lo, hi) == 0.25  # only the reading 30 above the estimate is inside 155 to 195
+    assert cb.patient_coverage([item]).iloc[0] == 0.25 and item["gate2_cov"] == 0.25
+    out = cb.evaluate([item], cb.UNCHANGED)
+    assert out["before"]["mean_coverage"] == 0.25 and out["before_differs_from_gate2_by"] == 0.0
+    item["gate2_cov"] = 0.5  # a band that is not the one the traces were checked with
+    with pytest.raises(SystemExit, match="not the band Gate 2 scored"):
+        cb.evaluate([item], cb.UNCHANGED)
 
 
 def test_a_band_that_is_too_narrow_is_widened_to_cover_80_percent():
@@ -52,7 +68,7 @@ def test_a_band_that_is_too_narrow_is_widened_to_cover_80_percent():
 
 def test_two_recordings_of_one_patient_count_once():
     items = _items(spread=10.0, n=3)
-    twice = [*items, {**items[0], "need": items[0]["need"] * 3.0}]
+    twice = [*items, {**items[0], "off": items[0]["off"] * 3.0}]  # a second recording, three times as far off
     cov = cb.patient_coverage(twice)
     assert len(cov) == 3 and cov["p0"] < cb.patient_coverage(items)["p0"]
 
@@ -61,7 +77,32 @@ def test_a_band_with_no_width_cannot_divide_by_zero():
     tr = _trace("p", 10.0)
     flat = {**tr, "lo": tr["twin"].copy(), "hi": tr["twin"].copy()}
     item = cb.prepare(flat)
-    assert np.isfinite(item["need"]).all() and np.mean(item["need"] <= 2.0) < 0.01
+    assert np.mean(cb.inside(item, 2.0)) < 0.01  # no factor widens a band of no width
+    assert cb.fit_factor([item]) in cb.GRID and cb.patient_coverage([item]).iloc[0] == item["gate2_cov"]
+
+
+def test_the_test_pass_takes_only_a_band_that_is_committed_and_unchanged():
+    cb.check_band_committed("results/calibrate/cgmacros-dev/band.json", "")
+    with pytest.raises(SystemExit, match="not committed"):
+        cb.check_band_committed(None, "")  # git does not know the file
+    with pytest.raises(SystemExit, match="changed since"):
+        cb.check_band_committed("results/calibrate/cgmacros-dev/band.json", " M results/calibrate/x")
+    with pytest.raises(SystemExit, match="not committed"):
+        cb.check_band_committed("results/calibrate/cgmacros-dev/band.json", None)  # git is not available
+
+
+def test_the_band_file_is_strict_json_and_its_hash_identifies_it(tmp_path):
+    design = cb.choose(_items(spread=14.0, n=8))  # too few patients for a factor per day: no day gap exists
+    assert all(np.isnan(v) for v in design["left_out_day_gap"].values())
+    path = tmp_path / "band.json"
+    digest = cb.write_band(design, path)
+    text = path.read_text(encoding="utf-8")
+    assert "NaN" not in text and cb.read_band(path) == (
+        {**design, "left_out_day_gap": {"single": None, "by_day": None}},
+        digest,
+    )
+    path.write_text(text.replace("0.8", "0.9"), encoding="utf-8")
+    assert cb.read_band(path)[1] != digest  # an edited file is another file
 
 
 def test_a_factor_per_day_is_fitted_only_for_days_enough_patients_reach():

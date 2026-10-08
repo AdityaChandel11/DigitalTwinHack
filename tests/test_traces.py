@@ -1,3 +1,6 @@
+import json
+import sys
+
 import numpy as np
 import pandas as pd
 import pytest
@@ -115,3 +118,92 @@ def test_a_fit_that_fails_keeps_its_row(tmp_path, monkeypatch, rec):
     monkeypatch.setattr(tc, "run_reveal", boom)
     index = tc.build([rec], [3.0], root=tmp_path)
     assert index["error"].tolist() == ["no convergence"] and not list(tmp_path.rglob("*.npz"))
+
+
+def test_a_recording_that_can_no_longer_be_traced_leaves_no_old_trace_behind(tmp_path, monkeypatch, rec):
+    skipped = tc.trace_file(tmp_path, rec.dataset, rec.patient_id, rec.rec_id, 6.0)
+    failed = tc.trace_file(tmp_path, rec.dataset, rec.patient_id, rec.rec_id, 3.0)
+    skipped.parent.mkdir(parents=True)
+    for old in (skipped, failed):
+        old.write_bytes(b"from an earlier build")
+    assert tc.build([rec], [6.0], root=tmp_path)["skipped"].notna().all()  # six days leave nothing to hide
+    assert not skipped.exists() and failed.exists()
+
+    def boom(rec, k, n_members=200):
+        raise RuntimeError("no convergence")
+
+    monkeypatch.setattr(tc, "run_reveal", boom)
+    tc.build([rec], [3.0], root=tmp_path)
+    assert not failed.exists()  # a later pass must not read a trace this build could not make
+
+
+def test_a_check_against_gate2_cannot_pass_on_nothing(tmp_path):
+    traces = [fake_trace("a"), fake_trace("b", off=7.0)]
+    metrics = _gate2_rows(traces)
+    assert tc.gate2_differences([], metrics, ks=[3.0]) == [
+        "a k=3: scored by the Gate 2 run, no trace",
+        "b k=3: scored by the Gate 2 run, no trace",
+    ]
+    both = pd.concat([metrics, _gate2_rows([fake_trace("a", k_days=5.0)])])
+    assert tc.gate2_differences(traces, both, ks=[3.0, 5.0]) == ["a k=5: scored by the Gate 2 run, no trace"]
+    path = tmp_path / "metrics.csv"
+    both.to_csv(path, index=False)
+    tc.require_gate2(traces, 3.0, path)
+    for too_few in ([], traces[:1]):
+        with pytest.raises(SystemExit, match="no trace"):
+            tc.require_gate2(too_few, 3.0, path)
+    with pytest.raises(SystemExit, match="did not score k = 7"):
+        tc.require_gate2(traces, 7.0, path)
+    with pytest.raises(SystemExit, match="missing"):
+        tc.require_gate2(traces, 3.0, tmp_path / "nowhere.csv")
+
+
+def _stub_main(monkeypatch, tmp_path, argv, calls, status=""):
+    """Run `traces.main` without data: record whether it got as far as loading and building."""
+    monkeypatch.setattr(tc, "TRACE_DIR", tmp_path)
+    monkeypatch.setattr(tc, "GATE2_TEST", tmp_path / "gate2.csv")
+    monkeypatch.setattr(tc, "_git", lambda *args: status)
+    monkeypatch.setattr(tc, "load", lambda dataset: calls.append("load") or [])
+    monkeypatch.setattr(tc, "build", lambda *a, **k: calls.append("build") or pd.DataFrame([]))
+    monkeypatch.setattr(sys, "argv", ["traces", *argv])
+
+
+def test_test_patients_are_traced_only_with_confirm_on_committed_code_at_the_registered_settings(
+    monkeypatch, tmp_path
+):
+    calls = []
+    refusals = (
+        (["--split", "test"], "", "--confirm"),
+        (["--split", "test", "--confirm"], " M src/chhaya/eval/reveal.py", "uncommitted"),
+        (["--split", "test", "--confirm", "--k", "7"], "", "registered"),
+        (["--split", "test", "--confirm", "--members", "50"], "", "registered"),
+    )
+    for argv, status, why in refusals:
+        _stub_main(monkeypatch, tmp_path, argv, calls, status)
+        with pytest.raises(SystemExit, match=why):
+            tc.main()
+    assert calls == [] and not list(tmp_path.iterdir())  # no patient was loaded, nothing was written
+
+
+def test_a_test_build_that_does_not_give_back_gate2_stops_with_an_error(monkeypatch, tmp_path):
+    calls = []
+    _stub_main(monkeypatch, tmp_path, ["--split", "test", "--confirm"], calls)
+    _gate2_rows([fake_trace("a")]).to_csv(tmp_path / "gate2.csv", index=False)
+    with pytest.raises(SystemExit, match="no trace"):
+        tc.main()  # nothing was traced, yet Gate 2 scored a recording at k = 3
+    assert calls == ["load", "build"]
+
+
+def test_a_development_build_needs_no_confirm_and_records_what_built_it(monkeypatch, tmp_path):
+    calls = []
+    _stub_main(monkeypatch, tmp_path, ["--split", "dev", "--k", "4"], calls)
+    tc.main()
+    prov = tc.trace_provenance("cgmacros", "dev", tmp_path)
+    assert calls == ["load", "build"] and (prov["split"], prov["k"], prov["members"]) == ("dev", [4.0], 200)
+    assert (
+        prov["n_traces"] == 0
+        and "commit" in prov
+        and tc.trace_provenance("cgmacros", "test", tmp_path) is None
+    )
+    saved = json.loads((tmp_path / "cgmacros" / "build-dev.json").read_text(encoding="utf-8"))
+    assert saved == prov and "Users" not in json.dumps(saved)  # no local path in it

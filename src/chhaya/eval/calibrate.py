@@ -6,18 +6,20 @@ test patients only report: mean coverage, and how many patients fall within 70 t
 Gate 2 results are not touched: the factor is applied to cached traces, and later by the dashboard.
 
 Usage: python -m chhaya.eval.calibrate             (development patients: choose, write band.json)
-       python -m chhaya.eval.calibrate --confirm   (test patients, once, with the band.json on disk)
+       python -m chhaya.eval.calibrate --confirm   (test patients, once, with the committed band.json)
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
-from chhaya.config import RESULTS_DIR
+from chhaya.config import REPO_ROOT, RESULTS_DIR
 from chhaya.eval.descriptive import (
     MIN_DAY_READINGS,
     check_committed,
@@ -26,9 +28,10 @@ from chhaya.eval.descriptive import (
     table,
     write_outputs,
 )
-from chhaya.eval.gate2 import COVERAGE_BAND, _git
+from chhaya.eval.gate2 import COVERAGE_BAND, _clean, _git
 from chhaya.eval.gate3 import refuse_second_run
-from chhaya.eval.traces import load_traces, require_gate2
+from chhaya.eval.metrics import coverage
+from chhaya.eval.traces import load_traces, require_gate2, trace_provenance
 
 TARGET = 0.80
 GRID = np.round(np.arange(0.50, 2.0001, 0.01), 2)  # the factors tried
@@ -39,32 +42,36 @@ MIN_GAIN = (
 )
 PRIMARY_K = 5.0  # the Gate 2 setting; the factor is chosen there
 ALSO_K = 3.0  # reported with the same factor
-EPS = 1e-6
 FOLDER = RESULTS_DIR / "calibrate"
 BAND = FOLDER / "cgmacros-dev" / "band.json"
 UNCHANGED = {"design": "single", "factor": 1.0, "by_day": {}}
 
 
-def half_widths(tr: dict) -> tuple[np.ndarray, np.ndarray]:
-    """How far the band reaches below and above the estimate. Never zero, so a factor always means something."""
-    return np.maximum(tr["twin"] - tr["lo"], EPS), np.maximum(tr["hi"] - tr["twin"], EPS)
-
-
 def rescale(tr: dict, factor) -> tuple[np.ndarray, np.ndarray]:
-    """The band with both half-widths multiplied by `factor` (one number, or one value per reading)."""
-    down, up = half_widths(tr)
-    return tr["twin"] - factor * down, tr["twin"] + factor * up
+    """The band with both half-widths about the estimate multiplied by `factor` (a number, or one per reading).
+
+    A half-width is signed: where the estimate lies outside its own band one of them is negative. That keeps a
+    factor of 1 the band exactly as Gate 2 scored it, whatever the estimate does.
+    """
+    return tr["twin"] - factor * (tr["twin"] - tr["lo"]), tr["twin"] + factor * (tr["hi"] - tr["twin"])
 
 
 def prepare(tr: dict) -> dict:
-    """Per hidden reading: the factor at which the band just reaches it, and its day since the sensor."""
-    down, up = half_widths(tr)
-    off = tr["truth"] - tr["twin"]
+    """What the factor fit needs of a trace: per hidden reading its distance from the estimate, the band's two
+    half-widths and the day since the sensor; and the coverage of the band as it is, the way Gate 2 counts it."""
     return {
         "patient_id": str(tr["patient_id"]),
-        "need": np.where(off >= 0, off / up, -off / down),
+        "off": tr["truth"] - tr["twin"],
+        "down": tr["twin"] - tr["lo"],
+        "up": tr["hi"] - tr["twin"],
         "day": day_index(tr["t"], float(tr["k_days"]) * 1440.0),
+        "gate2_cov": coverage(tr["truth"], tr["lo"], tr["hi"]),
     }
+
+
+def inside(item: dict, factor) -> np.ndarray:
+    """Which hidden readings the band holds once both half-widths are multiplied by `factor`."""
+    return (item["off"] >= -factor * item["down"]) & (item["off"] <= factor * item["up"])
 
 
 def factors(item: dict, design: dict):
@@ -79,7 +86,7 @@ def factors(item: dict, design: dict):
 def patient_coverage(items: list[dict], design: dict = UNCHANGED) -> pd.Series:
     """Share of hidden readings inside the band, per patient (recordings of one patient are averaged)."""
     rows = [
-        {"patient_id": i["patient_id"], "cov": float(np.mean(i["need"] <= factors(i, design)))} for i in items
+        {"patient_id": i["patient_id"], "cov": float(np.mean(inside(i, factors(i, design))))} for i in items
     ]
     return pd.DataFrame(rows).groupby("patient_id")["cov"].mean()
 
@@ -89,8 +96,16 @@ def fit_factor(items: list[dict]) -> float:
     if not items:
         raise ValueError("no trace to fit a band factor on")
     # coverage of every recording at every factor of the grid, then patients, then the cohort
+    grid = GRID[None, :]
     curves = pd.DataFrame(
-        [np.mean(i["need"][:, None] <= GRID[None, :], axis=0) for i in items],
+        [
+            np.mean(
+                (i["off"][:, None] >= -grid * i["down"][:, None])
+                & (i["off"][:, None] <= grid * i["up"][:, None]),
+                axis=0,
+            )
+            for i in items
+        ],
         index=[i["patient_id"] for i in items],
     )
     miss = np.abs(curves.groupby(level=0).mean().mean(axis=0).to_numpy() - TARGET)
@@ -103,7 +118,7 @@ def on_day(item: dict, d: int) -> dict | None:
     m = item["day"] == d
     if m.sum() < MIN_DAY_READINGS:
         return None
-    return {"patient_id": item["patient_id"], "need": item["need"][m], "day": item["day"][m]}
+    return {"patient_id": item["patient_id"], **{key: item[key][m] for key in ("off", "down", "up", "day")}}
 
 
 def fit_by_day(items: list[dict]) -> dict[str, float]:
@@ -183,8 +198,17 @@ def choose(items: list[dict]) -> dict:
 
 
 def evaluate(items: list[dict], design: dict) -> dict:
-    """Coverage before and after the recalibration: mean over patients, range, patients within 70 to 90 %."""
-    out: dict = {"n_patients": len({i["patient_id"] for i in items})}
+    """Coverage before and after the recalibration: mean over patients, range, patients within 70 to 90 %.
+
+    "Before" has to be the coverage Gate 2 counted, recording by recording, or the comparison is with some
+    other band. That is checked here and the run stops if it is not so.
+    """
+    apart = max(abs(float(np.mean(inside(i, 1.0))) - i["gate2_cov"]) for i in items)
+    if apart > 1e-6:
+        raise SystemExit(
+            f"the unchanged band is not the band Gate 2 scored: coverage differs by {apart:.4f} in a recording"
+        )
+    out: dict = {"n_patients": len({i["patient_id"] for i in items}), "before_differs_from_gate2_by": apart}
     for name, d in (("before", UNCHANGED), ("after", design)):
         cov = patient_coverage(items, d)
         out[name] = {
@@ -259,34 +283,69 @@ def run(items_by_k: dict[float, list[dict]], confirmatory: bool, design: dict | 
     return {"confirmatory": confirmatory, "design": design, "use_recalibrated_band": use, "by_k": by_k}
 
 
+def _digest(design: dict) -> str:
+    """A hash of the design's content, the same whatever the file's line endings or key order."""
+    return hashlib.sha256(json.dumps(design, sort_keys=True).encode("utf-8")).hexdigest()
+
+
+def write_band(design: dict, path: Path = BAND) -> str:
+    """Write the chosen design as strict JSON and return the hash that identifies it."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(_clean(design), indent=2, allow_nan=False), encoding="utf-8")
+    return read_band(path)[1]
+
+
+def read_band(path: Path = BAND) -> tuple[dict, str]:
+    design = json.loads(path.read_text(encoding="utf-8"))
+    return design, _digest(design)
+
+
+def check_band_committed(tracked: str | None, status: str | None) -> None:
+    """The band a test pass reads was fixed beforehand: the file is in git and has not been touched since."""
+    if not tracked or status is None:
+        raise SystemExit(
+            f"{BAND} is not committed: choose the band on development patients and commit it before the test pass"
+        )
+    if status:
+        raise SystemExit(
+            f"{BAND} has changed since it was committed: commit it, or restore it, before the test pass"
+        )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--confirm", action="store_true", help="report on the test patients; this is done once")
     args = ap.parse_args()
     out_dir = FOLDER / ("cgmacros" if args.confirm else "cgmacros-dev")
     split = "test" if args.confirm else "dev"
-    design = None
+    design = digest = None
     if args.confirm:
         check_committed(_git("status", "--porcelain", "--", "src"))
         refuse_second_run(out_dir)
-        if not BAND.exists():
-            raise SystemExit(f"{BAND} is missing: choose the band on development patients first")
-        design = json.loads(BAND.read_text(encoding="utf-8"))
+        rel = BAND.relative_to(REPO_ROOT).as_posix()
+        check_band_committed(
+            _git("ls-files", "--error-unmatch", "--", rel), _git("status", "--porcelain", "--", rel)
+        )
+        design, digest = read_band()
     items_by_k = {}
     for k in (PRIMARY_K, ALSO_K):
         traces = load_traces("cgmacros", split, k)
-        if not traces:
+        if args.confirm:
+            require_gate2(traces, k)
+        elif not traces:
             raise SystemExit(
                 f"no {split} traces at k = {k:g}: run python -m chhaya.eval.traces --split {split}"
             )
-        if args.confirm:
-            require_gate2(traces)
         items_by_k[k] = [prepare(tr) for tr in traces]
     result = run(items_by_k, args.confirm, design)
-    write_outputs(out_dir, result, _report(result), provenance(args.confirm, k=[PRIMARY_K, ALSO_K]))
+    report = _report(result)  # everything is computed before the first file is written
     if not args.confirm:
-        BAND.write_text(json.dumps(result["design"], indent=2), encoding="utf-8")
-    print((out_dir / "report.md").read_text(encoding="utf-8"))
+        digest = write_band(result["design"])
+    prov = provenance(
+        args.confirm, k=[PRIMARY_K, ALSO_K], band_sha256=digest, traces=trace_provenance("cgmacros", split)
+    )
+    write_outputs(out_dir, result, report, prov)
+    print(report)
 
 
 if __name__ == "__main__":
