@@ -1,0 +1,11 @@
+{
+  "commit": "e4e0076",
+  "uncommitted_changes_in_src": false,
+  "confirm": false,
+  "seed": 20261002,
+  "k": [
+    3.0,
+    5.0
+  ],
+  "reproduces": "results/fingersticks/shanghai-dev-tau120/summary.json"
+}

@@ -2,6 +2,8 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
+> **Status, 8 Oct 2026:** Tasks 0 to 5 are done. The code blocks of Tasks 1 to 5 show each file as first committed. The independent reviews of Task 6 then changed all five modules (commits `d4df1a0` and `e4e0076`; the list is at the end of this plan, under "Changes made by the reviews of Task 6"). **The repository is the source of truth for those files, not the blocks below.** Tasks 7 to 9 are written against the reviewed code.
+
 **Goal:** Produce the last evidence of Milestone 3: what the frozen fingerstick estimator says at the level a doctor reads, how fast a sensor report stops being true (by day on both datasets and in the eight re-recorded patients), a recalibrated band, and, if time allows, the staleness alarm.
 
 **Architecture:** Seven new modules and no change to any existing source file, so the estimators that Gate 2 and section F scored stay byte-identical. Every pass over test patients first recomputes numbers that are already committed and refuses to write unless they match, then refuses to run a second time. Per-reading arrays (reveal traces) go to a git-ignored cache under the data folder; results folders hold aggregates only.
@@ -2788,7 +2790,7 @@ The note of Task 0 lists what the scratch runs showed. From the five reports, ch
 
 | Output | Must read |
 |---|---|
-| Second pass, k = 3 | 24 patients; mean error `stale` 14.83, `hindsight` 12.10; time above 180 `stale` 8.76, `hindsight` 9.91; Spearman -0.67 |
+| Second pass, k = 3 | 24 patients; mean error `stale` 14.83, `hindsight` 12.10; time above 180 `stale` 8.76, `hindsight` 9.91 (9.79 after the review fix to the spread; see the addendum to the note); Spearman -0.67 |
 | Expiry, Shanghai, k = 3 | 49 patients on day 1; `abs_dmean` 10.8 on day 0; slope of `abs_dmean` 0.56 (0.28 to 1.40) |
 | Case series | 3 later wears of 3 patients; one with `moved` = 1 |
 | Expiry, CGMacros | 25 patients; at k = 3 the twin is closer than its control on days 1 to 7 and further on days 8 and 9 |
@@ -2871,10 +2873,10 @@ uv run python -m chhaya.eval.expiry cases --confirm
 Build the test traces (20 patients, two calibration lengths, about 12 minutes with 6 workers; start it in the background and say so):
 
 ```bash
-uv run python -m chhaya.eval.traces --dataset cgmacros --split test --k 3 5 --jobs 6
+uv run python -m chhaya.eval.traces --split test --confirm --jobs 6
 ```
 
-Expected last line: `Reproduces the Gate 2 run.` If it prints `DOES NOT reproduce`, stop: the next command would refuse anyway, and the cause has to be found first.
+`git status --porcelain -- src` must print nothing first: the command refuses uncommitted code, and it takes no `--k` or `--members` for test patients. Expected last line: `Reproduces the Gate 2 run.` Otherwise it stops with an error that lists every recording that differs; the cause has to be found before anything else is run. Unlike the passes below it may be repeated: the traces are a cache of numbers that are already committed.
 
 ```bash
 uv run python -m chhaya.eval.expiry cgmacros --confirm
@@ -3396,7 +3398,9 @@ git commit -m "feat: staleness alarm on fingerstick surprises, thresholds from d
 uv run python -m chhaya.eval.staleness
 ```
 
-Must read, at k = 3: 25 recordings of 24 patients, 8 drifted (7 downwards), thresholds from 17 recordings without drift; AUROC `score` 0.735, `plain` 0.728. A difference is handled as in Task 6, Step 2.
+Must read, at k = 3: 25 recordings of 24 patients, 8 drifted (7 downwards), thresholds from 17 recordings without drift; AUROC `plain` 0.728. The AUROC of `score` was 0.735 before the review fix to the spread, which is the scale of a surprise, so it may differ in the second decimal: record what the committed code gives and append one dated line to the note with both figures. Any other difference is handled as in Task 6, Step 2.
+
+The code blocks above were written before the reviews of Task 6. Three things to follow from the reviewed code instead: build the provenance before computing and pass it to `write_outputs` (as `expiry.run` does), so nothing is written after `summary.json`; `paired_summary` now reports `frac_larger` for a "greater" comparison; `profile_sigma` leaves the scored day out of both halves of the shape. None of these changes a signature the staleness modules use.
 
 Dispatch `mle-reviewer` on both staleness modules: "Find any path by which a hidden sensor reading reaches a surprise, a score or a threshold; any path by which a test recording reaches a threshold; and any way the AUROC could be inflated by recording length or by the number of fingersticks beyond what `auroc_of_fingerstick_count` discloses." Dispatch `python-reviewer`. Fix, test first. Commit `results/staleness/shanghai-dev`.
 
@@ -3466,3 +3470,22 @@ Expected: every test passes (274 with Task 8, 265 without), ruff is clean, and t
 - **Leakage tests, one per builder:** `test_no_stated_report_reads_a_hidden_sensor_value`, `test_the_shape_is_built_before_the_split_only`, `test_the_alarm_never_reads_a_hidden_sensor_value_and_the_label_does`, `test_a_trace_comes_back_as_it_was_saved_and_only_from_its_own_split`, `test_test_patients_only_report_a_design_fixed_beforehand`.
 - **Names across tasks** were checked by running the code: the plan's blocks are the files that passed.
 - **Known gaps, accepted.** `main()` of each module and `expiry.run` load real data and are covered by the development runs of Task 6, not by unit tests. Day 0 uses k - 1 days. The case series cannot separate ageing from treatment change or from a new sensor. The staleness score grows with the number of fingersticks; the report discloses how well that number alone separates.
+
+## Changes made by the reviews of Task 6 (8 Oct 2026)
+
+`mle-reviewer` and `python-reviewer` read the five modules of Tasks 1 to 5. Neither found a path by which a sensor reading from after the split, or a test patient, reaches an estimate, a shape, a spread or a fitted value. They found the defects below. Each was fixed with a test that failed first; commits `d4df1a0` and `e4e0076`. No test patient had been read.
+
+| Finding | Where | What changed |
+|---|---|---|
+| The "unchanged" band was not Gate 2's band when an estimate lay outside its own band (the half-widths were clipped at a small positive number) | `calibrate.py` | Half-widths are signed, so a factor of 1 is the band exactly as scored; `evaluate` compares "before" with Gate 2's coverage per recording and stops if they differ. On the development traces the estimate is never outside its band, so no number moved |
+| `traces --split test` ran the estimator on test patients with no guard, and only printed whether it reproduced Gate 2 | `traces.py` | It needs `--confirm`, committed code and the registered settings, and stops with an error unless Gate 2 is reproduced. It may be repeated: it is a cache of committed numbers |
+| The Gate 2 check passed when there was no trace at a calibration length | `traces.py` | `require_gate2(traces, k_days)` names the k it asks for; every recording Gate 2 scored at that k must have a trace |
+| The test pass of the band read an uncommitted, rewritable `band.json` | `calibrate.py` | It reads only a file that git tracks and that has not changed, and records its hash; the file is strict JSON |
+| The spread around the daily shape left the scored day out of the average day but not out of the mean | `descriptive.py` | Both halves leave the day out, as the note says. Development figures that moved are in the addendum to the note |
+| `share_of_cohort` was relative to the best-attended day and was missing from the report tables | `descriptive.py`, both reports | It is over every patient with a row, and the tables show it |
+| A "has it grown" comparison reported the share that had shrunk as `frac_better` | `descriptive.py` | It reports `frac_larger` |
+| A results folder could be left with a summary and no provenance; a provenance file held an absolute local path | `descriptive.py`, `fingersticks_report.py` | All three files are serialised before any is written, the summary last; paths are relative to the repository |
+| A recording a build could no longer trace kept the trace of an earlier build; nothing recorded what built the traces | `traces.py` | The old file is removed; each build writes its commit and settings, and the passes that read traces copy them into their provenance |
+| The case series summary did not say its counts are over wears | `expiry.py` | It says so |
+
+Not changed, with the reason: `pooled_line` does not itself refuse a test patient's recording (every caller builds its list with `is_dev_patient`, and the synthetic tests pass arbitrary patient names); `differences` treats a missing committed number as a difference (it fails safe); in `choose`, a fold too small for a factor per day is left out of that design's count only (the bias is toward the single factor).

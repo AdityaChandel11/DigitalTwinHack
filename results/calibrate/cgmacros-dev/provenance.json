@@ -1,0 +1,25 @@
+{
+  "commit": "e4e0076",
+  "uncommitted_changes_in_src": false,
+  "confirm": false,
+  "seed": 20261002,
+  "k": [
+    5.0,
+    3.0
+  ],
+  "band_sha256": "d157b392f61903d1ebc18fed7cfc45dc653e41babd3b42118a1bd36a72481605",
+  "traces": {
+    "commit": "e4e0076",
+    "uncommitted_changes_in_src": false,
+    "confirm": false,
+    "seed": 20261002,
+    "dataset": "cgmacros",
+    "split": "dev",
+    "k": [
+      3.0,
+      5.0
+    ],
+    "members": 200,
+    "n_traces": 50
+  }
+}

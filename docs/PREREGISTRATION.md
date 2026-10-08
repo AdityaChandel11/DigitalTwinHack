@@ -526,3 +526,28 @@ folder, which is not committed.
 
 **Order and cuts, unchanged:** the second pass of F, then expiry, then the band; the staleness alarm only if
 those are done by 16:00 on 10 Oct. Whatever is cut is stated as not done.
+
+**Added 8 Oct 2026, after two independent reviews of the code for the outputs above and before any test
+patient was read by it.** The reviews found no path by which a hidden sensor reading or a test patient reaches
+an estimate, a shape, a spread or a fitted value. They found defects, each fixed with a test that failed first
+(commits `d4df1a0` and `e4e0076`). What a reader of the note above should know:
+
+- *The spread.* The code left the scored day out of the average-day half of the daily shape but not out of
+  the mean half. It now leaves it out of both, as written above. On development patients at k = 3 the
+  in-hindsight report's error in time above 180 went from 9.9 to 9.8 points and in time in range from 13.0 to
+  13.1, and day 0's shape error from 31.3 to 33.6 mg/dL. No other figure listed above moved, and the band's
+  design is the same (one factor, 0.78).
+- *The band.* Its half-widths are signed, so a factor of 1 is exactly the band Gate 2 scored, also where an
+  estimate lies outside its own band; the code checks this recording by recording. On the development traces
+  no estimate lies outside its band. The test pass reads the band file only if it is committed and unchanged,
+  and records its hash.
+- *Tracing test patients* (`python -m chhaya.eval.traces --split test`) needs `--confirm`, committed code and
+  the registered settings, and stops unless every recording Gate 2 scored is reproduced. It is the one command
+  that reads test patients and may be repeated: it writes no result, only a cache, under the data folder, of
+  estimates whose scores are already committed. The three guards listed above apply to the commands that
+  write results.
+- *Two reported quantities.* The share of the cohort that reaches a day is taken over every patient with a
+  row on any day (it had been taken over the best-attended day). Where a day is compared with day 0, the share
+  reported is of patients further from the report than inside the wear.
+
+Nothing else in the note changes.

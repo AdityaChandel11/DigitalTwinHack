@@ -1,0 +1,161 @@
+{
+  "confirmatory": false,
+  "design": {
+    "design": "single",
+    "factor": 0.78,
+    "by_day": {
+      "1": 0.77,
+      "2": 0.74,
+      "3": 0.7,
+      "4": 0.71,
+      "5": 0.69
+    },
+    "left_out_day_gap": {
+      "single": 0.029746450993870632,
+      "by_day": 0.0019940638892283367
+    },
+    "left_out_patients_within": {
+      "single": 17,
+      "by_day": 14
+    },
+    "n_patients": 25,
+    "target": 0.8
+  },
+  "use_recalibrated_band": null,
+  "by_k": [
+    {
+      "k_days": 5.0,
+      "n_patients": 25,
+      "before_differs_from_gate2_by": 0.0,
+      "before": {
+        "mean_coverage": 0.8744047869421904,
+        "min": 0.5046153846153846,
+        "max": 0.9859719438877755,
+        "patients_within": 14
+      },
+      "after": {
+        "mean_coverage": 0.8017788696092738,
+        "min": 0.38153846153846155,
+        "max": 0.9570552147239264,
+        "patients_within": 17
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 25,
+          "before": 0.881783180778032,
+          "after": 0.8055650266971778
+        },
+        {
+          "day": 2,
+          "n_patients": 24,
+          "before": 0.890521325348628,
+          "after": 0.8180931595816464
+        },
+        {
+          "day": 3,
+          "n_patients": 24,
+          "before": 0.9011513574494746,
+          "after": 0.8404079652811106
+        },
+        {
+          "day": 4,
+          "n_patients": 24,
+          "before": 0.8927595628415301,
+          "after": 0.8378799521857924
+        },
+        {
+          "day": 5,
+          "n_patients": 23,
+          "before": 0.9202713635207915,
+          "after": 0.8529691709064597
+        },
+        {
+          "day": 6,
+          "n_patients": 12,
+          "before": 0.7607373475028593,
+          "after": 0.68798747458381
+        },
+        {
+          "day": 7,
+          "n_patients": 6,
+          "before": 0.7818994924307537,
+          "after": 0.7168518682014091
+        }
+      ]
+    },
+    {
+      "k_days": 3.0,
+      "n_patients": 25,
+      "before_differs_from_gate2_by": 0.0,
+      "before": {
+        "mean_coverage": 0.8670929327199396,
+        "min": 0.6419019316493314,
+        "max": 0.9920844327176781,
+        "patients_within": 14
+      },
+      "after": {
+        "mean_coverage": 0.7960868115497388,
+        "min": 0.5261121856866537,
+        "max": 0.9868073878627969,
+        "patients_within": 16
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 25,
+          "before": 0.8861502474134053,
+          "after": 0.8258472141893195
+        },
+        {
+          "day": 2,
+          "n_patients": 25,
+          "before": 0.8781600870075219,
+          "after": 0.798951264683943
+        },
+        {
+          "day": 3,
+          "n_patients": 25,
+          "before": 0.8517381769641494,
+          "after": 0.7681748665141115
+        },
+        {
+          "day": 4,
+          "n_patients": 24,
+          "before": 0.8704843539136302,
+          "after": 0.7945505791722898
+        },
+        {
+          "day": 5,
+          "n_patients": 24,
+          "before": 0.8993116379157113,
+          "after": 0.8450853557875185
+        },
+        {
+          "day": 6,
+          "n_patients": 24,
+          "before": 0.8923255350637523,
+          "after": 0.8383139799635702
+        },
+        {
+          "day": 7,
+          "n_patients": 23,
+          "before": 0.9126262626262627,
+          "after": 0.8456129728432529
+        },
+        {
+          "day": 8,
+          "n_patients": 12,
+          "before": 0.7386659677214387,
+          "after": 0.681656261913839
+        },
+        {
+          "day": 9,
+          "n_patients": 6,
+          "before": 0.7446130596817374,
+          "after": 0.7029720785242421
+        }
+      ]
+    }
+  ]
+}

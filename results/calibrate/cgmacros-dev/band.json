@@ -1,0 +1,21 @@
+{
+  "design": "single",
+  "factor": 0.78,
+  "by_day": {
+    "1": 0.77,
+    "2": 0.74,
+    "3": 0.7,
+    "4": 0.71,
+    "5": 0.69
+  },
+  "left_out_day_gap": {
+    "single": 0.029746450993870632,
+    "by_day": 0.0019940638892283367
+  },
+  "left_out_patients_within": {
+    "single": 17,
+    "by_day": 14
+  },
+  "n_patients": 25,
+  "target": 0.8
+}
