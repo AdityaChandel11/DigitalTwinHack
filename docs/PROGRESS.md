@@ -68,7 +68,7 @@ What stands behind each clause today:
 |---|---|---|
 | How long it stays true | Gate 2 (gain lasts about five days); expiry by day | Gate 2 done; Plan 4 to come |
 | Which readings not to believe | Label check: 8 of 64 sensor lows confirmed, 732 of 809 highs | Done |
-| What keeps it true | Meal log (Gate 2); fingersticks (F1, F2) | Both pass |
+| What keeps it true | Meal log (Gate 2); fingersticks (F1, F2); second pass of F at report level | Both pass. At report level a plain baseline wins: the fingerstick average on the sensor's scale beats our estimate |
 | When to wear a sensor again | Staleness alarm | Plan 4, first to be cut |
 | Fusion of record and sensor | Gate 3 (M1) and record prior (P1) | Both missed: built and measured, no gain |
 
@@ -85,6 +85,12 @@ What stands behind each clause today:
   patient's daily shape alone (median paired RMSE difference; 95 % interval 1.6 to 4.7; 86 % of patients;
   p = 4e-06) and 9.5 mg/dL closer in hindsight (interval 4.6 to 12.1); with one fingerstick a day the running
   gain was 0.3 mg/dL.
+- **Fingersticks at report level (descriptive, no bar; a plain baseline wins):** on 29 held-out Shanghai
+  patients who tested about six times a day, a three-day sensor report missed the mean glucose of the
+  following days (up to eleven) by a median of 13.0 mg/dL; a report rebuilt from fingersticks missed it by
+  8.9 (3.4 closer, 95 % interval 1.6 to 8.9, 83 % of patients), but was no closer than the plain fingerstick
+  average put on the sensor's scale (6.4), which was also closer on time above 180 (3.1 against 8.8 points)
+  and on time in range (5.0 against 15.2). (`docs/decisions/2026-10-08-fingersticks-report.md`)
 - **Gate 3 (missed its bars):** on 47 held-out Shanghai patients (1,205 meals, 39 % followed by an excursion
   above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal
   time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the

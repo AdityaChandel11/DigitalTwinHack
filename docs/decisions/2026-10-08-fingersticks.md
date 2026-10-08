@@ -156,6 +156,8 @@ reference implementation; the grid has not been checked against the figure in th
   Nothing in the run explains it; the test cohort is larger (29 against 24) and fewer of its recordings were
   excluded for sparse testing (16 against 25), so its patients may simply test more often. The run did not
   record fingersticks per day, so this is a guess, to be checked in the descriptive pass of Plan 4.
+  **Checked on 8 Oct** in `2026-10-08-fingersticks-report.md`: the test cohort tests about six times a day,
+  the development cohort about four, and the gain rises with testing frequency inside both.
 
 ### What a reader should weigh
 
