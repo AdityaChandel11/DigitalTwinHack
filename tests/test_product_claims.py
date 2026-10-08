@@ -10,7 +10,7 @@ from chhaya.config import REPO_ROOT, RESULTS_DIR
 from chhaya.product.claims import CLAIMS, tally
 
 BY_ID = {c.id: c for c in CLAIMS}
-WHOLE = ["gate3", "prior", "sticks", "report", "expiry", "band", "stale"]
+WHOLE = ["gate3", "prior", "sticks", "report", "expiry", "band", "stale", "stickband"]
 
 
 def _norm(text: str) -> str:
@@ -24,7 +24,7 @@ def _section(path: str, heading: str = "The claim to quote") -> str:
     return found.group(1)
 
 
-def test_nine_results_in_the_order_of_the_evidence_screen():
+def test_the_results_in_the_order_of_the_evidence_screen():
     assert [c.id for c in CLAIMS] == [
         "gate2",
         "label",
@@ -35,6 +35,7 @@ def test_nine_results_in_the_order_of_the_evidence_screen():
         "expiry",
         "band",
         "stale",
+        "stickband",
     ]
 
 
@@ -86,5 +87,5 @@ def test_a_result_with_no_bar_is_descriptive_and_one_with_bars_passed_or_missed(
         assert claim.bar_text, claim.id
 
 
-def test_the_tally_is_five_bars_passed_four_missed_and_five_descriptive_results():
-    assert tally() == {"bars": 9, "passed": 5, "missed": 4, "descriptive": 5}
+def test_the_tally_is_five_bars_passed_four_missed_and_six_descriptive_results():
+    assert tally() == {"bars": 9, "passed": 5, "missed": 4, "descriptive": 6}

@@ -89,4 +89,12 @@ TEXT = {
         "not advice on treatment and not a rule for when to wear a sensor, and it was not tested in "
         "outpatient care, at lower testing frequencies or over longer periods."
     ),
+    "stickband": (
+        "Descriptive, no bar. On 29 held-out Shanghai patients under supervised care, calibrated on three "
+        "days of sensor data and tested about six times a day, a band built from the fingerstick filter's "
+        "own spread and each patient's spread during the sensor wear, with nothing fitted, held 83.6 % of "
+        "hidden sensor readings around the running estimate (49.9 % to 98.9 % for an individual; 12 of 29 "
+        "patients within 70 to 90 %) and 86.1 % around the estimate in hindsight (56.7 % to 100 %), at a "
+        "half-width of about 45 mg/dL. It is calibrated on average, not per patient, and it is wide."
+    ),
 }

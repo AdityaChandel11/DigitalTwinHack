@@ -283,6 +283,34 @@ CLAIMS: tuple[Claim, ...] = (
             ],
         },
     ),
+    Claim(
+        id="stickband",
+        grade="descriptive",
+        bars=(),
+        title="The band of the fingerstick estimate",
+        sub="Wide, and right on average",
+        claim=TEXT["stickband"],
+        bar_text=(
+            "No bar. Registered as descriptive before its code was written. The band was chosen on development "
+            "patients between two constructions with nothing fitted in either; held-out patients were scored once.",
+        ),
+        cohort="ShanghaiT2DM, supervised care · 29 held-out patients",
+        command="python -m chhaya.eval.stickband --confirm",
+        record="docs/decisions/2026-10-09-stickband.md",
+        figure={
+            "type": "dots",
+            "title": "Hidden sensor readings inside the band",
+            "unit": "per cent; the line spans individuals",
+            "min": 40,
+            "max": 100,
+            "ref": {"value": 80, "label": "target 80"},
+            "items": [
+                _item("stickband.live", "As fingersticks arrive", True),
+                _item("stickband.hindsight", "In hindsight", True),
+                _item("stickband.filter", "The filter's own spread, not used"),
+            ],
+        },
+    ),
 )
 
 
