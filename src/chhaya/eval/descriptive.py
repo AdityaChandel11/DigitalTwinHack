@@ -285,6 +285,21 @@ def check_committed(src_status: str | None) -> None:
         raise SystemExit("uncommitted changes under src/: commit them before reading the test patients")
 
 
+def refuse_second_pass(out_dir: Path) -> None:
+    """A pass over test patients is made once: refuse when the folder holds any file of an earlier one.
+
+    A report or a provenance file without its summary still means the test patients were read, and the report
+    holds their numbers. So any of the three closes the pass, not the summary alone.
+    """
+    found = [name for name in ("summary.json", "report.md", "provenance.json") if (out_dir / name).exists()]
+    if found:
+        raise SystemExit(
+            f"{out_dir} already holds {', '.join(found)} from a pass over test patients. Reading them again "
+            "needs a dated amendment (docs/PREREGISTRATION.md); move the folder aside deliberately if that is "
+            "what this is."
+        )
+
+
 def provenance(confirm: bool, **settings) -> dict:
     status = _git("status", "--porcelain", "--", "src")
     return {

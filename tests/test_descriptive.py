@@ -220,6 +220,16 @@ def test_nothing_is_written_when_any_of_the_three_files_cannot_be(tmp_path):
     assert not (tmp_path / "run").exists()  # so no half-written folder can pass for a finished run
 
 
+def test_a_folder_that_holds_any_file_of_an_earlier_pass_closes_the_pass(tmp_path):
+    ds.refuse_second_pass(tmp_path / "never-run")
+    for name in ("summary.json", "report.md", "provenance.json"):
+        folder = tmp_path / name
+        folder.mkdir()
+        (folder / name).write_text("{}", encoding="utf-8")
+        with pytest.raises(SystemExit, match="already"):
+            ds.refuse_second_pass(folder)  # a report without its summary still holds test numbers
+
+
 def test_a_path_in_a_results_file_is_relative_to_the_repository():
     assert ds.repo_path(REPO_ROOT / "results" / "fingersticks" / "shanghai" / "summary.json") == (
         "results/fingersticks/shanghai/summary.json"
