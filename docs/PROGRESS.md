@@ -17,9 +17,9 @@ When the next task names a different model, Claude stops and waits for the switc
 
 ## Start here
 
-1. **Merge the branch.** All of 8 Oct is on `claude/chhaya-plan-tasks-2-3-f552bd` (a worktree), not on main.
-   Until it is merged, **do not run `gate3 --confirm` or `fingersticks --confirm` from any other checkout**:
-   the once-only guards look for `results/gate3/shanghai/` and `results/fingersticks/shanghai/`.
+1. **Push when ready.** All of 8 Oct is merged into `main` locally (fast-forward, 202 tests pass there) and not
+   pushed: `origin/main` is still at `985b2ad`. The once-only guards (`results/gate3/shanghai/`,
+   `results/fingersticks/shanghai/`) are now on main, so `--confirm` is refused from any checkout of it.
 2. **Write Plan 4** (Opus 5.5, max for the design; it decides what we claim about "how long the report stays
    true"). It must include, in this order of priority:
    - the declared second pass of section F with the estimator frozen: error in mean glucose, time above 180
@@ -106,7 +106,7 @@ estimate is still about 22 % off the next fingerstick where a real sensor is abo
 
 ## Waiting on the team lead
 
-- Merge the 8 Oct branch into main.
+- Push `main` to GitHub (the repo is public at submission; nothing from 8 Oct is on GitHub yet).
 - Three questions to the organisers (rubric; video minimum and live Q&A; non-commercial data).
 - Read the RSSDI glucose-monitoring consensus before it is cited.
 - One clinician to look at the dashboard on 13 or 14 Oct.
