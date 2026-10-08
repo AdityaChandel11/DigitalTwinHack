@@ -113,4 +113,10 @@ def test_a_development_run_carries_no_second_density_block(tmp_path):
     recs = _cohort()
     result = fr.run(recs, recs, [3.0], tmp_path, False)
     assert result["confirmatory"] is False and "density_dev" not in result["by_k"][0]
+    assert not (tmp_path / "provenance.json").exists()
+    fr.run(
+        recs, recs, [3.0], tmp_path / "with", False, prov={"commit": "abc", "reproduces": "results/x.json"}
+    )
+    saved = json.loads((tmp_path / "with" / "provenance.json").read_text(encoding="utf-8"))
+    assert saved == {"commit": "abc", "reproduces": "results/x.json"}  # written with the results, not after
     assert "Not confirmatory" in (tmp_path / "report.md").read_text(encoding="utf-8")

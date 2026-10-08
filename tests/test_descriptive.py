@@ -6,7 +6,10 @@ import pandas as pd
 import pytest
 from conftest import make_recording
 
+from chhaya.config import REPO_ROOT
 from chhaya.eval import descriptive as ds
+from chhaya.eval.baselines import average_day_baseline
+from chhaya.eval.metrics import rmse
 
 SPLIT = 3 * 1440.0
 
@@ -49,6 +52,21 @@ def test_the_spread_around_the_daily_shape_is_measured_on_days_the_shape_has_not
     assert g.std() < ds.profile_sigma(clock, g) < g.std() + 1.0  # a little above the noise, never below it
     one_day = clock < 1440  # no other day to learn from: the spread about that day's mean, not zero
     assert abs(ds.profile_sigma(clock[one_day], g[one_day]) - g[one_day].std()) < 1e-9
+
+
+def test_the_spread_leaves_the_scored_day_out_of_both_halves_of_the_shape():
+    rng = np.random.default_rng(0)
+    t = np.arange(0, 4 * 1440, 15)
+    g = 140.0 + np.repeat([0.0, 30.0, -20.0, 10.0], 96) + rng.normal(0.0, 5.0, t.size)  # days at four levels
+    day = t // 1440
+    unseen, flattered = np.empty_like(g), np.empty_like(g)
+    for d in np.unique(day):
+        held = day == d
+        shape = average_day_baseline(t[~held], g[~held], t[held])
+        unseen[held] = 0.5 * shape + 0.5 * g[~held].mean()
+        flattered[held] = 0.5 * shape + 0.5 * g.mean()  # the day's own readings inside its own mean
+    assert ds.profile_sigma(t, g) == pytest.approx(rmse(unseen, g), rel=1e-9)
+    assert rmse(unseen, g) > rmse(flattered, g) + 1.0  # which is why the day must be left out of both
 
 
 def test_daily_rows_score_each_day_with_enough_readings():
@@ -97,7 +115,8 @@ def test_paired_summary_is_over_patients_and_ignores_a_patient_without_both():
     empty = ds.paired_summary(per.iloc[:0], "shadow", "stale")
     assert empty == {"of": "shadow", "against": "stale", "alternative": "less", "n_patients": 0}
     worse = ds.paired_summary(_per(), "stale", "shadow", "greater")  # the same question asked the other way
-    assert worse["median_diff"] == 2.0 and worse["p"] == s["p"] and worse["frac_better"] == 0.0
+    assert worse["median_diff"] == 2.0 and worse["p"] == s["p"]
+    assert worse["frac_larger"] == 1.0 and "frac_better" not in worse and "frac_larger" not in s
     with pytest.raises(ValueError, match="alternative"):
         ds.paired_summary(_per(), "shadow", "stale", "two-sided")
 
@@ -129,6 +148,17 @@ def test_days_are_summarised_over_patients_and_thin_days_get_no_comparison():
     assert by_day[3]["share_moved"] == 0.5 and "moved" not in by_day[3]
     assert by_day[4]["n_patients"] == 3 and "twin_rmse_vs_control_rmse" not in by_day[4]
     assert by_day[1]["share_of_cohort"] == 1.0 and by_day[4]["share_of_cohort"] == 3 / 8
+
+
+def test_the_share_of_the_cohort_counts_every_patient_not_the_best_attended_day():
+    rows = [
+        {"patient_id": f"p{i}", "day": d, "x": 1.0}
+        for i in range(10)
+        for d in (1, 2, 3)
+        if (i, d) not in ((7, 1), (8, 2), (9, 3))  # each day misses a different patient
+    ]
+    out = ds.summarise_days(pd.DataFrame(rows))
+    assert [r["n_patients"] for r in out] == [9, 9, 9] and [r["share_of_cohort"] for r in out] == [0.9] * 3
 
 
 def test_two_recordings_of_one_patient_count_once_per_day():
@@ -180,6 +210,21 @@ def test_test_patients_are_read_only_on_committed_code():
         ds.check_committed(" M src/chhaya/eval/expiry.py")
     with pytest.raises(SystemExit, match="git"):
         ds.check_committed(None)
+
+
+def test_nothing_is_written_when_any_of_the_three_files_cannot_be(tmp_path):
+    with pytest.raises(TypeError):
+        ds.write_outputs(tmp_path / "run", {"n": 1}, "# report\n", {"where": tmp_path})  # a path is not JSON
+    with pytest.raises(TypeError):
+        ds.write_outputs(tmp_path / "run", {"n": {1, 2}}, "# report\n")  # nor is a set
+    assert not (tmp_path / "run").exists()  # so no half-written folder can pass for a finished run
+
+
+def test_a_path_in_a_results_file_is_relative_to_the_repository():
+    assert ds.repo_path(REPO_ROOT / "results" / "fingersticks" / "shanghai" / "summary.json") == (
+        "results/fingersticks/shanghai/summary.json"
+    )
+    assert "Users" not in ds.repo_path(REPO_ROOT / "results")
 
 
 def test_outputs_are_strict_json_and_a_table_leaves_nested_values_out(tmp_path):

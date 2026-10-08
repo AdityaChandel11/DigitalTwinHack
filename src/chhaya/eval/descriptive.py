@@ -14,7 +14,7 @@ import numpy as np
 import pandas as pd
 from scipy.stats import norm
 
-from chhaya.config import SEED
+from chhaya.config import REPO_ROOT, SEED
 from chhaya.eval.baselines import lodo_average_day
 from chhaya.eval.fingersticks import _interval, calibration_pairs
 from chhaya.eval.gate2 import _clean, _git, _paired_p
@@ -71,13 +71,22 @@ def estimated_report(est, sigma: float) -> dict[str, float]:
 def profile_sigma(clock_min, g) -> float:
     """Spread of sensor readings around the daily shape built without their own day (mg/dL).
 
-    `clock_min` counts minutes from midnight of the first day. The shape is half the average day of the other
-    days, half the mean: the control of sections F and M.
+    `clock_min` counts minutes from midnight of the first day. The shape is the control of sections F and M,
+    half the average day and half the mean, and both halves are taken from the other days: a day that helped
+    to set its own mean would look closer to the shape than a day the shape has never seen. With a single day
+    there is no other day, and the spread is that day's spread about its own mean.
     """
     clock_min = np.asarray(clock_min, dtype=int)
     g = np.asarray(g, dtype=float)
-    seen = 0.5 * lodo_average_day(clock_min // DAY_MIN, clock_min, g) + 0.5 * float(g.mean())
-    return rmse(seen, g)
+    day = clock_min // DAY_MIN
+    days = np.unique(day)
+    if days.size < 2:
+        return rmse(np.full(g.shape, float(g.mean())), g)
+    others = np.empty_like(g)
+    for d in days:
+        held = day == d
+        others[held] = g[~held].mean()
+    return rmse(0.5 * lodo_average_day(day, clock_min, g) + 0.5 * others, g)
 
 
 def aging(now: dict, report: dict) -> dict[str, float]:
@@ -143,7 +152,8 @@ def paired_summary(per: pd.DataFrame, a: str, b: str, alternative: str = "less")
 
     Below zero means `a` is the smaller error. The interval is a 95 % percentile bootstrap over patients and
     the p-value a one-sided signed-rank test, as everywhere in Amendment 3: that `a` is smaller ("less"), or,
-    where the question is whether something got worse, that it is larger ("greater"). No bar hangs on it.
+    where the question is whether something got worse, that it is larger ("greater"). The share of patients
+    on the side the test asks about is `frac_better` (a smaller) or `frac_larger`. No bar hangs on it.
     """
     if alternative not in ("less", "greater"):
         raise ValueError(f"alternative must be 'less' or 'greater', got {alternative!r}")
@@ -160,7 +170,11 @@ def paired_summary(per: pd.DataFrame, a: str, b: str, alternative: str = "less")
             "median_diff": float(diff.median()),
             "diff_lo": lo,
             "diff_hi": hi,
-            "frac_better": float((diff < 0).mean()),
+            **(
+                {"frac_better": float((diff < 0).mean())}
+                if alternative == "less"
+                else {"frac_larger": float((diff > 0).mean())}
+            ),
             "p": _paired_p(diff if alternative == "less" else -diff),
         }
     )
@@ -172,8 +186,10 @@ def summarise_days(df: pd.DataFrame, pairs: tuple[tuple[str, str], ...] = ()) ->
 
     Recordings of one patient are averaged first. `moved` becomes `share_moved`, the share of patients whose
     daily mean lies more than 20 mg/dL from the report. A day with fewer than MIN_DAY_PATIENTS patients keeps
-    its medians and gets no paired comparison.
+    its medians and gets no paired comparison. `share_of_cohort` is the day's patients over every patient with
+    a row on any day: a day that few reach holds whoever is still recording, and is read with that in mind.
     """
+    cohort = df["patient_id"].nunique()
     out = []
     for d, g in df.groupby("day"):
         per = g.groupby("patient_id").mean(numeric_only=True)
@@ -185,9 +201,8 @@ def summarise_days(df: pd.DataFrame, pairs: tuple[tuple[str, str], ...] = ()) ->
             for a, b in pairs:
                 row[f"{a}_vs_{b}"] = paired_summary(per, a, b)
         out.append(row)
-    most = max((r["n_patients"] for r in out), default=0)
-    for row in out:  # a day that few patients reach is read with care: it holds whoever is left
-        row["share_of_cohort"] = row["n_patients"] / most
+    for row in out:
+        row["share_of_cohort"] = row["n_patients"] / cohort
     return out
 
 
@@ -289,13 +304,24 @@ def _plain(value):
 
 
 def write_outputs(out_dir: Path, result: dict, report: str, prov: dict | None = None) -> None:
-    """summary.json (strict JSON), report.md and, when given, provenance.json. Aggregates only."""
+    """summary.json (strict JSON), report.md and, when given, provenance.json. Aggregates only.
+
+    Everything is turned into text before the folder is made, so a value that cannot be written leaves nothing
+    behind. summary.json goes last: it is what marks a pass over test patients as done, and it must not exist
+    without its provenance.
+    """
+    summary = json.dumps(_clean(result), indent=2, allow_nan=False, default=_plain)
+    origin = None if prov is None else json.dumps(prov, indent=2, default=_plain)
     out_dir.mkdir(parents=True, exist_ok=True)
-    text = json.dumps(_clean(result), indent=2, allow_nan=False, default=_plain)
-    (out_dir / "summary.json").write_text(text, encoding="utf-8")
+    if origin is not None:
+        (out_dir / "provenance.json").write_text(origin, encoding="utf-8")
     (out_dir / "report.md").write_text(report, encoding="utf-8")
-    if prov is not None:
-        (out_dir / "provenance.json").write_text(json.dumps(prov, indent=2, default=_plain), encoding="utf-8")
+    (out_dir / "summary.json").write_text(summary, encoding="utf-8")
+
+
+def repo_path(path: Path) -> str:
+    """A path inside the repository as results files record it: relative, with forward slashes, no user name."""
+    return Path(path).resolve().relative_to(REPO_ROOT).as_posix()
 
 
 def table(rows: list[dict], columns: list[str] | None = None, digits: int = 1) -> str:

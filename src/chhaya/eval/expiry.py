@@ -80,6 +80,28 @@ TWIN_COLS = [
     "moved",
     "abs_dtar",
 ]
+# the columns of a by-day table in report.md; summary.json holds every column
+SHANGHAI_SHOWN = [
+    "day",
+    "n_patients",
+    "share_of_cohort",
+    "control_rmse",
+    "abs_dmean",
+    "dmean",
+    "share_moved",
+    "abs_dtar",
+]
+TWIN_SHOWN = [
+    "day",
+    "n_patients",
+    "share_of_cohort",
+    "twin_rmse",
+    "control_rmse",
+    "avgday_rmse",
+    "cov80",
+    "abs_dmean",
+    "share_moved",
+]
 TWIN_PAIRS = (("twin_rmse", "control_rmse"), ("twin_rmse", "avgday_rmse"), ("twin_mean_err", "abs_dmean"))
 
 
@@ -274,6 +296,7 @@ def cases_block(recs: list[Recording]) -> dict:
     return {
         "n_patients": int(df["patient_id"].nunique()),
         "n_cases": int(len(df)),
+        "unit": "later wear",  # the medians and counts below are over later wears, not patients
         "old_profile_rmse": float(df["old_profile_rmse"].median()),
         "fresh_profile_rmse": float(df["fresh_profile_rmse"].median()),
         "first_wear_rmse": float(df["first_wear_rmse"].median()),
@@ -316,7 +339,8 @@ def _cases_report(result: dict) -> str:
         if result["confirmatory"]
         else "Development patients only. Not confirmatory.",
         "",
-        f"{result['n_cases']} later wears of {result['n_patients']} patients.",
+        f"{result['n_cases']} later wears of {result['n_patients']} patients. The table has one row per later "
+        "wear, and the counts and medians in the summary are over wears: a patient recorded three times has two.",
         "",
     ]
     lines.append(table(result["cases"]))
@@ -324,7 +348,11 @@ def _cases_report(result: dict) -> str:
 
 
 def run(what: str, confirm: bool, out_dir: Path) -> dict:
-    """Load what the output needs, compute, write. Test patients are loaded only with `confirm`."""
+    """Load what the output needs, compute, write. Test patients are scored only with `confirm`.
+
+    The Shanghai loader reads every workbook; the split is applied here, before anything is computed. CGMacros
+    traces are read from one split's folder only.
+    """
     split = "test" if confirm else "dev"
     if what == "cgmacros":
         result = {"confirmatory": confirm, "by_k": []}
@@ -338,17 +366,7 @@ def run(what: str, confirm: bool, out_dir: Path) -> dict:
                 require_gate2(traces, k)
             result["by_k"].append(cgmacros_block(traces, k))
         note = "The twin (`twin`), its control with no meals (`control`) and the raw average day, by day since the sensor."
-        cols = [
-            "day",
-            "n_patients",
-            "twin_rmse",
-            "control_rmse",
-            "avgday_rmse",
-            "cov80",
-            "abs_dmean",
-            "share_moved",
-        ]
-        report = _by_day_report("Expiry by day: CGMacros", note, result, cols)
+        report = _by_day_report("Expiry by day: CGMacros", note, result, TWIN_SHOWN)
     else:
         from chhaya.data.shanghai import load_all
 
@@ -357,8 +375,7 @@ def run(what: str, confirm: bool, out_dir: Path) -> dict:
             recs = [r for r in recs if is_dev_patient(r.patient_id) != confirm]
             result = {"confirmatory": confirm, "by_k": [shanghai_block(recs, k) for k in K_LIST]}
             note = "The daily shape of the first k days against each later day; no fingersticks are read."
-            cols = ["day", "n_patients", "control_rmse", "abs_dmean", "dmean", "share_moved", "abs_dtar"]
-            report = _by_day_report("Expiry by day: ShanghaiT2DM", note, result, cols)
+            report = _by_day_report("Expiry by day: ShanghaiT2DM", note, result, SHANGHAI_SHOWN)
         else:
             # nothing is fitted across patients here, so the registered case series uses all of them
             recs = recs if confirm else [r for r in recs if is_dev_patient(r.patient_id)]

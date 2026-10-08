@@ -79,6 +79,7 @@ def test_each_later_day_is_read_against_day_zero_of_the_same_patient():
     assert (
         by_day[0]["n_patients"] == 7 and by_day[3]["share_moved"] == 1.0 and by_day[1]["share_moved"] == 0.0
     )
+    assert by_day[1]["share_of_cohort"] == 1.0 and "share_of_cohort" in ex.SHANGHAI_SHOWN
     zero = {(r["column"], r["day"]): r for r in block["against_day_zero"]}
     assert zero[("abs_dmean", 4)]["median_diff"] > 25.0 and abs(zero[("abs_dmean", 1)]["median_diff"]) < 8.0
     assert {column for column, _ in zero} == {"abs_dmean"}  # day 0 is no yardstick for the point error
@@ -176,3 +177,4 @@ def test_reports_say_what_they_are_and_by_day_reports_name_no_patient():
     first = make_recording(days=6, seed=4)
     cases = {"confirmatory": True, **ex.cases_block([first, _again(first, 40, 30.0)])}
     assert "case series" in ex._cases_report(cases) and "no test" in ex._cases_report(cases)
+    assert "one row per later wear" in ex._cases_report(cases) and cases["unit"] == "later wear"

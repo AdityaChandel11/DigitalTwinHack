@@ -38,6 +38,7 @@ from chhaya.eval.descriptive import (
     pooled_line,
     profile_sigma,
     provenance,
+    repo_path,
     slope_per_day,
     summarise_days,
     table,
@@ -244,7 +245,8 @@ def _report(result: dict) -> str:
             "",
             "By day since the sensor came off (RMSE against the hidden sensor, mg/dL):",
             "",
-            table(block["by_day"], ["day", "n_patients", "control_rmse", "live_rmse", "hindsight_rmse", "abs_dmean",
+            table(block["by_day"], ["day", "n_patients", "share_of_cohort", "control_rmse", "live_rmse",
+                                    "hindsight_rmse", "abs_dmean",
                                     "share_moved", "hindsight_mean_err"], digits=2),
         ]  # fmt: skip
     return "\n".join(lines) + "\n"
@@ -257,6 +259,7 @@ def run(
     out_dir: Path,
     confirmatory: bool,
     committed: dict | None = None,
+    prov: dict | None = None,
 ) -> dict:
     """Score `scored` at each k; the pooled line of the sensor map always comes from `dev_recs`.
 
@@ -280,7 +283,7 @@ def run(
         if confirmatory and block["n_patients"]:
             block["density_dev"] = block_for(dev_recs, k, pooled).get("density")
         result["by_k"].append(block)
-    write_outputs(out_dir, result, _report(result))
+    write_outputs(out_dir, result, _report(result), prov)
     return result
 
 
@@ -305,9 +308,8 @@ def main() -> None:
     dev_recs = [r for r in recs if is_dev_patient(r.patient_id)]
     scored = [r for r in recs if not is_dev_patient(r.patient_id)] if args.confirm else dev_recs
     assert args.confirm or all(is_dev_patient(r.patient_id) for r in scored)
-    run(scored, dev_recs, list(REGISTERED_K), out_dir, args.confirm, committed)
-    prov = provenance(args.confirm, k=list(REGISTERED_K), reproduces=str(path) if committed else None)
-    (out_dir / "provenance.json").write_text(json.dumps(prov, indent=2), encoding="utf-8")
+    prov = provenance(args.confirm, k=list(REGISTERED_K), reproduces=repo_path(path) if committed else None)
+    run(scored, dev_recs, list(REGISTERED_K), out_dir, args.confirm, committed, prov)
     print((out_dir / "report.md").read_text(encoding="utf-8"))
 
 
