@@ -14,6 +14,7 @@ Usage: python -m chhaya.eval.stickband             (development patients; they c
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 from pathlib import Path
 
 import numpy as np
@@ -22,6 +23,7 @@ import pandas as pd
 from chhaya.config import RESULTS_DIR, is_dev_patient
 from chhaya.data.schema import Recording
 from chhaya.eval.descriptive import (
+    MIN_DAY_PATIENTS,
     MIN_DAY_READINGS,
     check_committed,
     day_index,
@@ -40,13 +42,16 @@ from chhaya.twin.stickband import band, deviation_sd
 CONSTRUCTIONS = ("filter", "patient")
 ESTIMATES = ("live", "hindsight")  # live reads fingersticks stamped strictly before the minute, as F1 did
 TARGET = 80.0  # percent of hidden readings an 80 % band should hold
-WITHIN = (70.0, 90.0)
+WITHIN = (70.0, 90.0)  # both ends count as within
 TIE_POINTS = 1.0  # two constructions this close to the target are tied
 REGISTERED_SPREADS = (25.0, 15.0)  # the filter's deviation and fingerstick spreads, mg/dL
-FROZEN: str | None = (
-    None  # the construction development patients chose; written with the addendum to the note
-)
+# the construction development patients chose; written with the addendum to the note, before the test pass
+FROZEN: str | None = None
 FOLDER = RESULTS_DIR / "stickband"
+
+
+class BandUnavailable(ValueError):
+    """This recording cannot be given a band. It keeps a row with the reason (rule 4); any other error is a bug."""
 
 
 def _bands(rec: Recording, k_days: float, pooled: tuple[float, float], cfg: FilterConfig) -> dict:
@@ -62,6 +67,9 @@ def _bands(rec: Recording, k_days: float, pooled: tuple[float, float], cfg: Filt
     cal = t < split
     assert (e["t"] >= split).all() and (e["ft"] >= split).all()  # rule 1
     own = profile_sigma(rec.start.hour * 60 + rec.start.minute + t[cal], g[cal]) / cfg.fast_sd
+    if not own > 0.0:
+        # both constructions are scored on the same recordings, so this one is left out of both
+        raise BandUnavailable("no spread about the daily shape in the calibration window")
     out = {}
     for which in ESTIMATES:
         sd = deviation_sd(e["ft"], e["t"], cfg, smooth=which == "hindsight", strictly_before=which == "live")
@@ -141,7 +149,11 @@ def choose(by_construction: dict[str, dict]) -> str:
 
 
 def by_day(rows: list[dict]) -> list[dict]:
-    """Mean coverage over patients on each day since the sensor, with the share of the cohort that reaches it."""
+    """Mean coverage over patients on each day since the sensor, with the share of the cohort that reaches it.
+
+    Later days hold whoever is still recording, so a trend across days mixes ageing with who is left: a day
+    reached by fewer than MIN_DAY_PATIENTS patients is marked.
+    """
     flat = [{"patient_id": r["patient_id"], **d} for r in rows for d in r["days"]]
     if not flat:
         return []
@@ -155,6 +167,7 @@ def by_day(rows: list[dict]) -> list[dict]:
                 "day": int(d),
                 "n_patients": int(len(per)),
                 "share_of_cohort": len(per) / cohort,
+                "few_patients": bool(len(per) < MIN_DAY_PATIENTS),
                 **{c: float(per[c].mean()) for c in per.columns},
             }
         )
@@ -162,12 +175,12 @@ def by_day(rows: list[dict]) -> list[dict]:
 
 
 def _score_all(recs: list[Recording], k_days: float, pooled: tuple[float, float]) -> tuple[list[dict], list]:
-    """Scored rows and, for a recording whose band cannot be formed, a row with its error (rule 4)."""
+    """Scored rows and, for a recording that cannot be given a band, a row with the reason (rule 4)."""
     rows, errors = [], []
     for rec in recs:
         try:
             row = score_recording(rec, k_days, pooled)
-        except ValueError as err:
+        except BandUnavailable as err:
             errors.append({"rec_id": rec.rec_id, "error": str(err)})
             continue
         if row is not None:
@@ -177,6 +190,11 @@ def _score_all(recs: list[Recording], k_days: float, pooled: tuple[float, float]
 
 def _bands_block(rows: list[dict]) -> dict:
     return {which: {c: summarise(rows, which, c) for c in CONSTRUCTIONS} for which in ESTIMATES}
+
+
+def _outside(recs: list[Recording], k_days: float) -> dict[str, int]:
+    """Why recordings are outside section F's cohort at this k, and how many for each reason."""
+    return dict(Counter(why for why in (why_not(r, k_days) for r in recs) if why))
 
 
 def run(
@@ -189,6 +207,7 @@ def run(
     """Development recordings choose the construction at the first k, on the live estimate; `scored` reports.
 
     A pass over test recordings needs `frozen`, and stops if the development recordings would choose another.
+    Everything the development recordings decide is computed for every k before a test recording is scored.
     """
     shared = {r.patient_id for r in scored} & {r.patient_id for r in dev_recs}
     if confirmatory and shared:
@@ -202,25 +221,34 @@ def run(
         "frozen": frozen,
         "by_k": [],
     }
-    chosen = None
-    for i, k in enumerate(k_list):
+    dev = []
+    for k in k_list:
         pooled = pooled_line(dev_recs, k)
-        dev_rows, dev_errors = _score_all(dev_recs, k, pooled)
-        dev_bands = _bands_block(dev_rows) if dev_rows else None
-        if i == 0:
-            if dev_bands is None:
-                raise ValueError("no development recording in the cohort: the construction cannot be chosen")
-            chosen = choose(dev_bands["live"])
-            if confirmatory and chosen != frozen:
-                raise ValueError(f"development patients choose {chosen!r}, the code has {frozen!r} frozen")
-        rows, errors = _score_all(scored, k, pooled) if confirmatory else (dev_rows, dev_errors)
+        rows, errors = _score_all(dev_recs, k, pooled)
+        dev.append(
+            {"pooled": pooled, "rows": rows, "errors": errors, "bands": _bands_block(rows) if rows else None}
+        )
+    if dev[0]["bands"] is None:
+        raise ValueError("no development recording in the cohort: the construction cannot be chosen")
+    chosen = choose(dev[0]["bands"]["live"])
+    if confirmatory and chosen != frozen:
+        raise ValueError(f"development patients choose {chosen!r}, the code has {frozen!r} frozen")
+    for i, (k, d) in enumerate(zip(k_list, dev, strict=True)):
+        rows, errors = _score_all(scored, k, d["pooled"]) if confirmatory else (d["rows"], d["errors"])
         block: dict = {
             "k_days": k,
             "primary": i == 0,
             "n_recordings": len(rows),
             "n_patients": len({r["patient_id"] for r in rows}),
             "errors": errors,
-            "choice": {"on": "live", "at_k": k_list[0], "chosen": chosen, "development": dev_bands},
+            "outside": _outside(scored, k),
+            "choice": {
+                "on": "live",
+                "at_k": k_list[0],
+                "chosen": chosen,
+                "development": d["bands"],
+                "development_errors": d["errors"],
+            },
         }
         if rows:
             block["bands"] = _bands_block(rows)
@@ -239,25 +267,34 @@ def _report(result: dict) -> str:
     )
     lines += [
         "",
-        "Coverage is the percent of hidden sensor readings inside the band; the patient is the unit. `filter` is "
-        "the frozen filter's own spread; `patient` takes its width from the patient's spread about their daily "
-        "shape in the calibration window. Nothing in either is fitted. Half-widths are in mg/dL.",
+        "`live` is the estimate that reads fingersticks stamped strictly before each minute, as F1 was scored; "
+        "`hindsight` reads every fingerstick of the hidden window. Both are on the sensor's scale, and coverage "
+        "is the percent of hidden sensor readings inside the band, not of meter values. The patient is the "
+        "unit. `filter` is the frozen filter's own spread; `patient` takes its width from the patient's spread "
+        "about their daily shape in the calibration window. Nothing in either is fitted. Half-widths are in "
+        "mg/dL. The construction that was not chosen is reported beside the chosen one.",
     ]
     for block in result["by_k"]:
         role = "primary" if block["primary"] else "reported"
         lines += ["", f"## k = {block['k_days']:g} days ({role})", ""]
         choice = block["choice"]
+        outside = "; ".join(f"{why}: {n}" for why, n in block["outside"].items()) or "none"
         lines.append(
             f"{block['n_recordings']} recordings of {block['n_patients']} patients; {len(block['errors'])} could "
-            f"not be scored. Chosen on development patients at k = {choice['at_k']:g}, on the live estimate: "
-            f"`{choice['chosen']}`."
+            f"not be given a band. Outside the cohort of section F: {outside}. Chosen on development patients at "
+            f"k = {choice['at_k']:g}, on the live estimate: `{choice['chosen']}` "
+            f"({len(choice['development_errors'])} development recordings could not be given a band)."
         )
         if "bands" not in block:
             continue
+
+        def mark(c: str, chosen: str = choice["chosen"]) -> str:
+            return f"{c} ({'chosen' if c == chosen else 'not chosen'})"
+
         rows = [
             {
                 "estimate": which,
-                "band": c + (" (chosen)" if c == choice["chosen"] else ""),
+                "band": mark(c),
                 "mean coverage": s["mean"],
                 "smallest": s["min"],
                 "largest": s["max"],
@@ -267,8 +304,17 @@ def _report(result: dict) -> str:
             for which in ESTIMATES
             for c, s in block["bands"][which].items()
         ]
+        days = [
+            {
+                "day": d["day"],
+                "patients": f"{d['n_patients']}{' (few)' if d['few_patients'] else ''}",
+                "share of cohort": d["share_of_cohort"],
+                **{f"{w} {mark(c)}": d.get(f"{w}_{c}_cov") for w in ESTIMATES for c in CONSTRUCTIONS},
+            }
+            for d in block["by_day"]
+        ]
         lines += ["", table(rows), "", "By day since the sensor (mean coverage over patients):", ""]
-        lines.append(table(block["by_day"]))
+        lines.append(table(days, digits=2))
     return "\n".join(lines) + "\n"
 
 
@@ -297,10 +343,9 @@ def main() -> None:
     recs = load_all()
     dev_recs = [r for r in recs if is_dev_patient(r.patient_id)]
     scored = [r for r in recs if not is_dev_patient(r.patient_id)] if args.confirm else dev_recs
-    try:
-        result = run(scored, dev_recs, list(REGISTERED_K), args.confirm, FROZEN)
-    except ValueError as err:
-        raise SystemExit(str(err)) from err
+    assert all(is_dev_patient(r.patient_id) for r in dev_recs)
+    assert args.confirm == (not any(is_dev_patient(r.patient_id) for r in scored))
+    result = run(scored, dev_recs, list(REGISTERED_K), args.confirm, FROZEN)
     report = _report(result)
     write_outputs(out_dir, result, report, prov)
     print(report)

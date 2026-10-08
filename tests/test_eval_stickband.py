@@ -164,4 +164,4 @@ def test_a_recording_whose_band_cannot_be_formed_keeps_a_row_with_its_error():
     dev = [_recording(seed=s, pid=f"dev-{s}") for s in (1, 2, 3)]
     block = sb.run([*dev, flat], [*dev, flat], [3.0], confirmatory=False, frozen=None)["by_k"][0]
     assert block["n_recordings"] == 3 and len(block["errors"]) == 1
-    assert block["errors"][0]["rec_id"] == "flat" and "scale" in block["errors"][0]["error"]
+    assert block["errors"][0]["rec_id"] == "flat" and "spread" in block["errors"][0]["error"]
