@@ -20,16 +20,17 @@ excursions better than the sensor week already does, and it gives no rule for wh
 - **Task-level plans:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md) and
   [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
   and [Plan 4, second pass of F, expiry, band, staleness](docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md)
-  are done (Milestone 3 closed 8 Oct). Milestone 4 started 8 Oct: decisions in
-  `docs/decisions/2026-10-08-m4-kickoff.md`, design mocks in `docs/superpowers/specs/m4-mocks/`; its spec and
-  Plan 5 follow the approval of the mocks.
+  are done (Milestone 3 closed 8 Oct). **Milestone 4 is being executed:**
+  [design](docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md),
+  [Plan 5, the product](docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md), decisions in
+  `docs/decisions/2026-10-08-m4-kickoff.md`, mocks in `docs/superpowers/specs/m4-mocks/`.
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## Working agreement (solo project: Claude is the teammate)
 
 - Act as a teammate, not an order-taker: propose, push back with reasons, and make the call on routine
   trade-offs. Ask only when a choice is irreversible or genuinely the user's.
-- **Before each task, say which model and effort to use**, using the table in README.md (Developer guide).
+- **Before each task, say which model and effort to use**, using the table in `docs/MODEL_GUIDE.md`.
   Default to the cheapest model that is safe; escalate after one failed attempt. Say when to switch.
 - Keep reports short: what changed, what was verified, what is next.
 - **Keep the plan current.** When a step finishes or a decision is made, update the Status section of the

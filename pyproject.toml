@@ -1,7 +1,7 @@
 [project]
 name = "chhaya"
 version = "0.1.0"
-description = "Chhaya: a Type 2 diabetes digital twin that keeps working after the glucose sensor comes off"
+description = "Chhaya: a Type 2 diabetes digital twin that turns one glucose-sensor wear into the patient's shadow"
 requires-python = ">=3.12,<3.14"
 license = "MIT"
 dependencies = [

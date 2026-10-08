@@ -2,7 +2,7 @@
 
 Last updated: 8 Oct 2026. Project: Chhaya, team SynapseX (IIT Kanpur), solo. Deadline 20 Oct 2026, 19:00 IST;
 internal deadline 18 Oct; feature freeze 15 Oct; **science stops at midnight on 10 Oct**.
-Claude is the teammate: propose, push back, name the model and effort before each task (README developer guide).
+Claude is the teammate: propose, push back, name the model and effort before each task (`docs/MODEL_GUIDE.md`).
 When the next task names a different model, Claude stops and waits for the switch.
 
 ## Where we are
@@ -12,7 +12,7 @@ When the next task names a different model, Claude stops and waits for the switc
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
 | M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
-| M4 Product (three screens, one decision) | **Started 8 Oct.** Kickoff decisions recorded; design mocks of the three screens built and checked in the browser; **waiting for the team lead to approve the direction**, then the spec and Plan 5 |
+| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. **Next: Plan 5, Task A1** |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here
@@ -38,12 +38,15 @@ When the next task names a different model, Claude stops and waits for the switc
      computed".
    - **Milestone 4, where it stands.** Mocks of the three screens: `docs/superpowers/specs/m4-mocks/`
      (`python -m http.server 8765 --directory docs/superpowers/specs/m4-mocks`, then open
-     `http://localhost:8765`). Next, in order: (1) the team lead approves or corrects the direction; (2) the
-     M4 design spec and `docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md`; (3) **before science
-     stops on 10 Oct:** one descriptive pass that gives the fingerstick estimate a band and scores its
-     coverage once on held-out Shanghai patients (dated note to Amendment 3 first). If it is not done by
-     10 Oct, 16:00, Shanghai patients show measured things only and the estimated trace is drawn on
-     CGMacros patients and the synthetic demo patient only.
+     `http://localhost:8765`). Approved 8 Oct. Design:
+     `docs/superpowers/specs/2026-10-08-chhaya-m4-product-design.md`. Plan:
+     `docs/superpowers/plans/2026-10-11-chhaya-plan-5-product.md` (Parts A to D, with models, calendar and
+     cut order). **Start at Part A** (the band of the fingerstick estimate): it is science and must be
+     run by 10 Oct, 16:00, or it is dropped and Shanghai patients show measured things only. Task A5, the
+     one held-out pass, needs the team lead's go. Part B (the bundle) can run beside it.
+   - The README was rewritten on 8 Oct (results table, claims in full, what Chhaya is not); the model
+     table moved to `docs/MODEL_GUIDE.md`. A GitHub description and topics are drafted in the kickoff
+     record for the team lead to paste.
    - **What the four results change for the product** (Milestone 4; wording reviewed by
      `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the staleness
      output is a prompt to consider a new sensor wear, never called an alarm, never a finding about glucose or
