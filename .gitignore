@@ -13,3 +13,6 @@ results/**/*.npz
 
 # the local bundle holds per-reading arrays of real patients (rule 6)
 /artifacts/
+
+# vendored fonts wait for their licence file (SIL OFL) before they are committed
+/src/chhaya/dashboard/static/fonts/

@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "bundle": "demo",
- "commit": "3747fb2",
+ "commit": "7b9fe68",
  "wording": {
   "limits": "Research prototype; evaluated on a Chinese cohort in supervised care and a US free-living cohort; estimates, not measurements; not for dosing.",
   "sensor_low": "sensor low, unconfirmed",
@@ -44,7 +44,7 @@
    },
    "prompt": {
     "state": "raised",
-    "day": 5
+    "day": 6
    },
    "sticks_per_day": 6.0,
    "dates": {
