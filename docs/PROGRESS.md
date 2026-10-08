@@ -12,7 +12,7 @@ When the next task names a different model, Claude stops and waits for the switc
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
 | M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
-| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. Plan 5: A1 to A4 and B1 to B4 done on 8 Oct. **Next: Task A5 (needs the team lead's go), then B5** |
+| M4 Product (three screens, one decision) | **Started 8 Oct.** Direction approved by the team lead with three changes (white page by default, clinical colours on the sensor, pseudonyms), all in the mocks. Design spec and Plan 5 written. Plan 5: A1 to A4 and B1 to B4 done on 8 Oct. A5 run 9 Oct: the fingerstick band held 83.6 % of hidden readings on 29 held-out patients (86.1 % in hindsight), so Shanghai patients get an estimated trace with a band. **Next: B5** |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here

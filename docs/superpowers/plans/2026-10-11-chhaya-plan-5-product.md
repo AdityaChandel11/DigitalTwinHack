@@ -26,7 +26,7 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 | A2 the spread of the filter | Done 8 Oct; checked against the exact posterior |
 | A3 the experiment module | Done 8 Oct |
 | A4 reviews, development run, freeze | Done 8 Oct: no leakage path; `patient` frozen (addendum to the note) |
-| A5 the one held-out pass | **Waiting for the team lead's go.** Must run by 10 Oct, 16:00 |
+| A5 the one held-out pass | Done 9 Oct: 83.6 % live, 86.1 % in hindsight, about 45 mg/dL each side (`docs/decisions/2026-10-09-stickband.md`). Left for D1: `healthcare-reviewer` on its screen sentence; for B6: the tenth entry in `claims.py` |
 | B1 claims, B2 wording, B3 names, record, treatment, B4 the synthetic patient | Done 8 Oct. `copy.py` was named `wording.py`; `pseudonym` became `pseudonyms` (one call names a whole cohort, so no two patients share a name) |
 | B5 to B8, C1 to C7, D1, D2 | Not started |
 
@@ -65,9 +65,9 @@ HTML, CSS and ES modules, no runtime dependencies, vendored OFL fonts, pytest an
 
 | Day | Tasks | Recommended model (the team lead runs all of it on Opus 5.5, xhigh) |
 |---|---|---|
-| Fri 9 Oct | A1 to A4; B1 to B5 | A: Opus 5.5, max for the note, high for code and review. B1 to B5: Sonnet 5.5, medium |
-| Sat 10 Oct | A5 by 16:00 (needs the team lead's go); B6 to B9 | A5: Opus 5.5, max. B6, B7: Opus 5.5, high. B8, B9: Sonnet 5.5, medium |
-| Sun 11 Oct | B10; C1, C2 | B10: Opus 5.5, high (touches held-out patients). C1: Sonnet 5.5, medium. C2: Opus 5.5, high |
+| Fri 9 Oct | A1 to A4; B1 to B4 (done 8 Oct) | A: Opus 5.5, max for the note, high for code and review. B1 to B4: Sonnet 5.5, medium |
+| Sat 10 Oct | A5 by 16:00 (needs the team lead's go); B5 to B7 | A5: Opus 5.5, max. B5 (leakage test, prompt gating): Opus 5.5, high. B6: Sonnet 5.5, medium. B7: Sonnet 5.5, high |
+| Sun 11 Oct | B8; C1, C2 | B8: Opus 5.5, high (touches held-out patients). C1: Sonnet 5.5, medium. C2: Opus 5.5, high |
 | Mon 12 Oct | C3, C4, C5 | Sonnet 5.5, high; Opus 5.5, high for C3 |
 | Tue 13 Oct | C6, C7; D1. **18:00: Streamlit decision** | C6, C7: Sonnet 5.5, high. D1 reviews: Opus 5.5, high |
 | Wed 14 Oct | Clinician looks at it; fixes from D1 and from the clinician | Sonnet 5.5, high |

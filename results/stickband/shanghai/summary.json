@@ -1,0 +1,403 @@
+{
+  "confirmatory": true,
+  "target": 80.0,
+  "within": [
+    70.0,
+    90.0
+  ],
+  "frozen": "patient",
+  "by_k": [
+    {
+      "k_days": 3.0,
+      "n_recordings": 32,
+      "n_patients": 29,
+      "errors": [],
+      "outside": {
+        "fewer than two days after the split": 3,
+        "fewer than three paired fingersticks after the split": 2,
+        "fewer than one fingerstick a day": 16
+      },
+      "bands": {
+        "live": {
+          "filter": {
+            "n_patients": 29,
+            "mean": 61.825378351705936,
+            "min": 0.84985835694051,
+            "max": 94.51476793248945,
+            "n_within": 11,
+            "median_half_width": 29.317253818150963
+          },
+          "patient": {
+            "n_patients": 29,
+            "mean": 83.60234606306463,
+            "min": 49.858356940509914,
+            "max": 98.89502762430939,
+            "n_within": 12,
+            "median_half_width": 47.62131882035295
+          }
+        },
+        "hindsight": {
+          "filter": {
+            "n_patients": 29,
+            "mean": 65.35144900941022,
+            "min": 3.39943342776204,
+            "max": 94.51476793248945,
+            "n_within": 12,
+            "median_half_width": 25.990251793458185
+          },
+          "patient": {
+            "n_patients": 29,
+            "mean": 86.13752283935386,
+            "min": 56.657223796033996,
+            "max": 100.0,
+            "n_within": 14,
+            "median_half_width": 44.55231619137802
+          }
+        }
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 29,
+          "share_of_cohort": 1.0,
+          "few_patients": false,
+          "live_filter_cov": 62.39224137931034,
+          "live_patient_cov": 86.92528735632182,
+          "hindsight_filter_cov": 67.5646551724138,
+          "hindsight_patient_cov": 88.77514367816092
+        },
+        {
+          "day": 2,
+          "n_patients": 29,
+          "share_of_cohort": 1.0,
+          "few_patients": false,
+          "live_filter_cov": 63.16451149425288,
+          "live_patient_cov": 85.61422413793105,
+          "hindsight_filter_cov": 66.4691091954023,
+          "hindsight_patient_cov": 87.8771551724138
+        },
+        {
+          "day": 3,
+          "n_patients": 27,
+          "share_of_cohort": 0.9310344827586207,
+          "few_patients": false,
+          "live_filter_cov": 61.32907692343966,
+          "live_patient_cov": 83.99752253918922,
+          "hindsight_filter_cov": 65.04644366163974,
+          "hindsight_patient_cov": 86.42807809474476
+        },
+        {
+          "day": 4,
+          "n_patients": 23,
+          "share_of_cohort": 0.7931034482758621,
+          "few_patients": false,
+          "live_filter_cov": 64.68106407322654,
+          "live_patient_cov": 81.871351141231,
+          "hindsight_filter_cov": 66.11365369946607,
+          "hindsight_patient_cov": 84.18217890042833
+        },
+        {
+          "day": 5,
+          "n_patients": 21,
+          "share_of_cohort": 0.7241379310344828,
+          "few_patients": false,
+          "live_filter_cov": 64.77226421313324,
+          "live_patient_cov": 83.74031860541011,
+          "hindsight_filter_cov": 68.3846430941883,
+          "hindsight_patient_cov": 85.78458882143754
+        },
+        {
+          "day": 6,
+          "n_patients": 18,
+          "share_of_cohort": 0.6206896551724138,
+          "few_patients": false,
+          "live_filter_cov": 67.71943141734808,
+          "live_patient_cov": 82.19065656565655,
+          "hindsight_filter_cov": 71.46614959114959,
+          "hindsight_patient_cov": 86.24210858585859
+        },
+        {
+          "day": 7,
+          "n_patients": 16,
+          "share_of_cohort": 0.5517241379310345,
+          "few_patients": false,
+          "live_filter_cov": 64.88718015547613,
+          "live_patient_cov": 79.80190633144358,
+          "hindsight_filter_cov": 68.22822669902345,
+          "hindsight_patient_cov": 83.4577588883827
+        },
+        {
+          "day": 8,
+          "n_patients": 13,
+          "share_of_cohort": 0.4482758620689655,
+          "few_patients": false,
+          "live_filter_cov": 72.68640814313892,
+          "live_patient_cov": 80.1805966469428,
+          "hindsight_filter_cov": 74.73152648633418,
+          "hindsight_patient_cov": 83.0504191321499
+        },
+        {
+          "day": 9,
+          "n_patients": 11,
+          "share_of_cohort": 0.3793103448275862,
+          "few_patients": false,
+          "live_filter_cov": 70.12310606060605,
+          "live_patient_cov": 80.39772727272727,
+          "hindsight_filter_cov": 73.10606060606061,
+          "hindsight_patient_cov": 80.96590909090908
+        },
+        {
+          "day": 10,
+          "n_patients": 11,
+          "share_of_cohort": 0.3793103448275862,
+          "few_patients": false,
+          "live_filter_cov": 77.50886980666392,
+          "live_patient_cov": 86.02139894419307,
+          "hindsight_filter_cov": 79.87629404908817,
+          "hindsight_patient_cov": 86.25814136843549
+        },
+        {
+          "day": 11,
+          "n_patients": 9,
+          "share_of_cohort": 0.3103448275862069,
+          "few_patients": false,
+          "live_filter_cov": 75.89136203435582,
+          "live_patient_cov": 87.99400671949691,
+          "hindsight_filter_cov": 76.63075778570757,
+          "hindsight_patient_cov": 89.50234224744027
+        }
+      ],
+      "primary": true,
+      "choice": {
+        "on": "live",
+        "at_k": 3.0,
+        "chosen": "patient",
+        "development": {
+          "live": {
+            "filter": {
+              "n_patients": 24,
+              "mean": 60.196344036694825,
+              "min": 24.591738712776177,
+              "max": 88.3831464529598,
+              "n_within": 9,
+              "median_half_width": 30.259966341005608
+            },
+            "patient": {
+              "n_patients": 24,
+              "mean": 77.37464058859872,
+              "min": 46.336822074215036,
+              "max": 98.80478087649402,
+              "n_within": 15,
+              "median_half_width": 44.75404533123384
+            }
+          },
+          "hindsight": {
+            "filter": {
+              "n_patients": 24,
+              "mean": 62.13289170807408,
+              "min": 22.19020172910663,
+              "max": 86.92960217795972,
+              "n_within": 9,
+              "median_half_width": 28.092409300054754
+            },
+            "patient": {
+              "n_patients": 24,
+              "mean": 78.73581916038883,
+              "min": 42.8163653663178,
+              "max": 97.60956175298804,
+              "n_within": 12,
+              "median_half_width": 39.99983829338522
+            }
+          }
+        },
+        "development_errors": []
+      }
+    },
+    {
+      "k_days": 5.0,
+      "n_recordings": 24,
+      "n_patients": 21,
+      "errors": [],
+      "outside": {
+        "fewer than two days after the split": 12,
+        "fewer than three paired fingersticks after the split": 1,
+        "fewer than one fingerstick a day": 16
+      },
+      "bands": {
+        "live": {
+          "filter": {
+            "n_patients": 21,
+            "mean": 68.71738360281638,
+            "min": 26.422764227642276,
+            "max": 94.72450175849941,
+            "n_within": 9,
+            "median_half_width": 29.719732986667324
+          },
+          "patient": {
+            "n_patients": 21,
+            "mean": 85.49263757843713,
+            "min": 66.23853211009174,
+            "max": 99.14529914529915,
+            "n_within": 12,
+            "median_half_width": 44.49805065312229
+          }
+        },
+        "hindsight": {
+          "filter": {
+            "n_patients": 21,
+            "mean": 71.43543005996173,
+            "min": 31.70731707317073,
+            "max": 94.25556858147715,
+            "n_within": 12,
+            "median_half_width": 26.89271544736146
+          },
+          "patient": {
+            "n_patients": 21,
+            "mean": 87.18911136405788,
+            "min": 73.21100917431193,
+            "max": 100.0,
+            "n_within": 11,
+            "median_half_width": 40.87770913769193
+          }
+        }
+      },
+      "by_day": [
+        {
+          "day": 1,
+          "n_patients": 21,
+          "share_of_cohort": 1.0,
+          "few_patients": false,
+          "live_filter_cov": 68.89880952380952,
+          "live_patient_cov": 87.64880952380952,
+          "hindsight_filter_cov": 73.88392857142857,
+          "hindsight_patient_cov": 89.28571428571428
+        },
+        {
+          "day": 2,
+          "n_patients": 21,
+          "share_of_cohort": 1.0,
+          "few_patients": false,
+          "live_filter_cov": 72.47023809523809,
+          "live_patient_cov": 87.10317460317461,
+          "hindsight_filter_cov": 73.4375,
+          "hindsight_patient_cov": 88.21924603174602
+        },
+        {
+          "day": 3,
+          "n_patients": 21,
+          "share_of_cohort": 1.0,
+          "few_patients": false,
+          "live_filter_cov": 68.83738582310086,
+          "live_patient_cov": 86.35125799965734,
+          "hindsight_filter_cov": 70.91462370161169,
+          "hindsight_patient_cov": 87.54204813427661
+        },
+        {
+          "day": 4,
+          "n_patients": 18,
+          "share_of_cohort": 0.8571428571428571,
+          "few_patients": false,
+          "live_filter_cov": 72.00840247715249,
+          "live_patient_cov": 85.4608585858586,
+          "hindsight_filter_cov": 75.25262546095877,
+          "hindsight_patient_cov": 88.16761363636365
+        },
+        {
+          "day": 5,
+          "n_patients": 16,
+          "share_of_cohort": 0.7619047619047619,
+          "few_patients": false,
+          "live_filter_cov": 69.39074765208859,
+          "live_patient_cov": 82.94619949686685,
+          "hindsight_filter_cov": 72.38679058096855,
+          "hindsight_patient_cov": 85.80375690161355
+        },
+        {
+          "day": 6,
+          "n_patients": 13,
+          "share_of_cohort": 0.6190476190476191,
+          "few_patients": false,
+          "live_filter_cov": 75.7657967032967,
+          "live_patient_cov": 83.62907391753545,
+          "hindsight_filter_cov": 77.00593477035784,
+          "hindsight_patient_cov": 84.74162322720017
+        },
+        {
+          "day": 7,
+          "n_patients": 11,
+          "share_of_cohort": 0.5238095238095238,
+          "few_patients": false,
+          "live_filter_cov": 74.38446969696969,
+          "live_patient_cov": 80.9185606060606,
+          "hindsight_filter_cov": 75.75757575757575,
+          "hindsight_patient_cov": 81.48674242424244
+        },
+        {
+          "day": 8,
+          "n_patients": 11,
+          "share_of_cohort": 0.5238095238095238,
+          "few_patients": false,
+          "live_filter_cov": 77.90715412038941,
+          "live_patient_cov": 86.03613910599205,
+          "hindsight_filter_cov": 79.4529428904429,
+          "hindsight_patient_cov": 85.55429864253394
+        },
+        {
+          "day": 9,
+          "n_patients": 9,
+          "share_of_cohort": 0.42857142857142855,
+          "few_patients": false,
+          "live_filter_cov": 80.53155304231345,
+          "live_patient_cov": 88.80614381809983,
+          "hindsight_filter_cov": 79.59231152679264,
+          "hindsight_patient_cov": 88.08640320835444
+        }
+      ],
+      "primary": false,
+      "choice": {
+        "on": "live",
+        "at_k": 3.0,
+        "chosen": "patient",
+        "development": {
+          "live": {
+            "filter": {
+              "n_patients": 20,
+              "mean": 63.832909895043464,
+              "min": 32.744405182567725,
+              "max": 89.84299504465987,
+              "n_within": 8,
+              "median_half_width": 30.302208792051644
+            },
+            "patient": {
+              "n_patients": 20,
+              "mean": 79.73196624926175,
+              "min": 45.9837019790454,
+              "max": 94.14114513981359,
+              "n_within": 15,
+              "median_half_width": 40.756324530855686
+            }
+          },
+          "hindsight": {
+            "filter": {
+              "n_patients": 20,
+              "mean": 65.36978620789388,
+              "min": 30.270906949352177,
+              "max": 89.5519589561849,
+              "n_within": 10,
+              "median_half_width": 28.234082440971783
+            },
+            "patient": {
+              "n_patients": 20,
+              "mean": 80.31242773870846,
+              "min": 38.18393480791618,
+              "max": 94.65648854961832,
+              "n_within": 13,
+              "median_half_width": 36.74521424101468
+            }
+          }
+        },
+        "development_errors": []
+      }
+    }
+  ]
+}
