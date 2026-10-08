@@ -251,4 +251,4 @@ Code: MIT. Datasets are downloaded by the user and never redistributed; only der
 
 ## Team
 
-**SynapseX**, IIT Kanpur: a solo entry. Built with Claude (Anthropic) as a programming and review assistant, working under the rules in `CLAUDE.md`; every equation, split and bar is the team lead's to explain.
+**SynapseX**
