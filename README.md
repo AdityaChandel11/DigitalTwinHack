@@ -11,7 +11,7 @@
 ![Bars](https://img.shields.io/badge/bars%20written%20first-9%20%E2%80%A2%205%20passed%20%E2%80%A2%204%20missed-4a3aa7.svg)
 ![Held out](https://img.shields.io/badge/scored%20on-held--out%20patients%2C%20once-4a3aa7.svg)
 
-Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX**, IIT Kanpur · submission folder `SynapseX_IITK`
+Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · submission folder `SynapseX_IITK`
 
 </div>
 
