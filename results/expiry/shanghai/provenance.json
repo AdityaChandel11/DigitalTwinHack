@@ -1,0 +1,12 @@
+{
+  "commit": "1f50bd4",
+  "uncommitted_changes_in_src": false,
+  "confirm": true,
+  "seed": 20261002,
+  "output": "shanghai",
+  "k": [
+    3.0,
+    5.0
+  ],
+  "traces": null
+}

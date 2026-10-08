@@ -80,7 +80,7 @@ Three screens, read from pre-computed artifacts; nothing is fitted live.
    measured accuracy of that arm next to it**; a meal what-if labelled simulation.
 3. **Evidence.** Every results table with its bar, the label check, limits, data provenance.
 
-A limits banner is always visible: research prototype; validated on Chinese and US cohorts in supervised care;
+A limits banner is always visible: research prototype; evaluated on a Chinese cohort in supervised care and a US free-living cohort;
 estimates, not measurements; not for dosing.
 
 Front end: a single page served by one local command, with Streamlit as the fallback if the custom page is not

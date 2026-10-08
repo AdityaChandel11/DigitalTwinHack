@@ -1,0 +1,25 @@
+{
+  "commit": "1f50bd4",
+  "uncommitted_changes_in_src": false,
+  "confirm": true,
+  "seed": 20261002,
+  "output": "cgmacros",
+  "k": [
+    3.0,
+    5.0
+  ],
+  "traces": {
+    "commit": "1f50bd4",
+    "uncommitted_changes_in_src": false,
+    "confirm": true,
+    "seed": 20261002,
+    "dataset": "cgmacros",
+    "split": "test",
+    "k": [
+      3.0,
+      5.0
+    ],
+    "members": 200,
+    "n_traces": 38
+  }
+}

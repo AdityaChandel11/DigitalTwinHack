@@ -11,7 +11,7 @@ When the next task names a different model, Claude stops and waits for the switc
 |---|---|
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
-| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4 (second pass of F, expiry, band, staleness) written 8 Oct, not started |
+| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry and band **done on held-out patients, 8 Oct** (all descriptive, no bar); the staleness alarm is the only part left |
 | M4 Product (three screens, one decision) | Not started |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
@@ -20,21 +20,24 @@ When the next task names a different model, Claude stops and waits for the switc
 1. **Push when ready.** All of 8 Oct is merged into `main` locally (fast-forward, 202 tests pass there) and not
    pushed: `origin/main` is still at `985b2ad`. The once-only guards (`results/gate3/shanghai/`,
    `results/fingersticks/shanghai/`) are now on main, so `--confirm` is refused from any checkout of it.
-2. **Execute Plan 4**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
-   Its code was written and run before the plan was (60 new tests; one run of each output on development
-   patients; no test patient read), so Tasks 1 to 5 are transcription.
-   - Task 0 first: the dated note that fixes how each output is computed goes into the registration before
-     any code is committed.
-   - Tasks 1 to 5 on **Sonnet 5.5, medium**; Task 6 (development runs, reviews) on **Opus 5.5, high**; Task 7
-     (the passes over test patients and their records) on **Opus 5.5, max**. Stop at each switch.
-   - Priority order: second pass of section F, expiry (by day on both datasets, case series), band; the
-     staleness alarm only if those are committed by 16:00 on 10 Oct. Cut order: staleness, band, by-day expiry.
-   - Nothing in `src/` that exists today is modified, so the scored estimators stay as they were. Each pass
-     over test patients first reproduces committed numbers and refuses to run twice.
-   - **One thing the development look already suggests** (not quotable): on development patients the twin's
-     advantage holds on every day that most patients reach (to day 7 at k = 3) and reverses only on the last
-     days of the wear, which half the patients or fewer reach. If test patients show the same, "the gain
-     lasts about five days" is wrong as worded and the expiry record corrects it.
+2. **Plan 4, what is left**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
+   Tasks 0 to 7 were done on 8 Oct: the registration note, five modules, two independent reviews, and the three
+   passes over held-out patients with one record each (`docs/decisions/2026-10-08-fingersticks-report.md`,
+   `-expiry.md`, `-band.md`).
+   - **Task 8, the staleness alarm**, is the only science left. The checkpoint (three records committed by
+     16:00 on 10 Oct) is met two days early, so it can be built: Sonnet 5.5, medium to build; Opus 5.5, high to
+     review; Opus 5.5, max to read. On development recordings it was no better than the plain fingerstick
+     average (AUROC 0.74 against 0.73), so expect a result of that kind. If it is cut instead, Task 9 has the
+     sentence.
+   - **Task 9** closes Milestone 3 (architecture and commands in CLAUDE.md, README command list, limits).
+   - **What the three results change for the product** (Milestone 4; wording reviewed by
+     `healthcare-reviewer`, exact screen text in each record's "Consequences for the product"): the report
+     since the sensor is an estimated, "sensor-equivalent" mean and share of fingerstick readings above 180,
+     from the plain fingerstick average converted to the sensor's scale, beside the same figures as read from
+     the meter, not from the estimator; no time in range and no time below range from any source; days since
+     the sensor is a fact with no threshold and no per-day figure beside it; a recorded treatment change is
+     shown with the case-series counts and "no recorded change does not mean the report still holds"; the
+     clinic list has no default ranking by the treatment flag; the band is drawn as Gate 2 scored it.
 3. Before quoting any Clarke zone figure: `clarke_zones` matches the widely used reference implementation but
    has not been checked against the figure in the 1987 paper. Say in the README that the Clarke grid is used.
 
@@ -54,6 +57,12 @@ When the next task names a different model, Claude stops and waits for the switc
    into the sensor map and an inexact smoother, all fixed before the test run), filter frozen on development
    patients with a dated note, then the one confirmatory run: **F1 and F2 PASS**.
 8. 8 Oct: headline revised (the excursion clause removed, "which readings not to believe" added).
+9. 8 Oct, Plan 4: a third dated note to Amendment 3 fixed how the descriptive outputs are computed, before
+   their code. Five modules built with no change to any existing source file; two independent reviews found
+   no leakage and ten defects, all fixed test-first and recorded in an addendum to the note. Then one pass
+   each over held-out patients: the second pass of section F (a plain baseline beats our estimator at report
+   level), expiry (these data do not give a number of days; "lasts about five days" corrected) and the
+   band (the recalibration did not transfer).
 
 ## What Chhaya is now (the headline)
 
@@ -66,9 +75,10 @@ What stands behind each clause today:
 
 | Clause | Evidence | State |
 |---|---|---|
-| How long it stays true | Gate 2 (gain lasts about five days); expiry by day | Gate 2 done; Plan 4 to come |
+| How long it stays true | Expiry by day on both datasets; case series of eight re-recorded patients | Done. These data do not give a number of days: about 1 mg/dL per day, downward, over at most eleven days in supervised care; no ageing detected over a week in free-living participants; and in nine repeat wears of eight patients the four whose mean had moved all had a treatment change in the files. Not a rule for when to wear a sensor |
+| With an honest band | Gate 2 coverage; band recalibration | Done. 83.5 % on average, 60 to 98.5 % per patient; the recalibration did not transfer and is not used |
 | Which readings not to believe | Label check: 8 of 64 sensor lows confirmed, 732 of 809 highs | Done |
-| What keeps it true | Meal log (Gate 2); fingersticks (F1, F2); second pass of F at report level | Both pass. At report level a plain baseline wins: the fingerstick average on the sensor's scale beats our estimate |
+| What keeps it true | Meal log (Gate 2); fingersticks (F1, F2); second pass of F at report level | Both pass. At report level a plain baseline wins: the fingerstick average converted to the sensor's scale beats our estimate. Measured at about six fingersticks a day only |
 | When to wear a sensor again | Staleness alarm | Plan 4, first to be cut |
 | Fusion of record and sensor | Gate 3 (M1) and record prior (P1) | Both missed: built and measured, no gain |
 
@@ -76,7 +86,12 @@ What stands behind each clause today:
 
 - **Gate 2:** on 19 held-out patients, 5 days after the sensor comes off, Chhaya's estimate is 1.4 mg/dL (6 %)
   closer to the hidden sensor than the patient's own average day (p = 4e-05) and about 0.35 mg/dL closer than a
-  control that uses no meals (p = 0.04). The gain comes from the meal log and lasts about five days.
+  control that uses no meals (p = 0.04). The gain comes from the meal log and is small. **Corrected 8 Oct**
+  (the Gate 2 record said "lasts about five days"): it was not seen to fade with days since the sensor;
+  with three days of calibration the median favours the twin over its control on each of the seven
+  following days (0.4 to 2.0 mg/dL; the interval excludes zero on three of them; 19 held-out participants),
+  and it reverses only on the last days of the recording, which fewer than half of the participants reach.
+  (`docs/decisions/2026-10-08-expiry.md`)
 - **Label check:** of 64 sensor readings below 70 mg/dL with a fingerstick within 10 minutes, 8 (12.5 %) were
   confirmed, and 0 of 9 at night; of 809 sensor readings above 180, 732 (90.5 %) were confirmed.
   (`python -m chhaya.data.audit`)
@@ -85,12 +100,34 @@ What stands behind each clause today:
   patient's daily shape alone (median paired RMSE difference; 95 % interval 1.6 to 4.7; 86 % of patients;
   p = 4e-06) and 9.5 mg/dL closer in hindsight (interval 4.6 to 12.1); with one fingerstick a day the running
   gain was 0.3 mg/dL.
-- **Fingersticks at report level (descriptive, no bar; a plain baseline wins):** on 29 held-out Shanghai
-  patients who tested about six times a day, a three-day sensor report missed the mean glucose of the
-  following days (up to eleven) by a median of 13.0 mg/dL; a report rebuilt from fingersticks missed it by
-  8.9 (3.4 closer, 95 % interval 1.6 to 8.9, 83 % of patients), but was no closer than the plain fingerstick
-  average put on the sensor's scale (6.4), which was also closer on time above 180 (3.1 against 8.8 points)
-  and on time in range (5.0 against 15.2). (`docs/decisions/2026-10-08-fingersticks-report.md`)
+- **Fingersticks at report level** (`docs/decisions/2026-10-08-fingersticks-report.md`): descriptive, no
+  bar; a plain baseline beats our estimator. On 29 held-out Shanghai patients under supervised care who
+  were tested about six times a day, with the hidden sensor as the yardstick, a three-day sensor report
+  missed the mean sensor glucose of the following days (up to eleven) by a median of 13.0 mg/dL. Chhaya's
+  report rebuilt in hindsight from those fingersticks missed it by 8.9 (median paired difference 3.4, 95 %
+  interval 1.6 to 8.9, 83 % of patients), but was no closer than the plain average of the same fingersticks
+  converted to the sensor's scale by a line learned during the wear (6.4). The share of those converted
+  readings above 180 mg/dL and within 70 to 180 was also closer to the sensor's time above 180 and time in
+  range (3.1 against 8.8 points; 5.0 against 15.2). As read from the meter the same average lay 18.3 mg/dL
+  from the sensor's mean; sensor-scale figures are not meter values. Lower testing frequencies were not
+  measured, and this is not a recommendation to test at any frequency.
+- **Expiry** (`docs/decisions/2026-10-08-expiry.md`): descriptive, no bar; "report" means mean glucose
+  only, and a three-day report stands in for a fourteen-day one. On 47 held-out Shanghai patients under
+  supervised care with treatment being adjusted, a day's mean sensor glucose lay a median of 13.5 mg/dL
+  from a three-day sensor report's mean inside the wear and 11 to 16 on the four days after it; inside each
+  patient that distance grew by 1.0 mg/dL per day (95 % interval 0.7 to 2.6) over at most eleven days, with
+  glucose moving downward. On 19 held-out free-living CGMacros participants (7 with type 2 diabetes;
+  medication not recorded) no growth was detected over seven days (0.1 mg/dL per day, interval -0.8 to
+  0.8). In a case series of eight Shanghai patients recorded again (nine later wears, five beginning within
+  three days of the first sensor coming off and four 33 to 154 days after it), four wears in three patients
+  had a mean more than 20 mg/dL lower, all four with a change of treatment in the files; of the five that
+  had not moved, four had no change and one had, and the old daily profile fitted them no worse than a
+  fresh one. No test; not a rule for when a patient should wear a sensor.
+- **Band (descriptive, no bar; the recalibration did not transfer):** on 19 held-out participants the 80 %
+  band held 83.5 % of hidden readings on average and between 60 % and 98.5 % for an individual, with 10 of
+  19 participants within 70 to 90 %. A recalibration factor chosen on development patients (0.78) moved the
+  average to 75.7 %, further from 80 % than before, so it is not used: the band is calibrated on average,
+  not per patient. (`docs/decisions/2026-10-08-band.md`)
 - **Gate 3 (missed its bars):** on 47 held-out Shanghai patients (1,205 meals, 39 % followed by an excursion
   above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal
   time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the
