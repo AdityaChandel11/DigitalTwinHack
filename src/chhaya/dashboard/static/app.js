@@ -341,7 +341,9 @@
     const p = state.patients[id];
     // open on the latest day the sensor covers almost fully: the last day of a recording is often a few hours
     const fullDays = p.days.map((x, i) => (x.sensor.filter(v => v != null).length >= 80 ? i : -1)).filter(i => i >= 0);
-    if (state.current !== id) { hero.day = fullDays.length ? fullDays[fullDays.length - 1] : p.days.length - 1; hero.cross = null; if (qs.get('reveal') !== '1') hero.reveal = 0; }
+    if (state.current !== id) { hero.day = fullDays.length ? fullDays[fullDays.length - 1] : p.days.length - 1; hero.cross = null; if (qs.get('reveal') !== '1') hero.reveal = 0;
+      const want = Number(qs.get('day')); // ?day=N opens day N since the sensor, for screenshots
+      if (want >= 1 && want <= p.days.length) hero.day = want - 1; }
     state.current = id;
     drawPatient();
   }
