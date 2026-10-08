@@ -97,7 +97,9 @@ come out of the public War Room doc if the team lead confirms.
 
 ## Known limits we will state
 
-No Indian data. Shanghai is supervised care with treatment being adjusted. Hidden windows are at most about ten
-days, plus eight patients re-recorded up to 168 days later. The effect of the physiology is about 2 %. The
+No Indian data. Shanghai is supervised care with treatment being adjusted. Hidden windows are at most eleven
+days, and these data do not give a number of days for how long a report stays true: about 1 mg/dL per day,
+downward, in supervised care; none detected over a week in free-living participants; eight patients re-recorded
+up to 168 days later (a case series, not a rule). The effect of the physiology is about 2 %. The
 shadow is about one and a half times as far from a fingerstick as a real sensor is. No exogenous insulin, no
 drug kinetics, no counter-regulation in the model.

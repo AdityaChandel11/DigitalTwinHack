@@ -17,7 +17,8 @@ excursions better than the sensor week already does (headline revised 4 Oct and 
 - **Design from Milestone 3 on:** [docs/superpowers/specs/2026-10-04-chhaya-m3-design.md](docs/superpowers/specs/2026-10-04-chhaya-m3-design.md).
 - **Task-level plans:** [Plan 2, excursions](docs/superpowers/plans/2026-10-07-chhaya-plan-2-excursions.md) and
   [Plan 3, record prior and fingersticks](docs/superpowers/plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
-  are done. **Being executed:** [Plan 4, second pass of F, expiry, band, staleness](docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
+  and [Plan 4, second pass of F, expiry, band, staleness](docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md)
+  are done (Milestone 3 closed 8 Oct). Milestone 4 plan is written the day it starts.
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](docs/brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## Working agreement (solo project: Claude is the teammate)
@@ -76,6 +77,14 @@ uv run python -m chhaya.data.download shanghai cgmacros   # 3.7 MB + 627 MB, che
 uv run python -m chhaya.data.audit              # Gate 1 -> results/audit/
 uv run python -m chhaya.eval.gate2 --dataset cgmacros --k 3 5 7   # Gate 2 -> results/gate2/
 uv run python -m chhaya.eval.gate2 --dataset cgmacros --limit 5   # smoke run
+# Milestone 3 outputs: each reads held-out patients only with --confirm, once, on committed code
+uv run python -m chhaya.eval.gate3 [--confirm]                    # excursions -> results/gate3/
+uv run python -m chhaya.eval.fingersticks [--confirm]             # F1, F2 -> results/fingersticks/shanghai/
+uv run python -m chhaya.eval.fingersticks_report [--confirm]      # report level, by day -> results/fingersticks/shanghai-report/
+uv run python -m chhaya.eval.traces --split dev|test [--confirm] --jobs 6   # reveal traces (cache under data/, not results/)
+uv run python -m chhaya.eval.expiry shanghai|cgmacros|cases [--confirm]     # -> results/expiry/
+uv run python -m chhaya.eval.calibrate [--confirm]                # band factor -> results/calibrate/
+uv run python -m chhaya.eval.staleness [--confirm]                # prompt on drift -> results/staleness/
 ```
 
 ## Architecture
@@ -102,6 +111,16 @@ src/chhaya/
     baselines.py   mean; the patient's own average day (the bar to beat, and half of the blend)
     reveal.py      the hide-and-reveal experiment; estimate = blend of physiology and average day
     gate2.py       cohort run (--split dev|test, --jobs), pre-registered verdict, report
+    events.py, gate3.py      post-meal excursion experiment (M); missed its bars
+    fusion.py                record prior on and off (P); missed
+    fingersticks.py          live and in-hindsight estimates from fingersticks (F1, F2); passed
+    descriptive.py           shared pieces of the descriptive outputs: days since the sensor, report numbers, guards
+    fingersticks_report.py   second pass of F: report-level errors, error by day, testing frequency
+    traces.py                reveal traces cached outside results/, checked against Gate 2
+    expiry.py                expiry by day (both datasets) and the case series of re-recorded patients
+    calibrate.py             band recalibration (did not transfer; not used)
+    staleness.py             the prompt on fingerstick drift (reads fingersticks only)
+  twin/ also: assimilate.py (fingerstick filter), staleness.py (cumulative sum and its alarm time)
 ```
 
 Data flows one way: **loader → `Recording` → `build_inputs` → `fit_twin` → `simulate_ensemble` →

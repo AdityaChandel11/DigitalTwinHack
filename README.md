@@ -47,6 +47,23 @@ uv run python -m chhaya.data.audit
 uv run python -m chhaya.eval.gate2 --dataset cgmacros --k 3 5 7
 ```
 
+Milestone 3 outputs (each reads held-out patients only with `--confirm`, once; results are in `results/`):
+
+```bash
+uv run python -m chhaya.eval.gate3 --confirm                 # post-meal excursion: missed its bars
+uv run python -m chhaya.eval.fingersticks --confirm          # fingersticks after the sensor: passed
+uv run python -m chhaya.eval.fingersticks_report --confirm   # same, at the level of a sensor report
+uv run python -m chhaya.eval.expiry shanghai --confirm       # also: cgmacros, cases
+uv run python -m chhaya.eval.calibrate --confirm             # 80 % band recalibration: did not transfer
+uv run python -m chhaya.eval.staleness --confirm             # prompt to consider a new sensor wear
+```
+
+Limits: no Indian data; Shanghai is supervised care with treatment being adjusted; hidden windows are at most
+eleven days, plus eight patients recorded again up to 168 days later; the staleness prompt was not shown to do
+better than comparing the fingerstick average with the report and was not tested in outpatient care; the 80 %
+band holds 83.5 % of readings on average and 60 to 98.5 % per participant; no low-glucose alarm. The Clarke error
+grid used elsewhere is the widely used reference implementation, not checked against the 1987 figure.
+
 ## Data and licences
 
 Code: MIT. Datasets are downloaded by the user and never redistributed: ShanghaiT2DM (CC BY 4.0, Zhao et al.,

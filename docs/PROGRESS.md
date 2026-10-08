@@ -11,14 +11,14 @@ When the next task names a different model, Claude stops and waits for the switc
 |---|---|
 | M1 Data truth | Done. Gate 1 GO |
 | M2 Core twin and the reveal | Done and closed. Gate 2 GO on the corrected run |
-| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Only Task 9, the closing of the docs, is left |
-| M4 Product (three screens, one decision) | Not started |
+| M3 Evidence | **Plans 2 and 3 done.** Label check done. Gate 3 NOT PASSED. Record prior NOT PASSED. **Fingersticks PASS (F1, F2).** Plan 4: second pass of F, expiry, band and the staleness alarm **all done on held-out patients, 8 Oct** (descriptive, no bar). Task 9 closed the docs: **Milestone 3 is done** |
+| M4 Product (three screens, one decision) | **Next.** Plan written the day it starts |
 | M5 Ship (README, deck, 20-minute video, submit by noon 20 Oct) | Not started |
 
 ## Start here
 
 1. **GitHub.** `main` is on GitHub at `bdafe69` (all of 8 Oct up to the progress map). Plan 4 lives on the branch
-   `claude/plan-4-expiry-band-staleness-048969`, pushed 8 Oct, not yet merged into `main`. Merge it after Task 9.
+   `claude/plan-4-expiry-band-staleness-048969`, pushed 8 Oct, not yet merged into `main`. **Task 9 is committed: merge it now** (fast-forward, then push `main`).
    Never run any `--confirm` command from a checkout that lacks the results folders of earlier passes: the
    once-only guards read the folder in the checkout you run from.
 2. **Plan 4, what is left**: [docs/superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md](superpowers/plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md).
@@ -26,11 +26,11 @@ When the next task names a different model, Claude stops and waits for the switc
    held-out patients with one record each: `docs/decisions/2026-10-08-fingersticks-report.md`, `-expiry.md`,
    `-band.md`, `-staleness.md`). The staleness pass was run once (`results/staleness/shanghai/`, commit
    `1595e71`); `--confirm` is now refused for it from any checkout that has that folder.
-   - **Next: Task 9** (Sonnet 5.5, medium) closes Milestone 3: the seven modules and the new commands in
-     CLAUDE.md, the README command list, the design's limits, the roadmap. Nothing was cut, so none of the
-     "not done" sentences of its Step 4 is used; the README limits take the staleness record's caveats
-     instead. **End Task 9's report with the reminder to merge to `main` and push** (see "Waiting on the
-     team lead").
+   - **Task 9 is done** (docs closed: roadmap, CLAUDE.md architecture and commands, README commands and limits,
+     design limits). Nothing was cut.
+   - **Next: Milestone 4**, the product (three screens, one decision). Artifact build first: it reads
+     `chhaya.eval.traces`, `chhaya.eval.calibrate.rescale` (not called: the recalibration is not used) and
+     `chhaya.twin.staleness`. Write the M4 plan (Opus 5.5, max for the design), then build.
    - **For the team lead to decide before Milestone 4:** whether "and when to wear a sensor again" stays in
      the headline as worded. What stands behind it is the expiry record ("not a rule for when a patient
      should wear a sensor") and a prompt that, in the product's own use case (an outpatient, weeks after a
