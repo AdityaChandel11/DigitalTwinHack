@@ -1,2 +1,3 @@
 # Multi-line diet cells: never convert line endings in this file, or its bytes differ by platform.
 results/audit/shanghai_food_strings.csv -text
+*.sh text eol=lf

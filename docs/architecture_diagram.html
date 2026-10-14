@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chhaya — System Architecture</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,500;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #FAFAF8;
+    color: #1A1A2E;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    width: 1580px;
+    margin: 0 auto;
+    padding: 44px 56px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ─── ACCENT LINE ─── */
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 56px; right: 56px;
+    height: 5px;
+    background: linear-gradient(90deg, #6C3CE2, #2DD4BF, #F59E0B, #F43F5E, #6C3CE2);
+    border-radius: 0 0 3px 3px;
+  }
+
+  /* ═══════════ HEADER ═══════════ */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #E8E6E1;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .logo {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #6C3CE2 0%, #8B5CF6 100%);
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: white;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    box-shadow: 0 4px 16px #6C3CE230;
+  }
+
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 30px;
+    font-weight: 800;
+    color: #1A1A2E;
+    letter-spacing: -0.5px;
+  }
+
+  .header-text .tagline {
+    font-size: 13px;
+    color: #6B6580;
+    margin-top: 2px;
+    font-weight: 400;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .header-right .team {
+    font-size: 12px;
+    font-weight: 700;
+    color: #6C3CE2;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .header-right .event {
+    font-size: 11px;
+    color: #9B95A8;
+    margin-top: 2px;
+  }
+
+  /* ═══════════ HOOK SECTION ═══════════ */
+  .hook-section {
+    display: grid;
+    grid-template-columns: 440px 1fr;
+    gap: 28px;
+    margin-bottom: 28px;
+  }
+
+  .hook-card {
+    background: linear-gradient(135deg, #1A1A2E 0%, #2D1B69 100%);
+    border-radius: 16px;
+    padding: 28px 26px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .hook-card::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, #8B5CF630, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hook-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #A78BFA;
+    margin-bottom: 12px;
+  }
+
+  .hook-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 21px;
+    font-weight: 700;
+    color: #F5F3FF;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+
+  .hook-card h2 em {
+    color: #2DD4BF;
+    font-style: normal;
+    text-decoration: underline;
+    text-decoration-color: #2DD4BF50;
+    text-underline-offset: 3px;
+  }
+
+  .hook-stat-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 10px;
+  }
+
+  .hook-stat {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .hook-stat .num {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+    color: #2DD4BF;
+  }
+
+  .hook-stat .label {
+    font-size: 10px;
+    color: #C4B5FD;
+    line-height: 1.3;
+    max-width: 80px;
+  }
+
+  /* ─── THE GLUCOSE TRACE (SVG) ─── */
+  .trace-card {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 16px;
+    padding: 20px 24px 16px;
+    position: relative;
+  }
+
+  .trace-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #9B95A8;
+    margin-bottom: 6px;
+  }
+
+  .trace-subtitle {
+    font-size: 13px;
+    color: #6B6580;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+
+  .trace-subtitle strong {
+    color: #1A1A2E;
+  }
+
+  .trace-svg {
+    width: 100%;
+    height: 200px;
+  }
+
+  .trace-legend {
+    display: flex;
+    gap: 18px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+
+  .trace-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10.5px;
+    color: #6B6580;
+  }
+
+  .trace-legend-item .swatch {
+    width: 18px;
+    height: 3px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .trace-legend-item .swatch-band {
+    width: 18px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+    opacity: 0.3;
+  }
+
+  /* ═══════════ MAIN ARCHITECTURE ═══════════ */
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 360px 1fr 340px;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: #9B95A8;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-title .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ─── LEFT: DATA SOURCES ─── */
+  .sources-panel {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .source-item {
+    display: grid;
+    grid-template-columns: 36px 1fr 56px;
+    gap: 10px;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #F0EEE9;
+  }
+
+  .source-item:last-child { border-bottom: none; }
+
+  .source-icon {
+    width: 36px; height: 36px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .si-teal { background: #CCFBF1; }
+  .si-purple { background: #EDE9FE; }
+  .si-amber { background: #FEF3C7; }
+  .si-rose { background: #FFE4E6; }
+  .si-green { background: #DCFCE7; }
+
+  .source-text .s-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #1A1A2E;
+  }
+
+  .source-text .s-desc {
+    font-size: 10.5px;
+    color: #9B95A8;
+    line-height: 1.3;
+    margin-top: 1px;
+  }
+
+  .source-badge {
+    font-size: 9px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-align: center;
+  }
+
+  .sb-cal { background: #CCFBF1; color: #0D9488; }
+  .sb-post { background: #FFE4E6; color: #E11D48; }
+  .sb-both { background: #FEF3C7; color: #D97706; }
+
+  /* ─── CENTER: ODE TWIN ENGINE ─── */
+  .engine-panel {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+  }
+
+  .ode-diagram {
+    width: 100%;
+    height: 280px;
+  }
+
+  .engine-specs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .spec-item {
+    background: #F7F6F3;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+
+  .spec-item .spec-label {
+    font-size: 9.5px;
+    font-weight: 600;
+    color: #9B95A8;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .spec-item .spec-value {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1A1A2E;
+    line-height: 1.3;
+  }
+
+  /* ─── RIGHT: PIPELINE STEPS ─── */
+  .pipeline-panel {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 14px;
+    padding: 20px;
+  }
+
+  .pipe-step {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 10px;
+    position: relative;
+  }
+
+  .pipe-num-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pipe-num {
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    background: #6C3CE2;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    z-index: 2;
+  }
+
+  .pipe-line {
+    width: 2px;
+    flex: 1;
+    background: #E8E6E1;
+    margin: 2px 0;
+  }
+
+  .pipe-content {
+    padding-bottom: 14px;
+  }
+
+  .pipe-content h4 {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1A1A2E;
+    margin-bottom: 2px;
+  }
+
+  .pipe-content p {
+    font-size: 10.5px;
+    color: #9B95A8;
+    line-height: 1.4;
+  }
+
+  .pipe-content .code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    background: #F0EEE9;
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #6C3CE2;
+  }
+
+  /* ═══════════ BOTTOM: EVIDENCE + DASHBOARD ═══════════ */
+  .bottom-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 22px;
+  }
+
+  /* ─── EVIDENCE CHART ─── */
+  .evidence-panel {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .evidence-chart {
+    width: 100%;
+    height: 200px;
+    margin-top: 8px;
+  }
+
+  .evidence-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .ev-stat {
+    text-align: center;
+    padding: 10px 8px;
+    background: #F7F6F3;
+    border-radius: 8px;
+  }
+
+  .ev-stat .ev-num {
+    font-size: 24px;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .ev-stat .ev-label {
+    font-size: 9.5px;
+    color: #9B95A8;
+    margin-top: 2px;
+    line-height: 1.3;
+  }
+
+  .ev-pass { color: #16A34A; }
+  .ev-miss { color: #E11D48; }
+  .ev-desc { color: #D97706; }
+  .ev-teal { color: #0D9488; }
+
+  /* ─── DASHBOARD SCREENS ─── */
+  .dashboard-panel {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 14px;
+    padding: 20px 24px;
+  }
+
+  .screens-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .screen-mini {
+    background: #1A1A2E;
+    border-radius: 10px;
+    padding: 14px 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .screen-mini::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .screen-mini.sc1::before { background: #8B5CF6; }
+  .screen-mini.sc2::before { background: #2DD4BF; }
+  .screen-mini.sc3::before { background: #F59E0B; }
+
+  .screen-mini .sc-label {
+    font-size: 9px;
+    font-weight: 600;
+    color: #6B6580;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .screen-mini h5 {
+    font-size: 12px;
+    font-weight: 700;
+    color: #F5F3FF;
+    margin-bottom: 6px;
+  }
+
+  .screen-mini .sc-features {
+    list-style: none;
+    padding: 0;
+  }
+
+  .screen-mini .sc-features li {
+    font-size: 9.5px;
+    color: #A0A0B8;
+    padding: 2px 0;
+    padding-left: 10px;
+    position: relative;
+  }
+
+  .screen-mini .sc-features li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: #8B5CF6;
+    font-weight: 700;
+  }
+
+  /* ─── DESIGN PRINCIPLES ─── */
+  .principles-strip {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+
+  .principle {
+    background: white;
+    border: 1px solid #E8E6E1;
+    border-radius: 10px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+  }
+
+  .principle::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%; transform: translateX(-50%);
+    width: 30px; height: 3px;
+    border-radius: 0 0 3px 3px;
+  }
+
+  .principle:nth-child(1)::before { background: #6C3CE2; }
+  .principle:nth-child(2)::before { background: #2DD4BF; }
+  .principle:nth-child(3)::before { background: #E11D48; }
+  .principle:nth-child(4)::before { background: #F59E0B; }
+  .principle:nth-child(5)::before { background: #16A34A; }
+  .principle:nth-child(6)::before { background: #6C3CE2; }
+
+  .principle .pr-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+
+  .principle .pr-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1A1A2E;
+    margin-bottom: 3px;
+    line-height: 1.2;
+  }
+
+  .principle .pr-desc {
+    font-size: 9.5px;
+    color: #9B95A8;
+    line-height: 1.35;
+  }
+
+  /* ─── FOOTER ─── */
+  .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 2px solid #E8E6E1;
+  }
+
+  .tech-pills {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-size: 9.5px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: #F0EEE9;
+    color: #6B6580;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .not-strip {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    max-width: 680px;
+    justify-content: flex-end;
+  }
+
+  .not-item {
+    font-size: 9px;
+    color: #E11D48;
+    padding: 3px 9px;
+    border-radius: 5px;
+    background: #FFF1F2;
+    border: 1px solid #FECDD3;
+    font-weight: 500;
+  }
+
+  /* ─── FLOW CONNECTORS (SVG arrows between sections) ─── */
+  .flow-svg {
+    position: absolute;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* ─── Print ─── */
+  @page {
+    size: A3 landscape;
+    margin: 0;
+  }
+  @media print {
+    .page { padding: 30px 40px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="header">
+  <div class="header-left">
+    <div class="logo">छ</div>
+    <div class="header-text">
+      <h1>Chhaya · System Architecture</h1>
+      <div class="tagline">A diabetes digital twin that shows its work — from one sensor wear to a patient's shadow</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="team">Team SynapseX · IIT Kanpur</div>
+    <div class="event">Happiest Health Digital Twin Challenge 2026</div>
+  </div>
+</header>
+
+<!-- ═══════════ HOOK + GLUCOSE TRACE ═══════════ -->
+<div class="hook-section">
+
+  <!-- THE HOOK -->
+  <div class="hook-card">
+    <div class="hook-label">The Problem</div>
+    <h2>A sensor lasts 14 days and costs ₹4,200. So a patient wears it <em>once</em>, gets a report, and is treated from that report for months. <em>Nobody tells the doctor how old the report has become.</em></h2>
+    <div class="hook-stat-row">
+      <div class="hook-stat">
+        <div class="num">101M</div>
+        <div class="label">people with diabetes in India</div>
+      </div>
+      <div class="hook-stat">
+        <div class="num">₹50K</div>
+        <div class="label">per year for continuous CGM</div>
+      </div>
+      <div class="hook-stat">
+        <div class="num">14d</div>
+        <div class="label">one sensor wear, then nothing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE GLUCOSE TRACE VISUALIZATION -->
+  <div class="trace-card">
+    <div class="trace-title">The Core Concept — "The Reveal"</div>
+    <div class="trace-subtitle">Chhaya's estimate (purple with 80% band) is drawn <strong>without the sensor</strong>. Then the real sensor trace (teal) slides over it. The doctor sees where the shadow was right — and where it missed.</div>
+
+    <svg class="trace-svg" viewBox="0 0 780 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Grid lines -->
+      <line x1="60" y1="20" x2="60" y2="180" stroke="#E8E6E1" stroke-width="1"/>
+      <line x1="60" y1="180" x2="760" y2="180" stroke="#E8E6E1" stroke-width="1"/>
+      <!-- Y-axis labels -->
+      <text x="52" y="30" font-size="9" fill="#9B95A8" text-anchor="end" font-family="JetBrains Mono">250</text>
+      <text x="52" y="70" font-size="9" fill="#9B95A8" text-anchor="end" font-family="JetBrains Mono">200</text>
+      <text x="52" y="110" font-size="9" fill="#9B95A8" text-anchor="end" font-family="JetBrains Mono">150</text>
+      <text x="52" y="150" font-size="9" fill="#9B95A8" text-anchor="end" font-family="JetBrains Mono">100</text>
+      <text x="52" y="178" font-size="9" fill="#9B95A8" text-anchor="end" font-family="JetBrains Mono"> 70</text>
+      <text x="8" y="105" font-size="9" fill="#9B95A8" text-anchor="middle" font-family="Inter" transform="rotate(-90, 8, 105)">mg/dL</text>
+      <!-- Horizontal grid -->
+      <line x1="60" y1="30" x2="760" y2="30" stroke="#F0EEE9" stroke-width="0.5"/>
+      <line x1="60" y1="70" x2="760" y2="70" stroke="#F0EEE9" stroke-width="0.5"/>
+      <line x1="60" y1="110" x2="760" y2="110" stroke="#F0EEE9" stroke-width="0.5"/>
+      <line x1="60" y1="150" x2="760" y2="150" stroke="#F0EEE9" stroke-width="0.5"/>
+      <!-- High zone -->
+      <rect x="60" y="20" width="700" height="50" fill="#FEF3C7" opacity="0.3" rx="0"/>
+      <text x="65" y="48" font-size="8" fill="#D97706" font-family="Inter" font-weight="600">HIGH (&gt;180)</text>
+
+      <!-- CALIBRATION ZONE -->
+      <rect x="60" y="12" width="260" height="12" fill="#CCFBF1" rx="3"/>
+      <text x="190" y="21" font-size="8" fill="#0D9488" text-anchor="middle" font-family="Inter" font-weight="700">CALIBRATION (sensor on, 3 days)</text>
+
+      <!-- SPLIT LINE -->
+      <line x1="320" y1="12" x2="320" y2="185" stroke="#E11D48" stroke-width="1.5" stroke-dasharray="4 3"/>
+      <text x="323" y="195" font-size="8" fill="#E11D48" font-family="Inter" font-weight="700">SENSOR OFF ↓</text>
+
+      <!-- HIDDEN ZONE -->
+      <rect x="320" y="12" width="440" height="12" fill="#FEF3C7" rx="3"/>
+      <text x="540" y="21" font-size="8" fill="#D97706" text-anchor="middle" font-family="Inter" font-weight="700">HIDDEN WINDOW (scored, 5+ days)</text>
+
+      <!-- 80% confidence band (purple area) -->
+      <path d="M60,118 Q100,100 140,105 Q180,95 220,88 Q260,82 300,95 Q320,100 360,108
+               Q400,92 440,85 Q480,78 520,88 Q560,95 600,100 Q640,92 680,85 Q720,90 760,95
+               L760,145 Q720,140 680,135 Q640,142 600,148 Q560,145 520,138
+               Q480,128 440,135 Q400,142 360,155 Q320,150 300,145
+               Q260,132 220,138 Q180,145 140,155 Q100,150 60,168 Z"
+            fill="#8B5CF6" opacity="0.15"/>
+
+      <!-- Chhaya estimate (purple line) -->
+      <path d="M60,140 Q100,125 140,130 Q180,120 220,112 Q260,107 300,118
+               Q320,124 360,130 Q400,115 440,108 Q480,102 520,112
+               Q560,118 600,122 Q640,115 680,108 Q720,113 760,118"
+            stroke="#8B5CF6" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Real sensor (teal, dashed in calibration, solid in hidden) -->
+      <path d="M60,138 Q80,128 100,132 Q120,118 140,125 Q160,115 180,122
+               Q200,110 220,105 Q240,98 260,108 Q280,115 300,120"
+            stroke="#0D9488" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M320,128 Q340,118 360,125 Q380,110 400,105 Q420,98 440,102
+               Q460,108 480,95 Q500,105 520,115 Q540,120 560,112
+               Q580,105 600,118 Q620,108 640,112 Q660,105 680,102
+               Q700,108 720,115 Q740,110 760,120"
+            stroke="#0D9488" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+      <!-- Fingerstick diamonds -->
+      <g fill="#E11D48">
+        <polygon points="370,120 375,115 380,120 375,125" />
+        <polygon points="460,100 465,95 470,100 465,105" />
+        <polygon points="550,118 555,113 560,118 555,123" />
+        <polygon points="650,108 655,103 660,108 655,113" />
+        <polygon points="730,112 735,107 740,112 735,117" />
+      </g>
+
+      <!-- Day labels -->
+      <text x="190" y="195" font-size="8.5" fill="#9B95A8" text-anchor="middle" font-family="Inter">Day 1–3</text>
+      <text x="420" y="195" font-size="8.5" fill="#9B95A8" text-anchor="middle" font-family="Inter">Day 4–5</text>
+      <text x="600" y="195" font-size="8.5" fill="#9B95A8" text-anchor="middle" font-family="Inter">Day 6–7</text>
+      <text x="740" y="195" font-size="8.5" fill="#9B95A8" text-anchor="middle" font-family="Inter">Day 8</text>
+
+      <!-- Annotation arrow: the gap -->
+      <path d="M440,60 Q430,70 420,68" stroke="#6B6580" stroke-width="0.8" fill="none" marker-end="url(#arrowGray)"/>
+      <text x="442" y="58" font-size="8.5" fill="#6B6580" font-family="Inter" font-style="italic">1.4 mg/dL closer</text>
+      <text x="442" y="68" font-size="8.5" fill="#6B6580" font-family="Inter" font-style="italic">than the average day</text>
+
+      <defs>
+        <marker id="arrowGray" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#6B6580"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <div class="trace-legend">
+      <div class="trace-legend-item"><div class="swatch" style="background:#8B5CF6;"></div>Chhaya's estimate (no sensor)</div>
+      <div class="trace-legend-item"><div class="swatch-band" style="background:#8B5CF6;"></div>80% confidence band</div>
+      <div class="trace-legend-item"><div class="swatch" style="background:#0D9488;"></div>Real sensor (hidden, then revealed)</div>
+      <div class="trace-legend-item"><svg width="10" height="10"><polygon points="5,1 9,5 5,9 1,5" fill="#E11D48"/></svg>Fingerstick readings</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ MAIN ARCHITECTURE: SOURCES → ENGINE → PIPELINE ═══════════ -->
+<div class="arch-grid">
+
+  <!-- LEFT: DATA SOURCES -->
+  <div class="sources-panel">
+    <div class="section-title"><div class="dot" style="background:#0D9488;"></div>Data Inputs</div>
+
+    <div class="source-item">
+      <div class="source-icon si-teal">📡</div>
+      <div class="source-text">
+        <div class="s-name">CGM Sensor Wear</div>
+        <div class="s-desc">3–14 days, 5-min intervals · 145 patients across 2 datasets</div>
+      </div>
+      <div class="source-badge sb-cal">Calibr.</div>
+    </div>
+
+    <div class="source-item">
+      <div class="source-icon si-purple">🏥</div>
+      <div class="source-text">
+        <div class="s-name">Health Record (EHR)</div>
+        <div class="s-desc">Fasting glucose, HbA1c, demographics, diagnoses, labs</div>
+      </div>
+      <div class="source-badge" style="background:#EDE9FE;color:#6C3CE2;">Prior</div>
+    </div>
+
+    <div class="source-item">
+      <div class="source-icon si-amber">🍽️</div>
+      <div class="source-text">
+        <div class="s-name">Meal Log</div>
+        <div class="s-desc">Timestamp + carbs with fat/protein/fibre slowing factor</div>
+      </div>
+      <div class="source-badge sb-both">All</div>
+    </div>
+
+    <div class="source-item">
+      <div class="source-icon si-rose">🩸</div>
+      <div class="source-text">
+        <div class="s-name">Fingerstick Glucometer</div>
+        <div class="s-desc">Sparse post-sensor readings, mapped to CGM scale</div>
+      </div>
+      <div class="source-badge sb-post">Post</div>
+    </div>
+
+    <div class="source-item">
+      <div class="source-icon si-green">⌚</div>
+      <div class="source-text">
+        <div class="s-name">Wrist Accelerometer</div>
+        <div class="s-desc">METs → exercise term on insulin-dependent uptake</div>
+      </div>
+      <div class="source-badge sb-cal">Calibr.</div>
+    </div>
+
+    <div style="margin-top:12px; padding:10px 12px; background:#FFF1F2; border:1px solid #FECDD3; border-radius:8px;">
+      <div style="font-size:10px; font-weight:700; color:#E11D48; margin-bottom:3px;">🔒 LEAKAGE BOUNDARY</div>
+      <div style="font-size:9.5px; color:#9B4444; line-height:1.4;">Sensor data never crosses the calibration split. Every feature builder is tested: change hidden sensor → check nothing else moves.</div>
+    </div>
+  </div>
+
+  <!-- CENTER: ODE TWIN ENGINE -->
+  <div class="engine-panel">
+    <div class="section-title"><div class="dot" style="background:#6C3CE2;"></div>Physiological Twin Engine (E-DES in JAX)</div>
+
+    <!-- ODE COMPARTMENT DIAGRAM -->
+    <svg class="ode-diagram" viewBox="0 0 520 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background regions -->
+      <rect x="10" y="10" width="500" height="260" rx="12" fill="#F7F6F3" stroke="#E8E6E1" stroke-width="1"/>
+
+      <!-- GUT compartment -->
+      <rect x="40" y="40" width="100" height="60" rx="10" fill="#FEF3C7" stroke="#D97706" stroke-width="1.5"/>
+      <text x="90" y="65" font-size="11" fill="#92400E" text-anchor="middle" font-family="Inter" font-weight="700">GUT</text>
+      <text x="90" y="80" font-size="8" fill="#92400E" text-anchor="middle" font-family="Inter">Meal absorption</text>
+      <text x="90" y="90" font-size="7.5" fill="#B45309" text-anchor="middle" font-family="JetBrains Mono">Weibull k₁, σ=1.35</text>
+
+      <!-- PLASMA GLUCOSE compartment -->
+      <rect x="200" y="30" width="130" height="70" rx="10" fill="#EDE9FE" stroke="#7C3AED" stroke-width="1.5"/>
+      <text x="265" y="55" font-size="11" fill="#4C1D95" text-anchor="middle" font-family="Inter" font-weight="700">PLASMA GLUCOSE</text>
+      <text x="265" y="70" font-size="8" fill="#5B21B6" text-anchor="middle" font-family="Inter">Hepatic out + Gut in</text>
+      <text x="265" y="82" font-size="8" fill="#5B21B6" text-anchor="middle" font-family="Inter">− Uptake − Renal</text>
+      <text x="265" y="92" font-size="7.5" fill="#6D28D9" text-anchor="middle" font-family="JetBrains Mono">gₐ, k₃, k₄, k₅, g_th</text>
+
+      <!-- PLASMA INSULIN compartment -->
+      <rect x="200" y="130" width="130" height="60" rx="10" fill="#CCFBF1" stroke="#0D9488" stroke-width="1.5"/>
+      <text x="265" y="153" font-size="11" fill="#134E4A" text-anchor="middle" font-family="Inter" font-weight="700">PLASMA INSULIN</text>
+      <text x="265" y="168" font-size="8" fill="#115E59" text-anchor="middle" font-family="Inter">Pancreatic + Liver</text>
+      <text x="265" y="180" font-size="7.5" fill="#0D9488" text-anchor="middle" font-family="JetBrains Mono">k₆, k₇, k₈, k₉</text>
+
+      <!-- INTERSTITIAL (CGM) compartment -->
+      <rect x="390" y="40" width="110" height="60" rx="10" fill="#DBEAFE" stroke="#2563EB" stroke-width="1.5"/>
+      <text x="445" y="63" font-size="10" fill="#1E3A8A" text-anchor="middle" font-family="Inter" font-weight="700">INTERSTITIAL</text>
+      <text x="445" y="77" font-size="8" fill="#1D4ED8" text-anchor="middle" font-family="Inter">CGM reading</text>
+      <text x="445" y="87" font-size="7.5" fill="#2563EB" text-anchor="middle" font-family="JetBrains Mono">τ_g = 10 min</text>
+
+      <!-- Arrows between compartments -->
+      <!-- Gut → Plasma Glucose -->
+      <path d="M140,65 L195,60" stroke="#D97706" stroke-width="1.5" marker-end="url(#arrOrange)"/>
+      <text x="167" y="56" font-size="7" fill="#92400E" text-anchor="middle" font-family="JetBrains Mono">k₂ · f</text>
+
+      <!-- Plasma Glucose → Interstitial -->
+      <path d="M330,65 L385,65" stroke="#7C3AED" stroke-width="1.5" marker-end="url(#arrPurple)"/>
+      <text x="357" y="58" font-size="7" fill="#5B21B6" text-anchor="middle" font-family="JetBrains Mono">(G−Gᵢ)/τ</text>
+
+      <!-- Plasma Glucose ↔ Insulin -->
+      <path d="M255,100 L255,125" stroke="#0D9488" stroke-width="1.2" marker-end="url(#arrTeal)"/>
+      <path d="M275,125 L275,100" stroke="#7C3AED" stroke-width="1.2" marker-end="url(#arrPurple)"/>
+      <text x="240" y="115" font-size="7" fill="#0D9488" text-anchor="end" font-family="JetBrains Mono">secretion</text>
+      <text x="282" y="115" font-size="7" fill="#5B21B6" text-anchor="start" font-family="JetBrains Mono">uptake</text>
+
+      <!-- Circadian box -->
+      <rect x="40" y="130" width="100" height="45" rx="8" fill="#FFF7ED" stroke="#EA580C" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="90" y="148" font-size="9" fill="#C2410C" text-anchor="middle" font-family="Inter" font-weight="600">☀ Circadian</text>
+      <text x="90" y="160" font-size="7.5" fill="#C2410C" text-anchor="middle" font-family="Inter">Dawn peak 05:00</text>
+      <text x="90" y="170" font-size="7" fill="#EA580C" text-anchor="middle" font-family="JetBrains Mono">cos(2π·t/1440)</text>
+
+      <!-- Exercise box -->
+      <rect x="40" y="195" width="100" height="45" rx="8" fill="#F0FDF4" stroke="#16A34A" stroke-width="1" stroke-dasharray="3 2"/>
+      <text x="90" y="213" font-size="9" fill="#15803D" text-anchor="middle" font-family="Inter" font-weight="600">🏃 Exercise</text>
+      <text x="90" y="225" font-size="7.5" fill="#15803D" text-anchor="middle" font-family="Inter">METs from accel.</text>
+      <text x="90" y="235" font-size="7" fill="#16A34A" text-anchor="middle" font-family="JetBrains Mono">τ_ex = 45 min</text>
+
+      <!-- Circadian → Hepatic -->
+      <path d="M140,150 L200,55" stroke="#EA580C" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrOrangeLight)"/>
+      <!-- Exercise → Uptake -->
+      <path d="M140,215 L250,190" stroke="#16A34A" stroke-width="1" stroke-dasharray="3 2" marker-end="url(#arrGreen)"/>
+
+      <!-- CALIBRATION BOX -->
+      <rect x="360" y="130" width="148" height="60" rx="8" fill="#FAF5FF" stroke="#8B5CF6" stroke-width="1.5"/>
+      <text x="434" y="147" font-size="9" fill="#6C3CE2" text-anchor="middle" font-family="Inter" font-weight="700">MAP CALIBRATION</text>
+      <text x="434" y="159" font-size="7.5" fill="#7C3AED" text-anchor="middle" font-family="Inter">6 random starts, bounded L-S</text>
+      <text x="434" y="169" font-size="7.5" fill="#7C3AED" text-anchor="middle" font-family="Inter">Laplace posterior (200 draws)</text>
+      <text x="434" y="181" font-size="7" fill="#8B5CF6" text-anchor="middle" font-family="JetBrains Mono">SciPy trf · JAX vmap</text>
+
+      <!-- BLEND BOX -->
+      <rect x="340" y="210" width="170" height="50" rx="8" fill="#F0FDF9" stroke="#0D9488" stroke-width="1.5"/>
+      <text x="425" y="228" font-size="9" fill="#0D9488" text-anchor="middle" font-family="Inter" font-weight="700">THE SHADOW (blend)</text>
+      <text x="425" y="241" font-size="8" fill="#115E59" text-anchor="middle" font-family="Inter">50% physiology + 50% avg day</text>
+      <text x="425" y="253" font-size="7.5" fill="#0D9488" text-anchor="middle" font-family="Inter">+ fingerstick Kalman nudge (τ=120m)</text>
+
+      <!-- 7 params callout -->
+      <rect x="155" y="220" width="160" height="40" rx="6" fill="white" stroke="#E8E6E1" stroke-width="1"/>
+      <text x="235" y="236" font-size="9" fill="#6C3CE2" text-anchor="middle" font-family="Inter" font-weight="700">7 Personal Parameters</text>
+      <text x="235" y="250" font-size="7" fill="#9B95A8" text-anchor="middle" font-family="JetBrains Mono">k₁ · k₅ · k₆ · gᵦ · dawn · kₑₓ · bₘ</text>
+
+      <!-- Arrow markers -->
+      <defs>
+        <marker id="arrOrange" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#D97706"/>
+        </marker>
+        <marker id="arrPurple" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#7C3AED"/>
+        </marker>
+        <marker id="arrTeal" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#0D9488"/>
+        </marker>
+        <marker id="arrOrangeLight" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#EA580C"/>
+        </marker>
+        <marker id="arrGreen" viewBox="0 0 6 6" refX="5" refY="3" markerWidth="5" markerHeight="5" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#16A34A"/>
+        </marker>
+      </defs>
+    </svg>
+
+    <div class="engine-specs">
+      <div class="spec-item">
+        <div class="spec-label">Integrator</div>
+        <div class="spec-value">RK4, 1-min grid, jax.lax.scan</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Calibration</div>
+        <div class="spec-value">MAP fit + Laplace band, ~2s/patient</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Uncertainty</div>
+        <div class="spec-value">200-member ensemble via jax.vmap</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Staleness</div>
+        <div class="spec-value">CUSUM on fingerstick surprises</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: PIPELINE STEPS -->
+  <div class="pipeline-panel">
+    <div class="section-title"><div class="dot" style="background:#F59E0B;"></div>Evaluation Pipeline</div>
+
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">1</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Split by Patient, Never by Row</h4>
+        <p>Half tunes settings. Half scored once. <span class="code">--confirm</span> flag on committed code.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">2</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Write Bars Before the Run</h4>
+        <p>Success criteria registered in <span class="code">PREREGISTRATION.md</span> with dated amendments. No moving goalposts.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">3</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Calibrate on k Days of Sensor</h4>
+        <p>MAP fit of 7 params. Record sets prior. Tested k=3, 5, 7.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">4</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Simulate the Shadow</h4>
+        <p>50% ODE physiology + 50% patient's average day. Laplace ensemble → 80% band.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">5</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Assimilate Fingersticks</h4>
+        <p>Kalman filter with fading deviation (τ=120min). RTS smoother for retrospective report.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">6</div><div class="pipe-line"></div></div>
+      <div class="pipe-content">
+        <h4>Detect Report Staleness</h4>
+        <p>CUSUM of standardised surprises. AUROC 0.82 for drift detection.</p>
+      </div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-num-col"><div class="pipe-num">7</div></div>
+      <div class="pipe-content">
+        <h4>Publish Misses With Passes</h4>
+        <p>Every result → JSON. Tests check each figure value against claim wording. Numbers and words cannot drift.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════ BOTTOM: EVIDENCE + DASHBOARD ═══════════ -->
+<div class="bottom-grid">
+
+  <!-- EVIDENCE CHART -->
+  <div class="evidence-panel">
+    <div class="section-title"><div class="dot" style="background:#16A34A;"></div>Evidence Scorecard — Bars Written Before the Run</div>
+
+    <!-- BAR CHART SVG -->
+    <svg class="evidence-chart" viewBox="0 0 640 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Axis -->
+      <line x1="30" y1="170" x2="630" y2="170" stroke="#E8E6E1" stroke-width="1"/>
+
+      <!-- Result bars (horizontal) -->
+      <!-- Pass 1: The reveal -->
+      <rect x="130" y="8" width="280" height="18" rx="4" fill="#DCFCE7" stroke="#16A34A" stroke-width="1"/>
+      <text x="126" y="20" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">The reveal</text>
+      <text x="135" y="20" font-size="8" fill="#15803D" font-family="Inter">1.4 mg/dL closer than average day · p=4e-05 · 19 patients</text>
+      <text x="416" y="20" font-size="8" fill="#16A34A" font-family="Inter" font-weight="700">✓ PASS</text>
+
+      <!-- Pass 2: Fingersticks -->
+      <rect x="130" y="30" width="320" height="18" rx="4" fill="#DCFCE7" stroke="#16A34A" stroke-width="1"/>
+      <text x="126" y="42" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Fingersticks</text>
+      <text x="135" y="42" font-size="8" fill="#15803D" font-family="Inter">2.8 mg/dL closer, p=4e-06 · 9.5 in hindsight · 29 patients</text>
+      <text x="456" y="42" font-size="8" fill="#16A34A" font-family="Inter" font-weight="700">✓ PASS</text>
+
+      <!-- Descriptive: Sensor lows -->
+      <rect x="130" y="52" width="200" height="18" rx="4" fill="#FEF9C3" stroke="#D97706" stroke-width="1"/>
+      <text x="126" y="64" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Sensor lows</text>
+      <text x="135" y="64" font-size="8" fill="#92400E" font-family="Inter">8 of 64 confirmed · most sensor lows unconfirmed</text>
+
+      <!-- Miss: Post-meal excursion -->
+      <rect x="130" y="74" width="250" height="18" rx="4" fill="#FFE4E6" stroke="#E11D48" stroke-width="1"/>
+      <text x="126" y="86" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Post-meal</text>
+      <text x="135" y="86" font-size="8" fill="#9F1239" font-family="Inter">AUPRC 0.60 — patient's rate does as well (0.59)</text>
+      <text x="386" y="86" font-size="8" fill="#E11D48" font-family="Inter" font-weight="700">✗ MISS</text>
+
+      <!-- Miss: Record prior -->
+      <rect x="130" y="96" width="180" height="18" rx="4" fill="#FFE4E6" stroke="#E11D48" stroke-width="1"/>
+      <text x="126" y="108" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Record prior</text>
+      <text x="135" y="108" font-size="8" fill="#9F1239" font-family="Inter">0.02 mg/dL change · p=0.16 · not useful</text>
+      <text x="316" y="108" font-size="8" fill="#E11D48" font-family="Inter" font-weight="700">✗ MISS</text>
+
+      <!-- Descriptive: Report level -->
+      <rect x="130" y="118" width="260" height="18" rx="4" fill="#FEF9C3" stroke="#D97706" stroke-width="1"/>
+      <text x="126" y="130" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Report level</text>
+      <text x="135" y="130" font-size="8" fill="#92400E" font-family="Inter">8.9 mg/dL miss — plain baseline (6.4) beats us</text>
+
+      <!-- Descriptive: Expiry -->
+      <rect x="130" y="140" width="240" height="18" rx="4" fill="#FEF9C3" stroke="#D97706" stroke-width="1"/>
+      <text x="126" y="152" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Report expiry</text>
+      <text x="135" y="152" font-size="8" fill="#92400E" font-family="Inter">~1 mg/dL per day drift in supervised care</text>
+
+      <!-- Descriptive: Staleness -->
+      <rect x="130" y="162" width="220" height="18" rx="4" fill="#FEF9C3" stroke="#D97706" stroke-width="1"/>
+      <text x="126" y="174" font-size="9" fill="#1A1A2E" text-anchor="end" font-family="Inter" font-weight="600">Staleness</text>
+      <text x="135" y="174" font-size="8" fill="#92400E" font-family="Inter">AUROC 0.82 — plain baseline matches</text>
+
+      <!-- Legend -->
+      <rect x="480" y="118" width="12" height="12" rx="2" fill="#DCFCE7" stroke="#16A34A" stroke-width="0.8"/>
+      <text x="497" y="128" font-size="8" fill="#6B6580" font-family="Inter">Passed bar</text>
+      <rect x="480" y="134" width="12" height="12" rx="2" fill="#FFE4E6" stroke="#E11D48" stroke-width="0.8"/>
+      <text x="497" y="144" font-size="8" fill="#6B6580" font-family="Inter">Missed bar</text>
+      <rect x="480" y="150" width="12" height="12" rx="2" fill="#FEF9C3" stroke="#D97706" stroke-width="0.8"/>
+      <text x="497" y="160" font-size="8" fill="#6B6580" font-family="Inter">Descriptive (no bar)</text>
+      <rect x="480" y="166" width="12" height="12" rx="2" fill="white" stroke="#E8E6E1" stroke-width="0.8"/>
+      <text x="497" y="176" font-size="8" fill="#6B6580" font-family="Inter">Baseline beats us</text>
+    </svg>
+
+    <div class="evidence-stats">
+      <div class="ev-stat"><div class="ev-num ev-pass">5</div><div class="ev-label">Bars passed</div></div>
+      <div class="ev-stat"><div class="ev-num ev-miss">4</div><div class="ev-label">Bars missed<br>(published)</div></div>
+      <div class="ev-stat"><div class="ev-num ev-desc">6</div><div class="ev-label">Descriptive<br>results</div></div>
+      <div class="ev-stat"><div class="ev-num ev-teal">0</div><div class="ev-label">Leakage<br>events</div></div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD SCREENS -->
+  <div class="dashboard-panel">
+    <div class="section-title"><div class="dot" style="background:#8B5CF6;"></div>Clinical Dashboard — Three Screens, Ten-Second Read</div>
+
+    <div style="font-size:11.5px; color:#6B6580; margin-bottom:12px; line-height:1.5;">
+      Built to be read by a doctor in a 4–5 minute consult. Runs offline from pre-computed JSON. 
+      <strong style="color:#1A1A2E;">Nothing is fitted while it runs.</strong> No dose advice. No alarm. 
+      An estimate is never drawn without its band and the word "estimated".
+    </div>
+
+    <div class="screens-row">
+      <div class="screen-mini sc1">
+        <div class="sc-label">Screen 1</div>
+        <h5>Clinic List</h5>
+        <ul class="sc-features">
+          <li>Which patients have an old report</li>
+          <li>Report age and staleness flag</li>
+          <li>Pseudonymised names</li>
+          <li>"Synthetic" labels</li>
+        </ul>
+      </div>
+      <div class="screen-mini sc2">
+        <div class="sc-label">Screen 2</div>
+        <h5>Patient Shadow</h5>
+        <ul class="sc-features">
+          <li>Shadow first, sensor slides over</li>
+          <li>Purple estimate + 80% band</li>
+          <li>Teal/amber real sensor overlay</li>
+          <li>What-if meal simulation</li>
+        </ul>
+      </div>
+      <div class="screen-mini sc3">
+        <div class="sc-label">Screen 3</div>
+        <h5>Evidence Wall</h5>
+        <ul class="sc-features">
+          <li>Every result beside its bar</li>
+          <li>Misses shown, not hidden</li>
+          <li>Figures + regeneration cmd</li>
+          <li>Limits on the screen</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ DESIGN PRINCIPLES ═══════════ -->
+<div class="section-title" style="margin-bottom:12px;"><div class="dot" style="background:#E11D48;"></div>Design Principles — What Separates This From a Model Validated on Its Own Simulator</div>
+
+<div class="principles-strip">
+  <div class="principle">
+    <div class="pr-icon">🔒</div>
+    <div class="pr-title">No Leakage</div>
+    <div class="pr-desc">Every feature builder tested: change the hidden sensor, check nothing else moves</div>
+  </div>
+  <div class="principle">
+    <div class="pr-icon">🧑‍⚕️</div>
+    <div class="pr-title">Split by Patient</div>
+    <div class="pr-desc">Development / held-out. Scored once. --confirm on committed code</div>
+  </div>
+  <div class="principle">
+    <div class="pr-icon">📝</div>
+    <div class="pr-title">Bars Written First</div>
+    <div class="pr-desc">Pre-registered criteria with dated amendments. No moving the goalposts</div>
+  </div>
+  <div class="principle">
+    <div class="pr-icon">🪟</div>
+    <div class="pr-title">Misses Published</div>
+    <div class="pr-desc">A failed fit is a row with an error, not a dropped patient. 4 missed bars on every page</div>
+  </div>
+  <div class="principle">
+    <div class="pr-icon">🔄</div>
+    <div class="pr-title">One-Command Repro</div>
+    <div class="pr-desc">Every result regenerated by a single command. Results committed, code committed</div>
+  </div>
+  <div class="principle">
+    <div class="pr-icon">🏷️</div>
+    <div class="pr-title">Synthetic Labelled</div>
+    <div class="pr-desc">"Mrs. R." is simulated and labelled so on screen. No genetic markers in either dataset</div>
+  </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="footer">
+  <div class="tech-pills">
+    <div class="pill">Python 3.12</div>
+    <div class="pill">JAX</div>
+    <div class="pill">SciPy</div>
+    <div class="pill">NumPy</div>
+    <div class="pill">Pandas</div>
+    <div class="pill">pytest</div>
+    <div class="pill">RK4 ODE</div>
+    <div class="pill">Laplace Ensemble</div>
+    <div class="pill">Kalman Filter</div>
+    <div class="pill">CUSUM</div>
+    <div class="pill">HTML/CSS/JS</div>
+    <div class="pill">MIT License</div>
+  </div>
+  <div class="not-strip">
+    <div class="not-item">✕ Does not replace a sensor</div>
+    <div class="not-item">✕ No low-glucose estimate</div>
+    <div class="not-item">✕ No dose advice</div>
+    <div class="not-item">✕ No Indian data yet</div>
+    <div class="not-item">✕ No drug kinetics</div>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -13,3 +13,12 @@ results/**/*.npz
 
 # the local bundle holds per-reading arrays of real patients (rule 6)
 /artifacts/
+
+# editor and agent config
+.claude/
+.agents/
+.gemini/
+CLAUDE.md
+GEMINI.md
+AGENTS.md
+skills-lock.json

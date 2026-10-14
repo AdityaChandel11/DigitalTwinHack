@@ -10,20 +10,8 @@ excursions better than the sensor week already does, and it gives no rule for wh
 `docs/decisions/2026-10-04-plan-revision.md`, `docs/decisions/2026-10-08-gate3.md` and
 `docs/decisions/2026-10-08-m4-kickoff.md`).
 
-- **Team:** SynapseX, IIT Kanpur. Solo participant; submission folder `SynapseX_IITK`.
-- **Where we are and what is next: [docs/PROGRESS.md](PROGRESS.md). Read it first.**
-- **Submission closes 20 Oct 2026, 19:00 IST.** We submit by 12:00 that day. Feature freeze is 15 Oct. Science
-  stops at midnight on 10 Oct.
-- **Why this concept, and what everyone else is building:** [docs/WAR_ROOM.md](WAR_ROOM.md) (read Phase 6).
-- **What to build, in order, with gates:** [docs/plans/2026-10-02-chhaya-roadmap.md](plans/2026-10-02-chhaya-roadmap.md).
-- **Design from Milestone 3 on:** [docs/specs/2026-10-04-chhaya-m3-design.md](specs/2026-10-04-chhaya-m3-design.md).
-- **Task-level plans:** [Plan 2, excursions](plans/2026-10-07-chhaya-plan-2-excursions.md) and
-  [Plan 3, record prior and fingersticks](plans/2026-10-07-chhaya-plan-3-prior-and-fingersticks.md)
-  and [Plan 4, second pass of F, expiry, band, staleness](plans/2026-10-08-chhaya-plan-4-expiry-band-staleness.md)
-  are done (Milestone 3 closed 8 Oct). **Milestone 4 is being executed:**
-  [design](specs/2026-10-08-chhaya-m4-product-design.md),
-  [Plan 5, the product](plans/2026-10-11-chhaya-plan-5-product.md), decisions in
-  `docs/decisions/2026-10-08-m4-kickoff.md`, mocks in `docs/specs/m4-mocks/`.
+- **Team:** SynapseX, IIT Kanpur. Submission folder `SynapseX_IITK`.
+- **Submission closes 20 Oct 2026, 19:00 IST.**
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](brief/Digital_Twin_Challenge_2026_Content.txt).
 
 ## The one claim
@@ -32,8 +20,7 @@ excursions better than the sensor week already does, and it gives no rule for wh
 > reveal the real trace on top.
 
 Everything in the repo exists to make that experiment true, measurable and demoable. Sensor-on spike
-forecasting is a **baseline table**, never the headline — at least four competing entries are already
-"GlucoTwin" classifiers. Do not name anything Gluco* or Glyco*.
+forecasting is a **baseline table**, never the headline — generic spike prediction is standard in the literature. Do not name anything with generic spike-prediction branding.
 
 ## Rules that are not negotiable
 
@@ -50,7 +37,7 @@ silently is worse than a bad number.
 3. **Pass bars are written before the run.** They live in `docs/PREREGISTRATION.md`. Changing a bar after
    seeing a result means adding a dated amendment that says so, not editing the number.
 4. **Report what happened.** A failed fit is a row with an `error`, not a dropped patient. A result that
-   misses its bar is published with the bar. Where a plain baseline beats the twin, say so.
+   misses its bar is published with the bar. Where a plain baseline did better than the twin, say so.
 5. **Never draw an estimate without its uncertainty band**, and label it "estimated". No dose
    recommendations anywhere — only simulations of options the doctor entered.
 6. **Datasets are never committed or redistributed.** CGMacros is CC BY-NC-SA. They are fetched by
@@ -128,7 +115,7 @@ metrics**. Loaders know file formats; nothing downstream does. The dashboard (la
 pre-computed artifacts — nothing is fitted live in a demo.
 
 **The estimate is a blend.** Half physiology (knows what was eaten today), half the patient's own average
-day (knows the habits the meal log misses). Their errors are only partly correlated, so the blend beats
+day (knows the habits the meal log misses). Their errors are only partly correlated, so the blend does better than
 both. `RevealConfig` holds the switches; its defaults are the configuration chosen on dev patients.
 
 **Fusion is Bayesian, not concatenation.** The health record sets the prior over the twin's seven
@@ -178,9 +165,9 @@ files vary (11 of 45 lack METs; the loader derives them from activity calories);
 22.8 % of time below 70 mg/dL, so its lows are mostly sensor artefacts. Gate 1 is GO.
 
 **Gate 2 is GO and closed** (corrected run, 4 Oct 2026, `docs/decisions/2026-10-04-gate2-corrected.md`; what it
-means is in `docs/decisions/2026-10-03-break-test.md`): on 19 held-out CGMacros patients, 5 days after the sensor
+means is in `docs/decisions/2026-10-03-break-test.md`): on 19 held-out free-living CGMacros participants (7 with type 2 diabetes), 5 days after the sensor
 comes off, Chhaya is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's average day (21.9 vs 23.3,
-p = 4e-05) but only about 0.35 mg/dL closer than a physiology-free control (p = 0.04). The gain comes from the
+p = 4e-05) but only about 0.35 mg/dL closer than a physiology-free control (p = 0.04). Type 2 evidence for fingersticks and the drift prompt comes from supervised-care Shanghai patients. The gain comes from the
 meal log and activity adds nothing measurable. Time-in-range is not a strength. Quote only the sentence in the
 "claim to quote" section of the corrected-run record, **except its clause "lasts about five days", which the
 expiry record of 8 Oct corrects**: the gain is small and was not seen to fade with days since the sensor (with
@@ -200,7 +187,7 @@ regenerates them** (`docs/decisions/2026-10-04-plan-revision.md`):
   more at high glucose.
 - The sheet's "Hypoglycemia (yes/no)" column is not defined as prior history: never a predictor.
 - Exploratory, development patients only: fingersticks add little reading by reading; the patient's own sensor
-  profile beats fingersticks alone; against the fingerstick the shadow is about 20 % off where a real sensor is
+  profile does better than fingersticks alone; against the fingerstick the shadow is about 20 % off where a real sensor is
   about 13 %.
 - ShanghaiT2DM is CC BY 4.0 on its Figshare page (read 4 Oct).
 
@@ -221,7 +208,7 @@ Also run on 8 Oct 2026 on held-out patients (Plan 4; descriptive, no bar; one re
 the clinical-wording review): **fingersticks at report level** (`2026-10-08-fingersticks-report.md`): in supervised-care
 patients tested about six times a day the rebuilt report missed the sensor's mean by 8.9 mg/dL where the stale
 three-day report missed by 13.0, but **the plain fingerstick average converted to the sensor's scale missed by 6.4
-and beats our estimate on all three report numbers**; time in range from an estimate is not usable; lower testing
+and did better than our estimate on all three report numbers**; time in range from an estimate is not usable; lower testing
 frequencies were not measured; sensor-scale figures are not meter values. **Expiry** (`2026-10-08-expiry.md`):
 these data do not give a number of days: about 1 mg/dL per day, downward, over at most eleven days in supervised
 care; no ageing detected over a week in free-living participants; in nine repeat wears of eight patients the four
@@ -252,7 +239,5 @@ kinetics, no exogenous insulin, one absorption curve per meal.
 
 ## Decisions
 
-- Decided: project name **Chhaya**; team **SynapseX**, IIT Kanpur; `docs/WAR_ROOM.md` is public.
+- Decided: project name **Chhaya**; team **SynapseX**, IIT Kanpur.
 - Not committed (kept local): local tooling settings.
-- Still open: questions for the organisers (top 10 or top 5 after Phase 1; is "minimum 20-minute video"
-  correct; is there a scoring rubric).

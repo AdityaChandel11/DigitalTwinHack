@@ -27,7 +27,7 @@ So we asked the question every digital twin claims to answer, and held ourselves
 
 > Calibrate on a few days of sensor data. **Hide the rest.** Estimate the hidden days without the sensor. Then lay the real trace on top.
 
-Before each run we wrote down what would count as success. **Nine bars were set in advance. Five passed. Four missed, and they are on this page.** Where a plain baseline beat our model, we say so. What survived is smaller than a pitch deck would claim and every number of it can be regenerated with one command.
+Before each run we wrote down what would count as success. **Nine bars were set in advance. Five passed (one only because its bar cannot discriminate). Four missed, and they are on this page.** Where a plain baseline beat our model, we say so, and choosing which to feature happened after seeing the test. What survived is smaller than a pitch deck would claim and every number of it can be regenerated with one command.
 
 ## What we found
 
@@ -35,12 +35,12 @@ Each result was scored once on held-out patients, a half of each cohort that no 
 
 | | Result | Bar written beforehand | Outcome |
 |---|---|---|---|
-| **The reveal** | Five days after the sensor comes off, the estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05, 19 participants). The gain comes from the meal log and is small | Closer than the average day, p < 0.05 | **Passed** |
-| **Fingersticks keep the report truer** | 2.8 mg/dL closer to the hidden sensor as fingersticks arrive, 9.5 in hindsight, 0.3 with one a day (29 patients) | Closer than the daily shape alone, p < 0.05 | **Passed** |
+| **The reveal** | Five days after the sensor comes off, the estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05, 19 held-out free-living CGMacros participants, 7 with type 2 diabetes). The gain comes from the meal log and is small | Closer than the average day, p < 0.05 | **Passed** |
+| **Fingersticks keep the report truer** | 2.8 mg/dL closer to the hidden sensor as fingersticks arrive, 9.5 in hindsight (reconstructing following days' mean), 0.3 with one a day (29 held-out ShanghaiT2DM patients, supervised care, tested about six times a day) | Closer than the daily shape alone, p < 0.05 | **Passed** |
 | **Which readings not to believe** | 8 of 64 sensor lows were confirmed by a fingerstick taken within 10 minutes; 732 of 809 sensor highs were | none | Descriptive |
 | **Post-meal excursions without the sensor** | Fusing the record, the sensor week and fingersticks reaches AUPRC 0.60. The patient's own excursion rate reaches 0.59, fingersticks alone 0.64 (47 patients) | Fusion beats every single stream and the personal rate | **Missed** |
 | **The record as the twin's prior** | It changed the error by 0.02 mg/dL with one day of sensor data (p = 0.16, 20 participants) | Lower error with the record, p < 0.05 | **Missed** |
-| **Fingersticks at report level** | Our rebuilt report missed mean glucose by 8.9 mg/dL. The plain fingerstick average on the sensor's scale missed by 6.4; the stale three-day report by 13.0 | none | Descriptive: a plain baseline beats us |
+| **Fingersticks at report level** | Our rebuilt report missed mean glucose by 8.9 mg/dL. The plain fingerstick average on the sensor's scale missed by 6.4; the stale three-day report by 13.0 (29 held-out Shanghai patients, supervised care, about six fingersticks a day) | none | Descriptive: a plain baseline did better than us |
 | **How long a report stays true** | About 1 mg/dL per day, downward, over at most eleven days in supervised care; none detected over a week in free-living participants. These data do not give a number of days | none | Descriptive |
 | **The 80 % band of the twin** | It held 83.5 % of hidden readings on average and 60 % to 98.5 % for an individual. A recalibration did not transfer and is not used | none | Descriptive |
 | **The band of the fingerstick estimate** | It held 83.6 % of hidden sensor readings (49.9 % to 98.9 % for an individual) at about 45 mg/dL each side: right on average, and wide | none | Descriptive |
@@ -48,7 +48,31 @@ Each result was scored once on held-out patients, a half of each cohort that no 
 
 Bars and their dated amendments: [docs/PREREGISTRATION.md](docs/PREREGISTRATION.md).
 
+<p align="center"><img src="docs/images/gate2-by-group.png" alt="Gate 2 per-participant results by diagnosis group (CGMacros test split, k = 5 days)" width="850"></p>
+
+<p align="center"><sub><b>Descriptive display of the registered per-participant results. Not a test. Seven type 2 participants: too few for their own test.</b> One dot per participant: twin RMSE minus average-day RMSE (negative means the twin is closer). 19 held-out free-living CGMacros participants (7 type 2 diabetes, 7 prediabetes, 5 healthy). Type 2 evidence for fingersticks and the drift prompt comes from supervised-care Shanghai patients.</sub></p>
+
 **Fusion, in one sentence:** we fused the record and the sensor two ways and measured both; once a sensor week exists the record added nothing detectable. What adds something is the meal log and fingersticks.
+
+### What this changes for the doctor
+
+1. **A prompt to consider a new sensor wear** — when fingerstick surprises accumulate against the last report, the dashboard raises a prompt about the report, never a finding about the patient (AUROC 0.82, tied with a plain baseline; 32 held-out recordings, supervised care, tested about six times a day). Record: [staleness](docs/decisions/2026-10-08-staleness.md).
+2. **Which sensor readings not to believe** — of 64 sensor lows (< 70 mg/dL), 8 were confirmed by a fingerstick within 10 minutes (12.5 %); 0 of 9 at night. Sensor lows read "sensor low, unconfirmed" on screen. Record: [label audit](docs/decisions/2026-10-04-plan-revision.md).
+3. **A fingerstick-anchored report number** — converting fingersticks to the sensor's scale and averaging them missed the following days' mean glucose by 6.4 mg/dL; the stale three-day sensor report missed by 13.0 (29 held-out Shanghai patients, supervised care, tested about six times a day; at one a day the running gain was 0.3 mg/dL). Record: [fingersticks at report level](docs/decisions/2026-10-08-fingersticks-report.md).
+
+### Information ladder
+
+Post-meal excursion prediction (AUPRC and AUROC) across data streams, from `results/gate3/shanghai/summary.json` (47 held-out Shanghai patients, 1,205 meals, 39 % excursion prevalence):
+
+| Data stream | AUPRC | AUROC | Calibration slope |
+|---|---|---|---|
+| Record only | 0.566 | 0.646 | 0.52 |
+| Fingersticks only | 0.642 | 0.703 | 1.00 |
+| Sensor history only | 0.626 | 0.777 | 0.86 |
+| Fused, sensor off | 0.596 | 0.713 | 0.48 |
+| Sensor on (reference) | 0.760 | 0.816 | 0.77 |
+
+More streams were not better: supervised fingersticks alone (AUPRC 0.642) did better than the fused model (0.596), and the fused model's calibration slope (0.48) shows severe overconfidence — so no probabilities or alerts are shown. Record: [Gate 3](docs/decisions/2026-10-08-gate3.md).
 
 ## The dashboard
 
@@ -106,14 +130,14 @@ flowchart LR
 - **The estimate is a blend**: half physiology, which knows what was eaten today, and half the patient's own average day, which knows the habits a meal log misses.
 - **Fingersticks** nudge the estimate through a filter whose effect fades over about two hours, and feed a running comparison with the sensor wear's daily pattern. Its band is the filter's own spread, scaled by the patient's own spread about their daily shape.
 
-Why this concept and what the other entries do: [docs/WAR_ROOM.md](docs/WAR_ROOM.md). Where the project stands: [docs/PROGRESS.md](docs/PROGRESS.md).
+
 
 ### The claims in full
 
 <details>
 <summary><b>The reveal</b> (Gate 2, passed)</summary>
 
-On 19 held-out patients, 5 days after the sensor comes off, Chhaya's estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05) and about 0.35 mg/dL closer than a control that uses no meals (p = 0.04). The gain comes from the meal log and is small. It was not seen to fade with days since the sensor; with three days of calibration the median favours the twin over its control on each of the seven following days (0.4 to 2.0 mg/dL; the interval excludes zero on three of them; 19 held-out participants), and it reverses only on the last days of the recording, which fewer than half of the participants reach.
+On 19 held-out free-living CGMacros participants (7 with type 2 diabetes), 5 days after the sensor comes off, Chhaya's estimate is 1.4 mg/dL (6 %) closer to the hidden sensor than the patient's own average day (p = 4e-05) and about 0.35 mg/dL closer than a control that uses no meals (p = 0.04). The gain comes from the meal log and is small. Seven type 2 participants are too few for their own test; type 2 evidence for fingersticks and the drift prompt comes from supervised-care Shanghai patients. It was not seen to fade with days since the sensor; with three days of calibration the median favours the twin over its control on each of the seven following days (0.4 to 2.0 mg/dL; the interval excludes zero on three of them; 19 held-out free-living CGMacros participants, 7 with type 2 diabetes), and it reverses only on the last days of the recording, which fewer than half of the participants reach.
 
 Records: [Gate 2, corrected run](docs/decisions/2026-10-04-gate2-corrected.md), [expiry](docs/decisions/2026-10-08-expiry.md). Time in range is not a strength of the estimate and is never shown from it.
 </details>
@@ -129,7 +153,7 @@ Regenerate: `python -m chhaya.data.audit`. This is why Chhaya has no low-glucose
 <details>
 <summary><b>Fingersticks</b> (passed)</summary>
 
-On 29 held-out Shanghai patients, calibrated on three days of sensor data, fingersticks taken afterwards brought the running estimate 2.8 mg/dL closer to the hidden sensor than the patient's daily shape alone (median paired RMSE difference; 95 % interval 1.6 to 4.7; 86 % of patients; p = 4e-06) and 9.5 mg/dL closer in hindsight (interval 4.6 to 12.1); with one fingerstick a day the running gain was 0.3 mg/dL.
+On 29 held-out Shanghai patients under supervised care who were tested about six times a day, calibrated on three days of sensor data, fingersticks taken afterwards brought the running estimate 2.8 mg/dL closer to the hidden sensor than the patient's daily shape alone (median paired RMSE difference; 95 % interval 1.6 to 4.7; 86 % of patients; p = 4e-06) and 9.5 mg/dL closer in hindsight (interval 4.6 to 12.1; reconstructing the mean sensor glucose of the following days for the report); with one fingerstick a day the running gain was 0.3 mg/dL.
 
 To be told with it: the filter was chosen on development patients by a criterion other than the plan's written rule (dated note in the registration, before the test run), and the estimate is still about 22 % off the next fingerstick where a real sensor is about 12 %. Record: [fingersticks](docs/decisions/2026-10-08-fingersticks.md).
 </details>
@@ -137,7 +161,7 @@ To be told with it: the filter was chosen on development patients by a criterion
 <details>
 <summary><b>Post-meal excursions without the sensor</b> (Gate 3, missed its bars)</summary>
 
-On 47 held-out Shanghai patients (1,205 meals, 39 % followed by an excursion above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the patient's own excursion rate from the sensor week (0.59; difference 0.01, 95 % interval -0.09 to 0.14); with the sensor on, the same model reaches 0.76.
+On 47 held-out Shanghai patients under supervised care (1,205 meals, 39 % followed by an excursion above 180 mg/dL), a model fusing the record, the sensor week and fingersticks predicted the excursion at meal time with AUPRC 0.60, which was not better than any single stream (fingersticks only: 0.64) nor than the patient's own excursion rate from the sensor week (0.59; difference 0.01, 95 % interval -0.09 to 0.14); with the sensor on, the same model reaches 0.76.
 
 Record: [Gate 3](docs/decisions/2026-10-08-gate3.md). There is no meal alert.
 </details>
@@ -151,7 +175,7 @@ Record: [record prior](docs/decisions/2026-10-08-record-prior.md).
 </details>
 
 <details>
-<summary><b>Fingersticks at report level</b> (descriptive; a plain baseline beats our estimator)</summary>
+<summary><b>Fingersticks at report level</b> (descriptive; supervised care, about six a day; a plain baseline did better than our estimator)</summary>
 
 On 29 held-out Shanghai patients under supervised care who were tested about six times a day, with the hidden sensor as the yardstick, a three-day sensor report missed the mean sensor glucose of the following days (up to eleven) by a median of 13.0 mg/dL. Chhaya's report rebuilt in hindsight from those fingersticks missed it by 8.9 (median paired difference 3.4, 95 % interval 1.6 to 8.9, 83 % of patients), but was no closer than the plain average of the same fingersticks converted to the sensor's scale by a line learned during the wear (6.4). The share of those converted readings above 180 mg/dL and within 70 to 180 was also closer to the sensor's time above 180 and time in range (3.1 against 8.8 points; 5.0 against 15.2). As read from the meter the same average lay 18.3 mg/dL from the sensor's mean; sensor-scale figures are not meter values. Lower testing frequencies were not measured, and this is not a recommendation to test at any frequency.
 
@@ -225,7 +249,7 @@ Some of what went into this project is deliberately not in the repository. Each 
 | **The two datasets** (`data/`) | Everything: calibration, scoring, the label check | Not ours to redistribute. CGMacros is CC BY-NC-SA, non-commercial; ShanghaiT2DM is CC BY 4.0 but we fetch both by script, with checksums, rather than copy them. `python -m chhaya.data.download` brings them in |
 | **Per-reading traces of real patients** (`data/derived/traces`, `artifacts/`) | The held-out patients on the local dashboard, and the by-day results | Per-reading data of real people is patient data, not an aggregate. Only derived aggregates are committed (`results/`). The committed demo bundle and any hosted copy carry the synthetic patient only |
 | **Real names** | Nowhere | The datasets contain none. Names on screen are pseudonyms given by Chhaya, with the dataset's own identifier beside them, and the dashboard says so |
-| **Local tooling settings** | Writing and reviewing the code with AI-assistant tools | Editor and tool configuration and third-party helper files with their own licences: tooling, not method. Every decision they helped with is written up in `docs/decisions/`, and the rules the work followed are public in `docs/PROJECT_GUIDE.md` |
+| **Local tooling settings** | Writing and reviewing the code | Editor and tool configuration: tooling, not method. Every design decision is written up in `docs/decisions/`, and the rules the work followed are public in `docs/PROJECT_GUIDE.md` |
 
 ## Limits
 
@@ -246,8 +270,8 @@ Code: MIT. Datasets are downloaded by the user and never redistributed; only der
 - `results/` every reported number, as written by the commands above
 - `docs/PREREGISTRATION.md` the bars, fixed before each run, with dated amendments
 - `docs/decisions/` one record per result, each with its "claim to quote"
-- `docs/` the roadmap, designs and task-level plans
 - `docs/PROJECT_GUIDE.md` the project's rules and conventions
+- `docs/brief/` the original challenge brief
 
 ## Team
 
