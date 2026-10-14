@@ -19,6 +19,7 @@ from chhaya.data.schema import Recording
 from chhaya.eval import stickband
 from chhaya.eval.descriptive import profile_sigma
 from chhaya.eval.fingersticks import estimates
+from chhaya.product.meal_risk import meal_risk_profile
 from chhaya.product.record import fhir_record
 from chhaya.product.treatment import treatment_since
 from chhaya.twin.assimilate import FilterConfig
@@ -33,12 +34,69 @@ BIN = 30  # minutes, for the wear's daily profile
 
 def _num(x, digits: int = 1):
     """A finite number rounded for the screen, else None (JSON has no NaN)."""
-    x = float(x)
-    return round(x, digits) if math.isfinite(x) else None
+    try:
+        x = float(x)
+        return round(x, digits) if math.isfinite(x) else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _safe_float(x, digits: int = 1) -> float | None:
+    try:
+        val = float(x)
+    except (TypeError, ValueError):
+        return None
+    return round(val, digits) if math.isfinite(val) else None
+
+
+def _safe_int(x) -> int | None:
+    try:
+        val = float(x)
+    except (TypeError, ValueError):
+        return None
+    return int(round(val)) if math.isfinite(val) else None
+
+
+def _record_summary(rec: Recording) -> dict:
+    """Key clinical numbers from the health record formatted as a flat dict for display."""
+    static = rec.static or {}
+
+    diag = None
+    if static.get("group") == "t2d" and getattr(rec, "dataset", "") in ("shanghai", "synthetic"):
+        diag = "Type 2 diabetes mellitus"
+    elif static.get("diagnosis"):
+        diag = str(static["diagnosis"])
+
+    duration = _safe_int(static.get("diabetes_duration_y"))
+    hba1c = _safe_float(static.get("hba1c_pct"), 1)
+    fasting = _safe_int(static.get("fasting_glucose_mgdl"))
+    bmi = _safe_float(static.get("bmi"), 1)
+
+    meds = None
+    agents = str(static.get("agents") or "").strip()
+    if agents and agents.lower() not in ("nan", "none"):
+        meds = agents
+
+    age = _safe_int(static.get("age"))
+
+    sex_raw = str(static.get("sex") or "").strip().upper()[:1]
+    sex = {"M": "Male", "F": "Female"}.get(sex_raw)
+
+    return {
+        "diagnosis": diag,
+        "duration_years": duration,
+        "hba1c": hba1c,
+        "fasting_glucose": fasting,
+        "bmi": bmi,
+        "medications": meds,
+        "age": age,
+        "sex": sex,
+    }
 
 
 def _list(values, digits: int = 1) -> list:
     return [_num(v, digits) for v in values]
+
 
 
 def _tod0(rec: Recording) -> int:
@@ -228,6 +286,8 @@ def patient_bundle(
         "wear": wear_report(rec, k_days),
         "days_since": s["days_since"],
         "treatment": treatment_since(rec, k_days),
+        "meal_risk": meal_risk_profile(rec, k_days),
+        "record_summary": _record_summary(rec),
         "estimate": None if estimate is None else {"kind": estimate["kind"]},
         "days": _days(rec, k_days, estimate),
         "since": since_sensor(rec, k_days, pooled, s),

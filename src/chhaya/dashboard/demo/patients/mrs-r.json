@@ -390,6 +390,48 @@
   "state": "changed",
   "day": 2
  },
+ "meal_risk": {
+  "state": "shown",
+  "meals_scored": 20,
+  "excursions": 18,
+  "rate": 0.9,
+  "by_type": [
+   {
+    "label": "breakfast",
+    "total": 5,
+    "excursions": 5,
+    "rate": 1.0
+   },
+   {
+    "label": "lunch",
+    "total": 5,
+    "excursions": 5,
+    "rate": 1.0
+   },
+   {
+    "label": "dinner",
+    "total": 5,
+    "excursions": 5,
+    "rate": 1.0
+   },
+   {
+    "label": "snack",
+    "total": 5,
+    "excursions": 3,
+    "rate": 0.6
+   }
+  ]
+ },
+ "record_summary": {
+  "diagnosis": "Type 2 diabetes mellitus",
+  "duration_years": 9,
+  "hba1c": 8.1,
+  "fasting_glucose": 137,
+  "bmi": 27.1,
+  "medications": "metformin; insulin glargine, started after the sensor wear",
+  "age": 58,
+  "sex": "Female"
+ },
  "estimate": {
   "kind": "twin"
  },

@@ -386,12 +386,75 @@
       <p class="small">${W.not_estimated}</p>`;
   }
 
+  function mealRiskBlock(p) {
+    const m = p.meal_risk;
+    if (!m || m.state === 'insufficient') {
+      return `<section class="panel"><div class="panel-head"><h2>Meal excursion history</h2><span class="chip chip-meas">sensor wear</span></div>
+        <p class="small">Too few meals during the sensor wear to show a profile.</p></section>`;
+    }
+    const color = r => r < 0.3 ? 'var(--pass)' : r <= 0.6 ? 'var(--g-high)' : 'var(--miss)';
+    const bars = (m.by_type || []).map(b => {
+      const pct = Math.round(b.rate * 100);
+      const c = color(b.rate);
+      return `<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:var(--t-sm);margin-bottom:4px">
+          <span style="font-weight:600;text-transform:capitalize">${esc(b.label)}: ${b.excursions} of ${b.total}</span>
+          <span class="num" style="color:var(--ink-2)">${pct} %</span>
+        </div>
+        <div style="height:8px;background:var(--sunken);border-radius:4px;overflow:hidden;border:1px solid var(--line)">
+          <div style="height:100%;width:${pct}%;background:${c};border-radius:3px"></div>
+        </div>
+      </div>`;
+    }).join('');
+    return `<section class="panel"><div class="panel-head"><h2>Meal excursion history</h2><span class="chip chip-meas">sensor wear</span><span class="eyebrow">${m.meals_scored} meals</span></div>
+      <p class="small" style="margin-bottom:14px">During the sensor wear, ${m.excursions} of ${m.meals_scored} scored meals were followed by glucose above 180 mg/dL within two hours.</p>
+      ${bars}</section>`;
+  }
+
   function recordLine(p) {
     const res = p.record.entry.map(e => e.resource);
     const obs = t => res.find(r => r.resourceType === 'Observation' && r.code.text === t);
     const q = t => obs(t) && `${obs(t).valueQuantity.value} ${obs(t).valueQuantity.unit}`;
     const med = res.find(r => r.resourceType === 'MedicationStatement');
     return [obs('Age') && `${obs('Age').valueQuantity.value} years`, res.some(r => r.resourceType === 'Condition') && 'type 2 diabetes', med && esc(med.medicationCodeableConcept.text), q('HbA1c') && `HbA1c ${q('HbA1c')}`].filter(Boolean).join(' · ') || 'No record fields in the dataset';
+  }
+
+  function healthRecordBlock(p) {
+    const s = p.record_summary;
+    if (!s) return '';
+    const rows = [];
+    if (s.diagnosis) {
+      const diagVal = s.duration_years != null ? `${esc(s.diagnosis)} · duration ${s.duration_years} years` : esc(s.diagnosis);
+      rows.push(['Diagnosis', diagVal]);
+    } else if (s.duration_years != null) {
+      rows.push(['Diabetes duration', `${s.duration_years} years`]);
+    }
+    if (s.age != null) rows.push(['Age', `${s.age} years`]);
+    if (s.sex) rows.push(['Sex', esc(s.sex)]);
+    if (s.bmi != null) rows.push(['BMI', `${s.bmi} kg/m²`]);
+    if (s.fasting_glucose != null) rows.push(['Fasting glucose', `${s.fasting_glucose} mg/dL`]);
+    if (s.hba1c != null) rows.push(['HbA1c', `${s.hba1c} %`]);
+    if (s.medications) rows.push(['Medications', esc(s.medications)]);
+
+    if (!rows.length) return '';
+
+    const rowHtml = rows.map(([label, val]) => `
+      <div style="display:flex;justify-content:space-between;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:var(--t-sm)">
+        <span style="color:var(--ink-3);font-weight:600">${label}</span>
+        <span style="font-weight:600;color:var(--ink);text-align:right;max-width:70%">${val}</span>
+      </div>`).join('');
+
+    return `
+      <section class="panel" style="background:var(--surface-2, var(--surface));border:1px solid var(--line);border-radius:var(--r2);padding:var(--s4) var(--s5);margin-bottom:var(--s5)">
+        <div class="panel-head" style="margin-bottom:6px">
+          <h2>From the health record</h2>
+          <span class="chip chip-meas">record prior</span>
+        </div>
+        <div style="margin-bottom:10px">
+          ${rowHtml}
+        </div>
+        <p class="small" style="color:var(--ink-3);font-size:var(--t-xs);margin:0">The record sets the twin's prior. With sensor data, the sensor dominates.</p>
+      </section>`;
   }
 
   function drawPatient() {
@@ -418,6 +481,8 @@
         </dl>
         <p class="small note">${W.days_note}</p>
       </div>
+
+      ${healthRecordBlock(p)}
 
       <section class="hero" aria-labelledby="h-hero">
         <div class="hero-head"><div>
@@ -467,6 +532,7 @@
             <p class="small" style="margin-bottom:12px">Median, middle half and 5th to 95th percentile of the readings, by time of day. Teal inside the target range, amber above 180.</p>
             <dl class="trio"><div><dt>Mean glucose</dt><dd>${p.wear.mean} mg/dL</dd></div><div><dt>Readings above 180</dt><dd>${p.wear.above_180} %</dd></div>
               <div><dt>Readings below 70</dt><dd>${p.wear.below_70} %<small>${W.sensor_low}</small></dd></div></dl></section>
+          ${mealRiskBlock(p)}
           <section class="panel"><div class="panel-head"><h2>Treatment since the sensor</h2><span class="eyebrow">from the record · ${txWord}</span></div>
             <p class="small">${tx.state === 'changed' ? W.treatment_changed : tx.state === 'none' ? 'No change of agent, insulin or pump is recorded. In a case series the sensor mean had moved by more than 20 mg/dL in 4 of 5 repeat wears after a change (3 of 4 patients) and in 0 of 4 without. No recorded change does not mean the report still holds.' : 'The dataset does not record treatment for this patient. Not recorded is not the same as unchanged.'}</p></section>
           ${p.whatif ? `<section class="panel"><div class="panel-head"><h2>Meal what-if</h2><span class="chip chip-sim">simulation</span><span class="eyebrow">${p.whatif.meal.label}, last day</span></div>
