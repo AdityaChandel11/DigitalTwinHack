@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Capture Wrapper</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    .site-viewport iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Cursor */
+    #cursor-ring {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 2.5px solid #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 14px rgba(108, 60, 226, 0.85);
+      transition: width 0.15s, height 0.15s, background-color 0.15s;
+    }
+    #cursor-ring.clicking {
+      width: 32px;
+      height: 32px;
+      background-color: rgba(108, 60, 226, 0.45);
+    }
+    
+    /* Spotlight */
+    #spotlight-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9000;
+      display: none;
+    }
+    .spotlight-pin {
+      position: absolute;
+      background: var(--purple);
+      color: #ffffff;
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide slide-site">
+    <div class="slide-header">
+      <div class="header-brand">
+        <div class="logo-badge">छा</div>
+        <div class="brand-text">Chhaya</div>
+        <div class="category-chip" id="page-category">02  LIVE WEBSITE WALKTHROUGH</div>
+      </div>
+      <div class="team-badge">https://chhaya-digital-twin.vercel.app/</div>
+    </div>
+    
+    <div class="slide-body">
+      <div class="site-frame-container">
+        <div class="site-browser-bar">
+          <div class="site-browser-dots">
+            <div class="site-dot" style="background: #FF5F56;"></div>
+            <div class="site-dot" style="background: #FFBD2E;"></div>
+            <div class="site-dot" style="background: #27C93F;"></div>
+          </div>
+          <div class="site-address-bar">
+            <span id="browser-url">🔒 https://chhaya-digital-twin.vercel.app/#p-mrs-r</span>
+          </div>
+          <div style="margin-left: auto; font-family: var(--font-mono); font-size: 13px; font-weight: 700; color: var(--purple); background: var(--purple-light); border: 1px solid var(--purple-border); padding: 4px 12px; border-radius: 6px; text-transform: uppercase;" id="browser-tag">
+            Synthetic demo patient
+          </div>
+        </div>
+        <div class="site-viewport">
+          <iframe id="live-frame" src="http://127.0.0.1:8765/#p-mrs-r"></iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="caption-bar" id="live-caption-bar">
+      <div class="caption-text" id="caption-label">This is Mrs. R.,
+a synthetic demo patient.</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>slide_architecture.html</title>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <div class="slide">
+    <div class="slide-header">
+      <div class="header-brand">
+        <div class="logo-badge">छा</div>
+        <div class="brand-text">Chhaya</div>
+        <div class="category-chip">ONE-WAY PIPELINE</div>
+      </div>
+      <div class="team-badge">Team SynapseX · D.B.S Kanpur · Digital Twin Challenge 2026</div>
+    </div>
+    
+    <div class="slide-body">
+
+      <div style="width: 100%; text-align: center;">
+        <div class="slide-title-hero" style="margin-bottom: 12px;">One-Way Data Architecture</div>
+        <div class="slide-title-sub" style="margin-bottom: 30px;">
+          The browser computes nothing: every curve is precomputed in static JSON bundles.
+        </div>
+        <div style="display: flex; gap: 14px; justify-content: center; align-items: center; max-width: 1600px; margin: 0 auto; flex-wrap: wrap;">
+          <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">Loader</div>
+          <div style="font-size: 22px; color: var(--purple); font-weight: 700;">➔</div>
+          <div style="background: var(--teal-light); border: 1px solid var(--teal-border); color: var(--teal); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">Recording</div>
+          <div style="font-size: 22px; color: var(--purple); font-weight: 700;">➔</div>
+          <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">build_inputs</div>
+          <div style="font-size: 22px; color: var(--purple); font-weight: 700;">➔</div>
+          <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">fit_twin</div>
+          <div style="font-size: 22px; color: var(--purple); font-weight: 700;">➔</div>
+          <div style="background: #FFFFFF; border: 1px solid var(--line); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">simulate_ensemble</div>
+          <div style="font-size: 22px; color: var(--purple); font-weight: 700;">➔</div>
+          <div style="background: var(--purple-light); border: 1px solid var(--purple-border); color: var(--purple); border-radius: 12px; padding: 18px 24px; font-family: var(--font-mono); font-size: 20px; font-weight: 700;">metrics</div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="caption-bar" id="caption-bar" style="display: none;">
+      <div class="caption-text" id="caption-text"></div>
+    </div>
+  </div>
+</body>
+</html>

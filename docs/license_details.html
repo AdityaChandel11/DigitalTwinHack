@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Chhaya — Open-Source License & Dataset Details</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 14mm 14mm 14mm 14mm;
+    @bottom-center {
+      content: "Page " counter(page) " of " counter(pages);
+      font-family: 'Inter', sans-serif;
+      font-size: 8pt;
+      color: #8E8C85;
+    }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #FAFAF8;
+    color: #1A1915;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 9pt;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .document-container {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Rainbow Stripe */
+  .accent-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, #6C3CE2, #2DD4BF, #F59E0B, #F43F5E, #6C3CE2);
+    border-radius: 2px;
+    margin-bottom: 18px;
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 14px;
+    border-bottom: 1.5px solid #E8E6E1;
+    margin-bottom: 18px;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-box {
+    width: 42px;
+    height: 42px;
+    background: linear-gradient(135deg, #6C3CE2 0%, #8B5CF6 100%);
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .title-group h1 {
+    font-family: 'Playfair Display', 'Source Serif 4', Georgia, serif;
+    font-size: 18pt;
+    font-weight: 700;
+    color: #1A1915;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .title-group p {
+    font-size: 8.5pt;
+    color: #66645E;
+    margin-top: 2px;
+  }
+
+  .header-right {
+    text-align: right;
+  }
+
+  .team-chip {
+    font-size: 8pt;
+    font-weight: 600;
+    color: #6C3CE2;
+    background: #F0EBFF;
+    padding: 3px 9px;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #D6C7FF;
+  }
+
+  .meta-sub {
+    font-size: 7.5pt;
+    color: #8E8C85;
+    margin-top: 3px;
+  }
+
+  /* Section Styles */
+  .section {
+    margin-bottom: 16px;
+    page-break-inside: avoid;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', 'Source Serif 4', Georgia, serif;
+    font-size: 11.5pt;
+    font-weight: 700;
+    color: #1A1915;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-left: 3px solid #6C3CE2;
+    padding-left: 8px;
+  }
+
+  /* Cards */
+  .card {
+    background: #FFFFFF;
+    border: 1px solid #E8E6E1;
+    border-radius: 7px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .card-title {
+    font-size: 9.5pt;
+    font-weight: 700;
+    color: #1A1915;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7pt;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .badge-mit { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }
+  .badge-cc { background: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB; }
+  .badge-nc { background: #FFF3E0; color: #E65100; border: 1px solid #FFE0B2; }
+  .badge-ofl { background: #F3E5F5; color: #7B1FA2; border: 1px solid #E1BEE7; }
+  .badge-apache { background: #E0F2F1; color: #00695C; border: 1px solid #B2DFDB; }
+  .badge-bsd { background: #EDE7F6; color: #4527A0; border: 1px solid #D1C4E9; }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8pt;
+    margin-top: 6px;
+    background: #FFFFFF;
+    border: 1px solid #E8E6E1;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  th {
+    background: #F7F6F3;
+    color: #383734;
+    text-align: left;
+    padding: 7px 9px;
+    font-weight: 600;
+    border-bottom: 1px solid #E8E6E1;
+    font-size: 7.5pt;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 7px 9px;
+    border-bottom: 1px solid #F0EEE9;
+    color: #383734;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7.5pt;
+    color: #6C3CE2;
+  }
+
+  .alert-box {
+    background: #FAF8F5;
+    border: 1px solid #EBE5D8;
+    border-left: 3px solid #F59E0B;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 8pt;
+    color: #555042;
+    margin-top: 8px;
+  }
+
+  .alert-title {
+    font-weight: 700;
+    color: #8C5B00;
+    margin-bottom: 2px;
+  }
+
+  .page-break { page-break-before: always; }
+
+  .footer-audit {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #E8E6E1;
+    display: flex;
+    justify-content: space-between;
+    font-size: 7.5pt;
+    color: #8E8C85;
+  }
+</style>
+</head>
+<body>
+<div class="document-container">
+
+  <!-- ACCENT STRIPE -->
+  <div class="accent-stripe"></div>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo-box">छा</div>
+      <div class="title-group">
+        <h1>Chhaya — Open-Source License & Dataset Details</h1>
+        <p>Complete Software IP, Clinical Dataset Governance, Font Software & Stack Manifest</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="team-chip">Team SynapseX · D.B.S Kanpur</span>
+      <div class="meta-sub">Happiest Health Digital Twin Challenge 2026</div>
+      <div class="meta-sub">Submission Folder: SynapseX_D.B.S Kanpur</div>
+    </div>
+  </div>
+
+  <!-- 1. CORE REPOSITORY CODE -->
+  <div class="section">
+    <div class="section-title">1. Core Repository Code</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Chhaya Software System</span>
+        <span class="badge badge-mit">MIT License</span>
+      </div>
+      <p style="font-size: 8.5pt; color: #222; margin-bottom: 6px;">
+        <strong>License:</strong> MIT License (Copyright &copy; 2026 The Chhaya authors &middot; Team SynapseX, D.B.S Kanpur)
+      </p>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 7pt; background: #F8F7F5; padding: 8px 10px; border-radius: 4px; border: 1px solid #EAE8E2; color: #444; line-height: 1.35; margin-bottom: 6px;">
+        Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the condition that the above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+      </div>
+      <p style="font-size: 8pt; color: #555;">
+        <strong>Covers:</strong> ODE physiological twin solver (<span class="mono">src/chhaya/twin/</span>), Bayesian Laplace calibration, baseline and ML models (<span class="mono">src/chhaya/models/</span>), Gates 1, 2, and 3 evaluation suites (<span class="mono">src/chhaya/eval/</span>), local clinician dashboard server (<span class="mono">src/chhaya/dashboard/</span>), and test suites (<span class="mono">tests/</span>).
+      </p>
+    </div>
+  </div>
+
+  <!-- 2. CLINICAL DATASETS & GOVERNANCE -->
+  <div class="section">
+    <div class="section-title">2. Clinical Dataset Provenance & Zero-Redistribution Governance</div>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Dataset</th>
+          <th>Cohort Profile</th>
+          <th>License</th>
+          <th>Original Authority & DOI Citation</th>
+          <th>Checksum & Storage Policy</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>ShanghaiT2DM</strong></td>
+          <td>100 inpatient Type 2 diabetes patients (109 wears), 15-min CGM readings, daily reference fingersticks, lab panels, diet logs.</td>
+          <td><span class="badge badge-cc">CC BY 4.0</span><br><span style="font-size: 6.5pt; color: #555;">Attribution Required</span></td>
+          <td>Zhao et al., <em>Scientific Data</em> 2023.<br><span class="mono">doi:10.6084/m9.figshare.c.6310860</span></td>
+          <td>MD5: <span class="mono">4bfb61cfa506b481...</span><br>Downloaded dynamically; not redistributed.</td>
+        </tr>
+        <tr>
+          <td><strong>CGMacros</strong></td>
+          <td>45 free-living individuals, dual continuous Dexcom & Abbott Libre sensors, Fitbit Charge 4 wristband, meal macronutrients.</td>
+          <td><span class="badge badge-nc">CC BY-NC-SA 4.0</span><br><span style="font-size: 6.5pt; color: #C62828;">Non-Commercial Only</span></td>
+          <td>Das et al., PhysioNet 2024.<br><span class="mono">doi:10.13026/3z8q-x658</span></td>
+          <td>SHA256: <span class="mono">05c8b0e6f1a27570...</span><br>Downloaded dynamically; not redistributed.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="alert-box">
+      <div class="alert-title">Governance Rule (Zero Redistribution)</div>
+      Raw patient traces are never redistributed in the Git repository. They are fetched dynamically via automated checksum-verified download scripts (<span class="mono">python -m chhaya.data.download</span>) directly from authoritative archives to respect patient privacy and original license conditions. Per-reading time series remain local; only aggregate evaluation benchmarks and the synthetic patient are committed.
+    </div>
+  </div>
+
+  <!-- 3. TYPOGRAPHY & OFFLINE FONTS -->
+  <div class="section">
+    <div class="section-title">3. Typography & Offline Clinic Font Software</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Adobe Source Font Family (Source Sans 3, Source Serif 4, Source Code Pro)</span>
+        <span class="badge badge-ofl">SIL OFL 1.1</span>
+      </div>
+      <p style="font-size: 8pt; color: #444;">
+        Bundled locally in <span class="mono">src/chhaya/dashboard/static/fonts/</span> for fully air-gapped hospital operation without external CDN dependencies or tracking scripts.
+      </p>
+      <p style="font-size: 7.5pt; color: #666; margin-top: 4px;">
+        <strong>License:</strong> SIL Open Font License 1.1 (OFL-1.1) (Copyright &copy; 2010–2024 Adobe Systems Incorporated). Full legal notice preserved in <span class="mono">src/chhaya/dashboard/static/fonts/OFL.txt</span>.
+      </p>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+  <div class="accent-stripe"></div>
+
+  <!-- 4. THIRD-PARTY COMPUTATIONAL STACK -->
+  <div class="section">
+    <div class="section-title">4. Third-Party Computational Stack</div>
+    <p style="font-size: 8pt; color: #555; margin-bottom: 6px;">
+      All runtime packages declared in <span class="mono">pyproject.toml</span> are governed by OSI-approved permissive licenses:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Component</th>
+          <th>License</th>
+          <th>Role in Chhaya Architecture</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>JAX / jaxlib</strong></td>
+          <td><span class="badge badge-apache">Apache 2.0</span></td>
+          <td>Vectorized numerical ODE integration and compiled autodiff Jacobian evaluations.</td>
+        </tr>
+        <tr>
+          <td><strong>NumPy / SciPy</strong></td>
+          <td><span class="badge badge-bsd">BSD 3-Clause</span></td>
+          <td>Array algebra, L-BFGS-B MAP optimization, and Wilcoxon signed-rank hypothesis tests.</td>
+        </tr>
+        <tr>
+          <td><strong>Pandas / Scikit-Learn</strong></td>
+          <td><span class="badge badge-bsd">BSD 3-Clause</span></td>
+          <td>Tabular clinical time series alignment, cross-validation, and AUPRC/AUROC scoring.</td>
+        </tr>
+        <tr>
+          <td><strong>PyArrow / Requests</strong></td>
+          <td><span class="badge badge-apache">Apache 2.0</span></td>
+          <td>Feather/Parquet serialization and checksummed HTTPS dataset ingestion.</td>
+        </tr>
+        <tr>
+          <td><strong>LightGBM</strong></td>
+          <td><span class="badge badge-mit">MIT</span></td>
+          <td>Gradient boosted tree excursion classification baseline.</td>
+        </tr>
+        <tr>
+          <td><strong>Hatchling / Tabulate / OpenPyXL</strong></td>
+          <td><span class="badge badge-mit">MIT</span></td>
+          <td>Build packaging system, CLI scorecard generation, and clinical Excel sheet parsing.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. FRONT-END & MEDIA ASSETS -->
+  <div class="section">
+    <div class="section-title">5. Front-End & Media Assets</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Front-End, Audio & Synthetic Avatar Disclosure</span>
+        <span class="badge badge-mit">Native & MIT</span>
+      </div>
+      <ul style="font-size: 8pt; color: #333; margin-left: 16px; line-height: 1.45;">
+        <li><strong>Front-End Architecture:</strong> 100% Native Vanilla HTML5, Vanilla CSS3, and dynamic SVG rendering (<span class="mono">src/chhaya/dashboard/static/app.js</span>). Zero external JavaScript frameworks (no React, Vue, Angular, D3, or Chart.js) and zero telemetry or analytics scripts.</li>
+        <li><strong>Ambient Audio (<span class="mono">video/out/music.mp3</span>):</strong> Royalty-free acoustic soundtrack utilized strictly for video demonstration and walkthrough mixing.</li>
+        <li><strong>Demo Patient (<span class="mono">Mrs. R.</span>):</strong> Synthetic clinical avatar (58 yr female, HbA1c 7.8 %, Fasting glucose 142 mg/dL, Metformin 1000 mg bid, BMI 28.4 kg/m&sup2;) with zero real-world patient identity, licensed under MIT terms.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 6. SCIENTIFIC & PHYSIOLOGICAL LITERATURE LINEAGE -->
+  <div class="section">
+    <div class="section-title">6. Scientific & Physiological Literature Lineage</div>
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">Open Peer-Reviewed Literature Foundations</span>
+        <span class="badge badge-cc">Open Science</span>
+      </div>
+      <ul style="font-size: 8pt; color: #333; margin-left: 16px; line-height: 1.45;">
+        <li><strong>E-DES Glucose-Insulin Model:</strong> Maas AH et al. <em>A physiology-based model describing heterogeneity in glucose metabolism: the core of the Eindhoven Diabetes Education Simulator (E-DES).</em> J Diabetes Sci Technol 2015;9:282-292. (<a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4604593" style="color: #6C3CE2;">PMC4604593</a>).</li>
+        <li><strong>Personalized CGM Parameter Identification:</strong> Erd&odblac;s B et al. <em>Leveraging continuous glucose monitoring for personalized modeling of insulin-regulated glucose metabolism.</em> Scientific Reports 2021.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- AUDIT FOOTER -->
+  <div class="footer-audit">
+    <div>Team SynapseX &middot; D.B.S. College, Kanpur &middot; Happiest Health Digital Twin Challenge 2026</div>
+    <div>Document: docs/lisence deatils.pdf &middot; Folder: SynapseX_D.B.S Kanpur</div>
+  </div>
+
+</div>
+</body>
+</html>

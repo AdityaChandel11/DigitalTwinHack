@@ -15,7 +15,7 @@
 ![Tests](https://img.shields.io/badge/tests-400%2B-4a3aa7.svg)
 ![Data](https://img.shields.io/badge/data-open%20and%20synthetic%20only-4a3aa7.svg)
 
-Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · IIT Kanpur · submission folder `SynapseX_IITK`
+Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
 **Start here:** [Live demo](https://chhaya-digital-twin.vercel.app/) · [Slides (PDF)](docs/Chhaya_Phase1_Presentation.pdf) · [Architecture (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
@@ -60,7 +60,7 @@ Every requirement of the challenge brief, and where it is met.
 | Architecture diagram (PDF/PPT) | Diagram in the Architecture section and as PDF | [Architecture](#architecture), [Deliverables](#submission-deliverables) |
 | Presentation (PDF/PPT) with project details and outcome | Deck as PDF | [Deliverables](#submission-deliverables) |
 | Open-source licence details | MIT for code; dataset and font licences listed | [Licence](#open-source-licence) |
-| Folder name: Team Name_College Name | `SynapseX_IITK` | [Deliverables](#submission-deliverables) |
+| Folder name: Team Name_College Name | `SynapseX_D.B.S Kanpur` | [Deliverables](#submission-deliverables) |
 
 ## Problem Statement
 
@@ -317,13 +317,13 @@ uv run python -m chhaya.dashboard                            # the dashboard
 | Presentation with project details and outcome (PDF) | [`docs/Chhaya_Phase1_Presentation.pdf`](docs/Chhaya_Phase1_Presentation.pdf) |
 | Hosted offline demo (static export of the dashboard) | [https://chhaya-digital-twin.vercel.app/](https://chhaya-digital-twin.vercel.app/) |
 | Licence | [`LICENSE`](LICENSE) |
-| Submission folder name | `SynapseX_IITK` |
+| Submission folder name | `SynapseX_D.B.S Kanpur` |
 
 The hosted demo is a static export (`python -m chhaya.dashboard --export DIR`). Only the synthetic demo bundle is ever exported.
 
 ## Team Details
 
-**Team SynapseX** · solo entry · Indian Institute of Technology Kanpur (IIT Kanpur) · team lead and developer: Aditya Singh Chandel.
+**Team SynapseX** · solo entry · D.B.S. College, Kanpur (D.B.S Kanpur) · team lead and developer: Aditya Singh Chandel.
 
 The team lead's contact details are submitted on the challenge platform, as the rules require. AI-assistant tools were used to write and review code; every decision they helped with is written up in [`docs/decisions/`](docs/decisions/) and the rules the work followed are in [`docs/PROJECT_GUIDE.md`](docs/PROJECT_GUIDE.md).
 

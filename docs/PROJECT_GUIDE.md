@@ -10,7 +10,7 @@ excursions better than the sensor week already does, and it gives no rule for wh
 `docs/decisions/2026-10-04-plan-revision.md`, `docs/decisions/2026-10-08-gate3.md` and
 `docs/decisions/2026-10-08-m4-kickoff.md`).
 
-- **Team:** SynapseX, IIT Kanpur. Submission folder `SynapseX_IITK`.
+- **Team:** SynapseX, D.B.S Kanpur. Submission folder `SynapseX_D.B.S Kanpur`.
 - **Submission closes 20 Oct 2026, 19:00 IST.**
 - **The brief itself:** [docs/brief/Digital_Twin_Challenge_2026_Content.txt](brief/Digital_Twin_Challenge_2026_Content.txt).
 
@@ -239,5 +239,5 @@ kinetics, no exogenous insulin, one absorption curve per meal.
 
 ## Decisions
 
-- Decided: project name **Chhaya**; team **SynapseX**, IIT Kanpur.
+- Decided: project name **Chhaya**; team **SynapseX**, D.B.S Kanpur.
 - Not committed (kept local): local tooling settings.

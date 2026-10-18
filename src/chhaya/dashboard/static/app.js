@@ -646,7 +646,7 @@
     state.index = index;
     W = index.wording;
     $('#limits').textContent = W.limits;
-    $('#foot').textContent = `Chhaya · SynapseX, IIT Kanpur · ${index.bundle === 'demo' ? 'demo bundle: the synthetic patient and the evidence' : 'local bundle: held-out patients, not for publication'} · built from ${index.commit}`;
+    $('#foot').textContent = `Chhaya · SynapseX, D.B.S Kanpur · ${index.bundle === 'demo' ? 'demo bundle: the synthetic patient and the evidence' : 'local bundle: held-out patients, not for publication'} · built from ${index.commit}`;
     return route();
   }).catch(fail);
 })();

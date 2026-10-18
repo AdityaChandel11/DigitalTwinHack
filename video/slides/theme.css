@@ -1,0 +1,727 @@
+/* Chhaya Presentation Deck Theme (1920x1080)
+   Publication-grade editorial design matching docs/Architecture_SynapseX.pdf
+   - Warm editorial canvas (#FAFAF8)
+   - Deep rich ink typography (#1A1A2E)
+   - Distinctive typography: Playfair Display / Source Serif 4 + Inter / Source Sans 3 + JetBrains Mono / Source Code Pro
+   - Rainbow accent top line (#6C3CE2, #2DD4BF, #F59E0B, #F43F5E)
+   - Ample breathing room, generous card padding, zero box clipping
+   - Bottom 200px reserved for high-contrast floating caption bar
+*/
+
+/* Local fonts loaded offline-first from src/chhaya/dashboard/static/fonts/ */
+
+@font-face {
+  font-family: "Source Sans 3 Local";
+  src: url("../../src/chhaya/dashboard/static/fonts/SourceSans3VF-Upright.woff2") format("woff2");
+  font-weight: 200 900;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Source Serif 4 Local";
+  src: url("../../src/chhaya/dashboard/static/fonts/SourceSerif4VF-Roman.woff2") format("woff2");
+  font-weight: 200 900;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Source Code Local";
+  src: url("../../src/chhaya/dashboard/static/fonts/SourceCodeVF-Upright.woff2") format("woff2");
+  font-weight: 200 900;
+  font-display: block;
+}
+
+:root {
+  --w: 1920px;
+  --h: 1080px;
+  
+  /* Canvas & Backgrounds */
+  --bg: #FAFAF8;
+  --card-bg: #FFFFFF;
+  --card-bg-elevated: #F7F6F3;
+  --line: #E8E6E1;
+  --line-strong: #D5D2CB;
+  
+  /* Text */
+  --text-primary: #1A1A2E;
+  --text-secondary: #5B556E;
+  --text-muted: #7E7892;
+  --text-dim: #A8A2B8;
+  
+  /* Accents */
+  --purple: #6C3CE2;
+  --purple-light: #F3F0FC;
+  --purple-border: #DDD6FE;
+  
+  --teal: #0E9AA7;
+  --teal-light: #ECFEFF;
+  --teal-border: #A5F3FC;
+  
+  --amber: #D97706;
+  --amber-light: #FEF3C7;
+  --amber-border: #FDE68A;
+  
+  --pass: #10B981;
+  --pass-light: #ECFDF5;
+  --pass-border: #A7F3D0;
+  --pass-text: #059669;
+  
+  --miss: #F43F5E;
+  --miss-light: #FFF1F2;
+  --miss-border: #FECDD3;
+  --miss-text: #E11D48;
+  
+  /* Fonts */
+  --font-serif: 'Playfair Display', 'Source Serif 4 Local', Georgia, serif;
+  --font-sans: 'Inter', 'Source Sans 3 Local', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Source Code Local', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 1920px;
+  height: 1080px;
+  overflow: hidden;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Master Slide Canvas */
+.slide {
+  position: relative;
+  width: 1920px;
+  height: 1080px;
+  padding: 52px 88px 180px 88px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Top Rainbow Accent Line */
+.slide::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #6C3CE2 0%, #2DD4BF 35%, #F59E0B 70%, #F43F5E 100%);
+  z-index: 100;
+}
+
+/* Slide Header */
+.slide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--line);
+  margin-bottom: 36px;
+  height: 56px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo-badge {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--purple) 0%, #8B5CF6 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(108, 60, 226, 0.28);
+}
+
+.brand-text {
+  font-family: var(--font-serif);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: var(--purple-light);
+  border: 1px solid var(--purple-border);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: var(--purple);
+  text-transform: uppercase;
+  margin-left: 6px;
+}
+
+.team-badge {
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+/* Slide Content Area */
+.slide-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-height: 640px;
+}
+
+/* Titles */
+.slide-title-hero {
+  font-family: var(--font-serif);
+  font-size: 56px;
+  font-weight: 800;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 34px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.slide-title-sub {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 1200px;
+  margin: -16px auto 32px auto;
+  line-height: 1.45;
+}
+
+/* Caption Bar (Bottom Floating Pill) */
+.caption-bar {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 1560px;
+  min-height: 104px;
+  background: rgba(26, 26, 46, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 20px;
+  padding: 14px 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 44px rgba(26, 26, 46, 0.35);
+  z-index: 500;
+}
+
+.caption-text {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 38px;
+  line-height: 1.28;
+  color: #ffffff;
+  text-align: center;
+  white-space: pre-line;
+}
+
+/* Cards Base */
+.card-base {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+/* Chips */
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
+
+.tag-pass {
+  background: var(--pass-light);
+  border: 1px solid var(--pass-border);
+  color: var(--pass-text);
+}
+
+.tag-miss {
+  background: var(--miss-light);
+  border: 1px solid var(--miss-border);
+  color: var(--miss-text);
+}
+
+.tag-purple {
+  background: var(--purple-light);
+  border: 1px solid var(--purple-border);
+  color: var(--purple);
+}
+
+.tag-teal {
+  background: var(--teal-light);
+  border: 1px solid var(--teal-border);
+  color: var(--teal);
+}
+
+.tag-neutral {
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+  color: #4B5563;
+}
+
+/* ==================== 1. SLIDE VARIANT: HOOK ==================== */
+.hook-hero {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.hook-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.hook-icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--purple) 0%, #8B5CF6 100%);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 46px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-serif);
+  box-shadow: 0 10px 28px rgba(108, 60, 226, 0.35);
+}
+
+.hook-title {
+  font-family: var(--font-serif);
+  font-size: 80px;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -1px;
+}
+
+.hook-subtitle {
+  font-family: var(--font-sans);
+  font-size: 38px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 1200px;
+  line-height: 1.4;
+}
+
+.hook-pills {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.hook-pill {
+  padding: 10px 22px;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 30px;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--purple);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+/* ==================== 2. SLIDE VARIANT: BIGNUM ==================== */
+.bignum-center {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+.bignum-val {
+  font-family: var(--font-serif);
+  font-size: 124px;
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+  line-height: 1.0;
+}
+
+.bignum-val.accent {
+  color: var(--purple);
+}
+
+.bignum-lede {
+  font-family: var(--font-serif);
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--text-primary);
+  max-width: 1300px;
+  line-height: 1.3;
+}
+
+.bignum-sub {
+  font-family: var(--font-sans);
+  font-size: 28px;
+  color: var(--text-secondary);
+  max-width: 1100px;
+  line-height: 1.45;
+}
+
+/* ==================== 3. SLIDE VARIANT: SCOREBOARD ==================== */
+.score-hero-row {
+  display: flex;
+  gap: 36px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.score-box {
+  border-radius: 20px;
+  padding: 36px 56px;
+  text-align: center;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+.score-box.pass {
+  background: var(--pass-light);
+  border: 2px solid var(--pass-border);
+}
+
+.score-box.miss {
+  background: var(--miss-light);
+  border: 2px solid var(--miss-border);
+}
+
+.score-num {
+  font-family: var(--font-mono);
+  font-size: 72px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.score-box.pass .score-num { color: var(--pass-text); }
+.score-box.miss .score-num { color: var(--miss-text); }
+
+.score-label {
+  font-family: var(--font-sans);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ==================== 4. SLIDE VARIANT: 2 CARDS ==================== */
+.cards-2-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+.card-2 {
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 38px 42px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card-2-title {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.card-2-desc {
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ==================== 5. SLIDE VARIANT: 3 CARDS ==================== */
+.cards-3-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1580px;
+  margin: 0 auto;
+}
+
+.card-3 {
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 34px 34px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.card-3-title {
+  font-family: var(--font-serif);
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.card-3-desc {
+  font-size: 22px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ==================== 6. SLIDE VARIANT: 4 CARDS (2x2) ==================== */
+.cards-4-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  width: 100%;
+  max-width: 1540px;
+  margin: 0 auto;
+}
+
+.card-4 {
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 28px 32px;
+  box-shadow: 0 2px 14px rgba(0, 0, 0, 0.02);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.card-4-num {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--purple-light);
+  border: 1px solid var(--purple-border);
+  color: var(--purple);
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-4-text {
+  font-family: var(--font-serif);
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+/* ==================== 7. SLIDE VARIANT: PROTOCOL (4 Steps Row) ==================== */
+.protocol-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.protocol-card {
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 30px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.protocol-step {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--purple);
+  text-transform: uppercase;
+}
+
+.protocol-title {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.25;
+}
+
+.protocol-desc {
+  font-size: 21px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+/* ==================== 8. SLIDE VARIANT: INFORMATION LADDER ==================== */
+.ladder-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+  width: 100%;
+  max-width: 1580px;
+  margin: 0 auto 24px auto;
+}
+
+.ladder-card {
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ladder-card.winner {
+  border: 2px solid var(--teal);
+  background: #FAFEFF;
+}
+
+.ladder-card.missed {
+  border: 1.5px solid var(--miss-border);
+  background: var(--miss-light);
+}
+
+.ladder-val {
+  font-family: var(--font-mono);
+  font-size: 48px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.ladder-card.winner .ladder-val { color: var(--teal); }
+.ladder-card.missed .ladder-val { color: var(--miss-text); }
+
+.ladder-sub {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.ladder-footer-note {
+  font-size: 26px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+/* ==================== 9. BROWSER FRAME FOR WALKTHROUGH ==================== */
+.site-frame-container {
+  width: 1720px;
+  height: 750px;
+  margin: 0 auto;
+  background: #FFFFFF;
+  border: 1.5px solid #E8E6E1;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 48px rgba(26, 26, 46, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.site-browser-bar {
+  height: 44px;
+  background: #F7F6F3;
+  border-bottom: 1px solid #E8E6E1;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  gap: 16px;
+}
+
+.site-browser-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.site-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.site-address-bar {
+  flex: 1;
+  max-width: 780px;
+  height: 28px;
+  background: #FFFFFF;
+  border: 1px solid #E8E6E1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #1A1A2E;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.site-viewport {
+  width: 100%;
+  height: 706px;
+  position: relative;
+  background: #FFFFFF;
+}
+
+.site-viewport iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #FFFFFF;
+}

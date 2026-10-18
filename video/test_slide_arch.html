@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Slide Design</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=JetBrains+Mono:wght@500;600;700&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #FAFAF8;
+      color: #1A1A2E;
+      font-family: 'Inter', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      position: relative;
+    }
+    
+    /* Rainbow Top Accent Line */
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #6C3CE2, #2DD4BF, #F59E0B, #F43F5E, #6C3CE2);
+      z-index: 100;
+    }
+    
+    .slide-container {
+      width: 1920px;
+      height: 1080px;
+      padding: 56px 88px 180px 88px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    /* Header */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 24px;
+      border-bottom: 2px solid #E8E6E1;
+      margin-bottom: 36px;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    
+    .logo-box {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #6C3CE2 0%, #8B5CF6 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px rgba(108, 60, 226, 0.28);
+    }
+    
+    .brand-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      font-weight: 800;
+      color: #1A1A2E;
+      letter-spacing: -0.3px;
+    }
+    
+    .category-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: #F3F0FC;
+      border: 1px solid #DDD6FE;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: #6C3CE2;
+      text-transform: uppercase;
+      margin-left: 8px;
+    }
+    
+    .header-right {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      color: #716C85;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+    
+    /* Slide Content Area */
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 640px;
+    }
+    
+    .section-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 52px;
+      font-weight: 800;
+      color: #1A1A2E;
+      text-align: center;
+      margin-bottom: 36px;
+      letter-spacing: -0.5px;
+    }
+    
+    /* Card Grid */
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 28px;
+      width: 100%;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    
+    .card {
+      background: #FFFFFF;
+      border: 1px solid #E8E6E1;
+      border-radius: 18px;
+      padding: 36px 36px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+    }
+    
+    .card-chip {
+      display: inline-block;
+      align-self: flex-start;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+    }
+    
+    .chip-miss {
+      background: #FFF1F2;
+      border: 1px solid #FECDD3;
+      color: #E11D48;
+    }
+    
+    .chip-baseline {
+      background: #ECFEFF;
+      border: 1px solid #A5F3FC;
+      color: #0891B2;
+    }
+    
+    .card-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: #1A1A2E;
+      line-height: 1.25;
+    }
+    
+    .card-desc {
+      font-size: 22px;
+      line-height: 1.5;
+      color: #555268;
+    }
+    
+    /* Caption Bar */
+    .caption-bar {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(26, 26, 46, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 20px;
+      padding: 16px 48px;
+      box-shadow: 0 16px 40px rgba(26, 26, 46, 0.35);
+      z-index: 200;
+    }
+    
+    .caption-text {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 40px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: #FFFFFF;
+      text-align: center;
+      white-space: pre-line;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div class="header-left">
+        <div class="logo-box">छा</div>
+        <div class="brand-title">Chhaya</div>
+        <div class="category-chip">01  Clinical Consequences</div>
+      </div>
+      <div class="header-right">Team SynapseX  D.B.S Kanpur  Digital Twin Challenge</div>
+    </div>
+    
+    <div class="slide-content">
+      <div class="section-title">Consequences in the Clinical Product</div>
+      <div class="cards-row">
+        <div class="card">
+          <div class="card-chip chip-miss">Gate 3 Missed</div>
+          <div class="card-title">No Meal Alert</div>
+          <div class="card-desc">No excursion probability or alert shown anywhere in the interface.</div>
+        </div>
+        <div class="card">
+          <div class="card-chip chip-miss">Record Prior Missed</div>
+          <div class="card-title">Fusion Added Nil</div>
+          <div class="card-desc">Health record retained strictly as background context for clinician review.</div>
+        </div>
+        <div class="card">
+          <div class="card-chip chip-baseline">Plain Baseline Won</div>
+          <div class="card-title">Plain Average Used</div>
+          <div class="card-desc">Converted fingerstick average drives patient summary in clinical practice.</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="caption-bar">
+      <div class="caption-text">Every miss changed the product and is reported openly.</div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,1298 @@
+1
+00:00:00,000 --> 00:00:04,500
+This is Mrs. R.,
+a synthetic demo patient.
+
+2
+00:00:04,500 --> 00:00:09,000
+Her shadow is drawn
+without a continuous glucose sensor.
+
+3
+00:00:09,000 --> 00:00:13,500
+The purple curve is estimated glucose.
+
+4
+00:00:13,500 --> 00:00:18,000
+Around it lies an eighty per cent
+uncertainty band.
+
+5
+00:00:18,000 --> 00:00:22,500
+Now we reveal the real sensor trace.
+
+6
+00:00:22,500 --> 00:00:27,000
+The real sensor trace slides in
+across the estimated shadow.
+
+7
+00:00:27,000 --> 00:00:31,500
+Teal marks glucose in range,
+and amber marks spikes above 180.
+
+8
+00:00:31,500 --> 00:00:36,500
+The shadow tracked the real trace
+five days after the sensor came off.
+
+9
+00:00:36,500 --> 00:00:41,000
+This is Chhaya,
+Hindi for shadow.
+
+10
+00:00:41,000 --> 00:00:45,500
+A Type 2 diabetes digital twin
+that shows its work.
+
+11
+00:00:45,500 --> 00:00:49,500
+Built by Team SynapseX
+at D.B.S Kanpur.
+
+12
+00:00:49,500 --> 00:00:54,000
+Here is our scoreboard plainly,
+written before the runs.
+
+13
+00:00:54,000 --> 00:00:58,000
+Nine bars were preregistered.
+
+14
+00:00:58,000 --> 00:01:02,500
+Five passed,
+though one cannot fail to pass.
+
+15
+00:01:02,500 --> 00:01:06,500
+Four missed their bars.
+
+16
+00:01:06,500 --> 00:01:11,000
+Every miss changed the product
+and is reported openly.
+
+17
+00:01:11,000 --> 00:01:15,500
+We show no meal alert,
+and no excursion probability.
+
+18
+00:01:15,500 --> 00:01:20,500
+The health record prior added nothing
+detectable to sensor data.
+
+19
+00:01:20,500 --> 00:01:25,500
+Where a plain baseline tied,
+we use the plain baseline.
+
+20
+00:01:25,500 --> 00:01:30,000
+Let us start with the clinical problem
+in India.
+
+21
+00:01:30,000 --> 00:01:34,500
+In India, a continuous glucose sensor
+costs 4400 to 5100 rupees.
+
+22
+00:01:34,500 --> 00:01:39,000
+That is the cost of a single
+fourteen-day wear.
+
+23
+00:01:39,000 --> 00:01:43,500
+Because of that cost,
+a patient wears a sensor once.
+
+24
+00:01:43,500 --> 00:01:48,000
+The clinic treats the patient
+from that single report for months.
+
+25
+00:01:48,000 --> 00:01:52,500
+When the sensor comes off,
+nobody is measuring continuously.
+
+26
+00:01:52,500 --> 00:01:57,000
+What does the doctor have?
+
+27
+00:01:57,000 --> 00:02:01,500
+A static paper report,
+occasional fingersticks, and a meal diary.
+
+28
+00:02:01,500 --> 00:02:06,000
+The brief says medicine must be
+proactive, not reactive.
+
+29
+00:02:06,000 --> 00:02:10,000
+How long does that sensor report
+stay true?
+
+30
+00:02:10,000 --> 00:02:14,000
+Which readings should you
+not believe?
+
+31
+00:02:14,000 --> 00:02:18,000
+What keeps the estimate true?
+
+32
+00:02:18,000 --> 00:02:22,500
+Our measurements show:
+meal logs and fingersticks do.
+
+33
+00:02:22,500 --> 00:02:26,500
+And when does the report
+stop being true?
+
+34
+00:02:26,500 --> 00:02:31,000
+When medications or lifestyle change,
+glucose drifts away from the report.
+
+35
+00:02:31,000 --> 00:02:35,500
+To answer these honestly,
+we built the reveal protocol.
+
+36
+00:02:35,500 --> 00:02:39,500
+Step one:
+calibrate on k days of sensor data.
+
+37
+00:02:39,500 --> 00:02:43,500
+Step two:
+hide the remaining sensor days.
+
+38
+00:02:43,500 --> 00:02:48,000
+Step three:
+estimate the hidden days without sensor data.
+
+39
+00:02:48,000 --> 00:02:52,500
+The twin uses only meals,
+activity, and fingersticks.
+
+40
+00:02:52,500 --> 00:02:56,500
+Step four:
+reveal the real sensor on top.
+
+41
+00:02:56,500 --> 00:03:01,000
+We never score a simulator
+on its own simulated data.
+
+42
+00:03:01,000 --> 00:03:05,000
+Every claim is scored once
+on held-out patients.
+
+43
+00:03:05,000 --> 00:03:09,500
+Against bars written beforehand
+in our preregistration.
+
+44
+00:03:09,500 --> 00:03:13,500
+Calibrate, hide, estimate, and reveal.
+
+45
+00:03:13,500 --> 00:03:18,000
+The hidden window simulates real clinic practice.
+
+46
+00:03:18,000 --> 00:03:22,500
+Scored on patients the twin never saw in training.
+
+47
+00:03:22,500 --> 00:03:26,500
+No cherry-picked runs and no leakage.
+
+48
+00:03:26,500 --> 00:03:31,000
+Saving patients repeated sensor costs in India.
+
+49
+00:03:31,000 --> 00:03:35,500
+The shadow extends the value of one sensor wear.
+
+50
+00:03:35,500 --> 00:03:39,500
+We open the live deployment now.
+
+51
+00:03:39,500 --> 00:03:44,000
+Sensor costs represent a heavy recurring expense.
+
+52
+00:03:44,000 --> 00:03:48,000
+Every number in this film is reproducible.
+
+53
+00:03:48,000 --> 00:03:52,000
+Welcome to Chhaya in the clinic.
+
+54
+00:03:52,000 --> 00:03:56,000
+Let us inspect the live system in action.
+
+55
+00:03:56,000 --> 00:04:00,000
+Running client-side from static assets.
+
+56
+00:04:00,000 --> 00:04:04,000
+We begin on the clinic view at #clinic.
+
+57
+00:04:04,000 --> 00:04:08,500
+The roster shows patient cohorts,
+wear duration, and staleness status.
+
+58
+00:04:08,500 --> 00:04:13,000
+Patients belong to synthetic,
+supervised, or free-living cohorts.
+
+59
+00:04:13,000 --> 00:04:17,500
+At the top is Mrs. R.,
+our synthetic demo patient.
+
+60
+00:04:17,500 --> 00:04:22,000
+Her cohort is explicitly tagged
+as Synthetic demo.
+
+61
+00:04:22,000 --> 00:04:26,000
+Clicking her row opens the patient screen.
+
+62
+00:04:26,000 --> 00:04:30,000
+Mrs. R.'s patient view loads at #p-mrs-r.
+
+63
+00:04:30,000 --> 00:04:35,000
+Notice the prominent 'Synthetic demo patient'
+tag in the header.
+
+64
+00:04:35,000 --> 00:04:39,500
+All twin curves are explicitly
+labelled 'Estimated'.
+
+65
+00:04:39,500 --> 00:04:44,000
+No synthetic estimate is ever
+presented as measured ground truth.
+
+66
+00:04:44,000 --> 00:04:48,500
+On the left is the 'From the health record' panel.
+
+67
+00:04:48,500 --> 00:04:53,000
+Mrs. R. is 58 years old,
+with Type 2 diabetes for six years.
+
+68
+00:04:53,000 --> 00:04:58,000
+Her HbA1c is 7.8 per cent,
+and fasting glucose is 142 mg/dL.
+
+69
+00:04:58,000 --> 00:05:03,000
+She takes Metformin 1000 mg twice daily,
+with a BMI of 28.4.
+
+70
+00:05:03,000 --> 00:05:07,500
+The record also captures her sedentary lifestyle
+and diet notes.
+
+71
+00:05:07,500 --> 00:05:12,000
+Renal function shows creatinine 1.0 mg/dL
+and eGFR 72.
+
+72
+00:05:12,000 --> 00:05:16,500
+Lipids show total cholesterol 188 mg/dL
+and triglycerides 164.
+
+73
+00:05:16,500 --> 00:05:21,000
+This record sets the twin's prior,
+which we will evaluate later.
+
+74
+00:05:21,000 --> 00:05:25,000
+The first three days show her calibration wear.
+
+75
+00:05:25,000 --> 00:05:29,500
+On day four the sensor comes off,
+and the shadow begins.
+
+76
+00:05:29,500 --> 00:05:34,000
+The purple curve shows the running
+glucose estimate.
+
+77
+00:05:34,000 --> 00:05:39,000
+The shaded band represents an eighty per cent
+uncertainty envelope.
+
+78
+00:05:39,000 --> 00:05:44,000
+Along the bottom axis are logged meals:
+breakfast, lunch, and dinner.
+
+79
+00:05:44,000 --> 00:05:48,500
+The twin simulates glycemic absorption
+following each recorded meal.
+
+80
+00:05:48,500 --> 00:05:53,000
+To test the shadow, the doctor clicks
+'Reveal the sensor'.
+
+81
+00:05:53,000 --> 00:05:57,500
+Clicking Reveal overlays the real
+hidden sensor trace.
+
+82
+00:05:57,500 --> 00:06:02,500
+Teal indicates in-range glucose,
+while amber marks readings above 180.
+
+83
+00:06:02,500 --> 00:06:06,500
+A scrubber bar appears below the chart.
+
+84
+00:06:06,500 --> 00:06:11,000
+We can scrub forward day by day
+to inspect fidelity.
+
+85
+00:06:11,000 --> 00:06:16,000
+On day five, the estimated peak closely matches
+the revealed peak.
+
+86
+00:06:16,000 --> 00:06:20,500
+The shadow continues to track
+the patient's diurnal shape.
+
+87
+00:06:20,500 --> 00:06:25,000
+Even eight days out, the purple curve
+remains centered.
+
+88
+00:06:25,000 --> 00:06:30,000
+The error metrics card computes difference
+against the revealed sensor.
+
+89
+00:06:30,000 --> 00:06:34,000
+Notice the diamond icons along the timeline.
+
+90
+00:06:34,000 --> 00:06:38,500
+These are fingerstick blood glucose checks
+taken by the patient.
+
+91
+00:06:38,500 --> 00:06:43,000
+Each fingerstick assimilates new evidence
+into the twin's state.
+
+92
+00:06:43,000 --> 00:06:47,500
+The uncertainty band visibly narrows
+after each fingerstick.
+
+93
+00:06:47,500 --> 00:06:52,000
+When hours pass without a check,
+the doubt expands honestly.
+
+94
+00:06:52,000 --> 00:06:56,500
+By day six, glucose baseline has shifted downward.
+
+95
+00:06:56,500 --> 00:07:01,000
+A prompt appears on day six:
+'Consider a new sensor wear'.
+
+96
+00:07:01,000 --> 00:07:05,500
+This prompt triggers when cumulative surprises
+exceed our threshold.
+
+97
+00:07:05,500 --> 00:07:10,500
+The threshold was chosen on development records
+to limit false prompts to ten per cent.
+
+98
+00:07:10,500 --> 00:07:15,500
+Notice the wording: it is a prompt,
+not advice, and not a diagnosis.
+
+99
+00:07:15,500 --> 00:07:20,500
+It informs the clinician that the old report
+may have gone stale.
+
+100
+00:07:20,500 --> 00:07:24,500
+Scrolling down reveals the Meal Excursions panel.
+
+101
+00:07:24,500 --> 00:07:29,000
+Every meal lists recorded carbs
+and observed post-meal excursion.
+
+102
+00:07:29,000 --> 00:07:34,000
+Breakfast with 45 grams of carbs
+produced a 48 mg/dL rise.
+
+103
+00:07:34,000 --> 00:07:39,000
+Dinner with 70 grams of carbs
+produced a 68 mg/dL spike.
+
+104
+00:07:39,000 --> 00:07:43,500
+Notice there are no excursion probabilities
+or risk scores here.
+
+105
+00:07:43,500 --> 00:07:48,000
+Beside the history is the Meal What-If simulator.
+
+106
+00:07:48,000 --> 00:07:53,000
+The clinician types in a hypothetical meal
+of 60 grams of carbs.
+
+107
+00:07:53,000 --> 00:07:57,500
+Clicking Simulate runs the twin's
+physiological equations.
+
+108
+00:07:57,500 --> 00:08:01,500
+The simulated excursion curve appears
+in purple.
+
+109
+00:08:01,500 --> 00:08:05,500
+Look at the bold disclaimer badge:
+
+110
+00:08:05,500 --> 00:08:09,500
+'Simulation, not a prediction, not advice.'
+
+111
+00:08:09,500 --> 00:08:14,000
+We show no meal alert
+and no prescription guidance.
+
+112
+00:08:14,000 --> 00:08:18,500
+Entering 30 grams simulates a lower post-meal rise.
+
+113
+00:08:18,500 --> 00:08:23,000
+The simulation updates instantly in the browser
+without round-trips to a server.
+
+114
+00:08:23,000 --> 00:08:27,500
+Now we open Mrs. R.'s full health record modal.
+
+115
+00:08:27,500 --> 00:08:32,000
+The modal displays structured,
+FHIR-shaped patient demographics.
+
+116
+00:08:32,000 --> 00:08:37,000
+Laboratory values include creatinine, lipid panel,
+and kidney metrics.
+
+117
+00:08:37,000 --> 00:08:41,500
+The provenance card confirms this record
+is entirely synthetic.
+
+118
+00:08:41,500 --> 00:08:45,500
+We close the modal and return to the dashboard.
+
+119
+00:08:45,500 --> 00:08:50,000
+Next, we click 'Evidence' in the navigation bar.
+
+120
+00:08:50,000 --> 00:08:54,000
+The Evidence screen opens at #evidence.
+
+121
+00:08:54,000 --> 00:08:58,000
+The top tally card summarizes our score:
+
+122
+00:08:58,000 --> 00:09:03,000
+Nine bars written first: five passed,
+four missed, and six descriptive.
+
+123
+00:09:03,000 --> 00:09:07,500
+Every single evaluation is published here
+with its full claim.
+
+124
+00:09:07,500 --> 00:09:12,000
+Let us open one of our misses:
+Gate 3 on meal excursions.
+
+125
+00:09:12,000 --> 00:09:16,000
+We expand the Gate 3 card.
+
+126
+00:09:16,000 --> 00:09:21,000
+Bars M1, M2, and M3 missed
+their preregistered targets.
+
+127
+00:09:21,000 --> 00:09:25,000
+The chart compares the information ladder.
+
+128
+00:09:25,000 --> 00:09:30,500
+Past sensor history achieved an AUPRC of 0.626,
+while our twin achieved 0.596.
+
+129
+00:09:30,500 --> 00:09:35,500
+The calibration slope was 0.482,
+far below the target of 0.8.
+
+130
+00:09:35,500 --> 00:09:40,500
+Because this bar missed,
+we show no meal alert in the product.
+
+131
+00:09:40,500 --> 00:09:45,000
+No alert is shown,
+and no false confidence is displayed.
+
+132
+00:09:45,000 --> 00:09:49,000
+We also inspect the Expiry analysis card.
+
+133
+00:09:49,000 --> 00:09:54,000
+On 47 Shanghai patients,
+mean sensor glucose drifted 1.0 mg/dL per day.
+
+134
+00:09:54,000 --> 00:09:59,000
+The Band card shows our 80 per cent band
+held 83.5 per cent of readings.
+
+135
+00:09:59,000 --> 00:10:03,000
+We navigate back to the Clinic view.
+
+136
+00:10:03,000 --> 00:10:07,000
+The full clinic roster reappears.
+
+137
+00:10:07,000 --> 00:10:11,500
+Every held-out participant can be inspected
+just like Mrs. R.
+
+138
+00:10:11,500 --> 00:10:15,500
+The interface is fast and fully client-side.
+
+139
+00:10:15,500 --> 00:10:19,500
+Built entirely from precomputed artifacts.
+
+140
+00:10:19,500 --> 00:10:23,500
+Deep ink styling with accessible contrast.
+
+141
+00:10:23,500 --> 00:10:27,500
+Showing doctors where uncertainty lies.
+
+142
+00:10:27,500 --> 00:10:31,500
+Holding our model to scientific scrutiny.
+
+143
+00:10:31,500 --> 00:10:35,500
+Transparent reveal of real measurements.
+
+144
+00:10:35,500 --> 00:10:40,000
+Physiological exploration without overclaiming.
+
+145
+00:10:40,000 --> 00:10:44,000
+Ready for clinical pilot evaluation.
+
+146
+00:10:44,000 --> 00:10:48,000
+A digital twin designed for clinical clarity.
+
+147
+00:10:48,000 --> 00:10:52,000
+Now let us examine how Chhaya was built.
+
+148
+00:10:52,000 --> 00:10:56,000
+Next is the architecture and engineering.
+
+149
+00:10:56,000 --> 00:11:00,000
+From live product to underlying code.
+
+150
+00:11:00,000 --> 00:11:04,500
+Section three: how Chhaya was built.
+
+151
+00:11:04,500 --> 00:11:09,000
+We evaluated on two open datasets
+and one synthetic patient.
+
+152
+00:11:09,000 --> 00:11:14,000
+ShanghaiT2DM includes 100 Type 2 diabetes patients
+across 109 recordings.
+
+153
+00:11:14,000 --> 00:11:19,000
+It provides 15-minute sensor readings,
+fingersticks, diet logs, and labs.
+
+154
+00:11:19,000 --> 00:11:23,500
+ShanghaiT2DM is open under CC BY 4.0.
+
+155
+00:11:23,500 --> 00:11:28,500
+CGMacros includes 45 free-living participants
+wearing dual sensors and Fitbit.
+
+156
+00:11:28,500 --> 00:11:33,500
+CGMacros is licensed under CC BY-NC-SA 4.0
+for non-commercial research.
+
+157
+00:11:33,500 --> 00:11:38,500
+Crucially, data is split strictly by patient,
+never by row.
+
+158
+00:11:38,500 --> 00:11:43,500
+Priors are tuned on dev patients
+and evaluated once on held-out test patients.
+
+159
+00:11:43,500 --> 00:11:48,000
+All datasets are checksummed
+and verified on download.
+
+160
+00:11:48,000 --> 00:11:52,500
+The architecture follows a strict
+one-way pipeline.
+
+161
+00:11:52,500 --> 00:11:57,500
+The Recording schema is the only data structure
+that crosses module boundaries.
+
+162
+00:11:57,500 --> 00:12:02,000
+Module build_inputs converts recordings
+into clean numerical arrays.
+
+163
+00:12:02,000 --> 00:12:07,000
+Module fit_twin optimizes patient parameters
+using JAX x64 acceleration.
+
+164
+00:12:07,000 --> 00:12:12,000
+Module simulate_ensemble simulates ODE trajectories
+and covariance envelopes.
+
+165
+00:12:12,000 --> 00:12:17,000
+The build command writes precomputed JSON bundles
+for the browser.
+
+166
+00:12:17,000 --> 00:12:22,000
+The browser app computes nothing live:
+every curve is precomputed and verified.
+
+167
+00:12:22,000 --> 00:12:27,000
+The physiological core is an E-DES model
+implemented in JAX.
+
+168
+00:12:27,000 --> 00:12:32,000
+Ordinary differential equations step at one minute
+using fourth-order Runge-Kutta.
+
+169
+00:12:32,000 --> 00:12:37,000
+A two-compartment gut model simulates
+carbohydrate digestion and appearance.
+
+170
+00:12:37,000 --> 00:12:42,000
+We use 64-bit floating point precision
+in JAX to prevent numerical underflow.
+
+171
+00:12:42,000 --> 00:12:46,500
+Pure functional simulation ensures
+exact reproducibility across platforms.
+
+172
+00:12:46,500 --> 00:12:51,000
+The twin fits seven patient-specific parameters.
+
+173
+00:12:51,000 --> 00:12:56,000
+Absorption rate k_abs governs gut emptying
+and appearance into plasma.
+
+174
+00:12:56,000 --> 00:13:01,000
+Basal glucose Gb represents steady-state
+hepatic glucose production.
+
+175
+00:13:01,000 --> 00:13:05,500
+Beta-cell responsiveness captures
+insulin secretion capacity.
+
+176
+00:13:05,500 --> 00:13:10,500
+Dawn amplitude models early morning
+circadian elevation in glucose.
+
+177
+00:13:10,500 --> 00:13:15,500
+Exercise sensitivity scales muscle glucose uptake
+from physical activity.
+
+178
+00:13:15,500 --> 00:13:20,500
+Meal-logging bias adjusts for patient
+underreporting of carb grams.
+
+179
+00:13:20,500 --> 00:13:25,000
+And insulin-mediated disposal fraction
+balances clearance.
+
+180
+00:13:25,000 --> 00:13:30,000
+We fit parameters with MAP estimation
+and compute a Laplace uncertainty band.
+
+181
+00:13:30,000 --> 00:13:34,500
+The optimizer finds the posterior mode
+using L-BFGS-B in seconds.
+
+182
+00:13:34,500 --> 00:13:39,500
+The Hessian at the mode gives the covariance
+for realistic uncertainty bands.
+
+183
+00:13:39,500 --> 00:13:44,500
+The estimate is an equal blend of physiology
+and the patient's average day.
+
+184
+00:13:44,500 --> 00:13:49,500
+Physiology captures today's meals,
+while average day captures unlogged habits.
+
+185
+00:13:49,500 --> 00:13:54,000
+A Kalman-style filter assimilates fingersticks
+as sparse evidence.
+
+186
+00:13:54,000 --> 00:13:59,000
+Each fingerstick updates both baseline glucose
+and running drift.
+
+187
+00:13:59,000 --> 00:14:03,500
+We followed four non-negotiable rules.
+
+188
+00:14:03,500 --> 00:14:08,500
+Rule one: no data leakage.
+Scored timestamps strictly follow the split.
+
+189
+00:14:08,500 --> 00:14:13,500
+Automated tests alter hidden sensor values
+and assert features do not move.
+
+190
+00:14:13,500 --> 00:14:18,500
+Rule two: all pass bars were written
+before test runs in PREREGISTRATION.md.
+
+191
+00:14:18,500 --> 00:14:23,500
+Rule three: report what happened.
+A miss is published, never hidden.
+
+192
+00:14:23,500 --> 00:14:28,000
+Rule four: where a plain baseline wins,
+we say so plainly.
+
+193
+00:14:28,000 --> 00:14:33,000
+Over 400 automated tests enforce compliance
+on every commit.
+
+194
+00:14:33,000 --> 00:14:37,500
+Truth rules take precedence over marketing.
+
+195
+00:14:37,500 --> 00:14:42,500
+Synthetic recordings verify that ground truth
+parameters can be recovered.
+
+196
+00:14:42,500 --> 00:14:47,000
+Comprehensive assertions on physiological bounds.
+
+197
+00:14:47,000 --> 00:14:51,500
+Now let us see what the measurements revealed.
+
+198
+00:14:51,500 --> 00:14:56,000
+Every claim scored once on held-out patients.
+
+199
+00:14:56,000 --> 00:15:00,000
+Continuous integration tests run
+on every commit.
+
+200
+00:15:00,000 --> 00:15:04,000
+Section four: results at true size.
+
+201
+00:15:04,000 --> 00:15:08,000
+Nine bars were preregistered before testing.
+
+202
+00:15:08,000 --> 00:15:13,000
+Five passed, four missed,
+and six analyses were registered as descriptive.
+
+203
+00:15:13,000 --> 00:15:17,500
+Gate 2 evaluated the reveal on 19 held-out patients.
+
+204
+00:15:17,500 --> 00:15:22,500
+Five days post-sensor, the twin was 1.4 mg/dL
+closer to the hidden sensor.
+
+205
+00:15:22,500 --> 00:15:27,000
+A one-sided Wilcoxon signed-rank test
+gave p = 4e-05.
+
+206
+00:15:27,000 --> 00:15:31,500
+That is a six per cent gain
+over the patient's average day.
+
+207
+00:15:31,500 --> 00:15:36,000
+And 0.35 mg/dL closer
+than a control using no meals.
+
+208
+00:15:36,000 --> 00:15:40,500
+The Wilcoxon test against the no-meal control
+gave p = 0.04.
+
+209
+00:15:40,500 --> 00:15:45,000
+The gain comes from the meal log,
+and it is modest.
+
+210
+00:15:45,000 --> 00:15:50,500
+The advantage did not fade over seven days,
+favoring the twin by 0.4 to 2.0 mg/dL.
+
+211
+00:15:50,500 --> 00:15:55,500
+Performance was consistent across age,
+gender, and BMI subgroups.
+
+212
+00:15:55,500 --> 00:16:00,500
+In patients under 65, the twin was 1.5 mg/dL
+closer to the hidden sensor.
+
+213
+00:16:00,500 --> 00:16:05,000
+In participants with BMI under 25,
+the twin was 1.3 mg/dL closer.
+
+214
+00:16:05,000 --> 00:16:09,500
+Bar P2 passed only because
+time in range cannot discriminate.
+
+215
+00:16:09,500 --> 00:16:14,000
+Fingersticks brought the report
+significantly closer.
+
+216
+00:16:14,000 --> 00:16:19,000
+On 29 held-out patients, fingersticks brought
+the live estimate 2.8 mg/dL closer.
+
+217
+00:16:19,000 --> 00:16:24,500
+With a 95 per cent interval of 1.6 to 4.7,
+improving 86 per cent of patients.
+
+218
+00:16:24,500 --> 00:16:29,500
+In hindsight, fingersticks brought the estimate
+9.5 mg/dL closer.
+
+219
+00:16:29,500 --> 00:16:34,500
+Even a single fingerstick a day
+produced a 0.3 mg/dL running gain.
+
+220
+00:16:34,500 --> 00:16:39,000
+With six fingersticks a day,
+the hindsight gain reached 9.5 mg/dL.
+
+221
+00:16:39,000 --> 00:16:44,000
+Yet the estimate remains 22 per cent off
+where a real sensor is 12 per cent.
+
+222
+00:16:44,000 --> 00:16:48,500
+Next, the health record as prior:
+Bar P1 missed.
+
+223
+00:16:48,500 --> 00:16:54,000
+On 20 held-out patients with one sensor day,
+the record changed error by only 0.02 mg/dL.
+
+224
+00:16:54,000 --> 00:16:58,500
+The Wilcoxon test gave p = 0.16,
+showing no significant difference.
+
+225
+00:16:58,500 --> 00:17:03,000
+With three or more sensor days,
+the record added nothing measurable.
+
+226
+00:17:03,000 --> 00:17:07,000
+The health record is not worth any sensor days.
+
+227
+00:17:07,000 --> 00:17:11,500
+Fusion was built and measured:
+it is not a gain.
+
+228
+00:17:11,500 --> 00:17:16,000
+Prior was placed on basal glucose Gb
+derived from fasting glucose.
+
+229
+00:17:16,000 --> 00:17:20,500
+Gate 3 tested post-meal excursions:
+all three bars missed.
+
+230
+00:17:20,500 --> 00:17:25,500
+Prevalence of meal spikes was 39.2 per cent
+across 1205 meals in 47 patients.
+
+231
+00:17:25,500 --> 00:17:29,500
+Here is the information ladder for AUPRC.
+
+232
+00:17:29,500 --> 00:17:34,500
+The health record achieved 0.566.
+Sensor history alone reached 0.626.
+
+233
+00:17:34,500 --> 00:17:39,500
+Fingersticks alone reached 0.642.
+Our fused twin reached only 0.596.
+
+234
+00:17:39,500 --> 00:17:44,000
+Raw sensor history beats the twin
+at classifying meal excursions.
+
+235
+00:17:44,000 --> 00:17:49,000
+Calibration slope was 0.482,
+against a target of 0.8 to 1.2.
+
+236
+00:17:49,000 --> 00:17:53,500
+Calibration intercept was -0.338,
+revealing consistent miscalibration.
+
+237
+00:17:53,500 --> 00:17:58,000
+Development recordings showed identical
+spike prevalence of 39 per cent.
+
+238
+00:17:58,000 --> 00:18:02,500
+Where plain baselines tied or won,
+we report it clearly.
+
+239
+00:18:02,500 --> 00:18:07,500
+At report level, a converted fingerstick average
+missed the sensor mean by 6.4 mg/dL.
+
+240
+00:18:07,500 --> 00:18:12,500
+While our twin in hindsight missed by 8.9.
+The plain average won.
+
+241
+00:18:12,500 --> 00:18:17,500
+On staleness drift,
+our cumulative sum had AUROC 0.82.
+
+242
+00:18:17,500 --> 00:18:22,500
+Plain baseline achieved identical AUROC 0.82
+with interval 0.61 to 0.97.
+
+243
+00:18:22,500 --> 00:18:27,000
+Every staleness finding is documented in
+decision record staleness.
+
+244
+00:18:27,000 --> 00:18:32,000
+In Gate 1, we audited all timestamps,
+units, and meal logs.
+
+245
+00:18:32,000 --> 00:18:37,000
+On 47 Shanghai patients,
+mean glucose drifted 1.0 mg/dL per day.
+
+246
+00:18:37,000 --> 00:18:42,000
+On 19 free-living participants,
+no drift growth was detected over seven days.
+
+247
+00:18:42,000 --> 00:18:47,000
+Recalibrating the band factor on dev (0.78)
+made test coverage worse, so was discarded.
+
+248
+00:18:47,000 --> 00:18:51,000
+Empirical truth without exaggeration.
+
+249
+00:18:51,000 --> 00:18:55,500
+Now let us examine the boundaries
+of what Chhaya is.
+
+250
+00:18:55,500 --> 00:19:00,000
+Held-out test results published without omissions.
+
+251
+00:19:00,000 --> 00:19:04,500
+Section five: limits and what Chhaya is not.
+
+252
+00:19:04,500 --> 00:19:09,000
+First: there is no Indian patient dataset
+in our evaluation.
+
+253
+00:19:09,000 --> 00:19:13,500
+Second: Shanghai data was inpatient care
+with adjusted medication.
+
+254
+00:19:13,500 --> 00:19:18,500
+Third: hidden windows are at most eleven days,
+not giving a fixed expiry day.
+
+255
+00:19:18,500 --> 00:19:23,500
+We observed about 1 mg/dL per day downward
+drift in supervised inpatient care.
+
+256
+00:19:23,500 --> 00:19:28,500
+In free-living participants, no significant
+drift was detected over a week.
+
+257
+00:19:28,500 --> 00:19:33,500
+Eight patients were re-recorded up to 168 days
+later as an observational case series.
+
+258
+00:19:33,500 --> 00:19:38,000
+Fourth: the physiological model effect
+is approximately two per cent.
+
+259
+00:19:38,000 --> 00:19:42,500
+Fifth: no exogenous insulin kinetics
+or drug dynamics in the ODE.
+
+260
+00:19:42,500 --> 00:19:47,000
+Chhaya is an investigative tool,
+not an autonomous clinical decision system.
+
+261
+00:19:47,000 --> 00:19:51,500
+What did these misses change in the product?
+
+262
+00:19:51,500 --> 00:19:56,000
+We display no meal alert
+and no excursion probabilities.
+
+263
+00:19:56,000 --> 00:20:00,500
+The health record is presented as context,
+not as predictive power.
+
+264
+00:20:00,500 --> 00:20:05,000
+Patient summary figures use the plain converted
+fingerstick average.
+
+265
+00:20:05,000 --> 00:20:09,500
+The staleness prompt is purely descriptive,
+never clinical advice.
+
+266
+00:20:09,500 --> 00:20:14,000
+Chhaya is not for acute hypoglycemia
+or insulin dosing.
+
+267
+00:20:14,000 --> 00:20:18,500
+Publishing negative results prevents
+repetition of flawed approaches.
+
+268
+00:20:18,500 --> 00:20:23,500
+Honest science is the foundation of
+safe clinical medicine.
+
+269
+00:20:23,500 --> 00:20:28,500
+Explore the live demo yourself
+at chhaya-digital-twin.vercel.app.
+
+270
+00:20:28,500 --> 00:20:33,500
+The full codebase, tests, and decision records
+are public on GitHub.
+
+271
+00:20:33,500 --> 00:20:38,000
+The web demo runs client-side with no tracking
+and open MIT licensing.
+
+272
+00:20:38,000 --> 00:20:43,000
+All evaluations can be regenerated with a single
+command from the repository.
+
+273
+00:20:43,000 --> 00:20:47,500
+Chhaya. Built by Team SynapseX
+at D.B.S Kanpur.
+
+274
+00:20:47,500 --> 00:20:52,000
+Thank you.

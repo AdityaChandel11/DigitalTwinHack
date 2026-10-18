@@ -22,3 +22,14 @@ CLAUDE.md
 GEMINI.md
 AGENTS.md
 skills-lock.json
+
+# video intermediate render cache and large media binaries
+video/out/clips/
+video/out/clips_nocap/
+video/out/frames/
+video/out/samples/
+video/out/concat_*.txt
+video/out/concat_list.txt
+video/out/*.mp4
+video/out/*.mp3
+video/out/arch_page1.png

@@ -1,0 +1,1934 @@
+[
+  {
+    "id": "S001",
+    "chapter": "Cold Open",
+    "visual": "SITE: Mrs. R. patient screen, dark theme. Tag 'Synthetic demo patient' clearly visible. Shadow estimate visible without sensor.",
+    "caption": "This is Mrs. R.,\na synthetic demo patient.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S002",
+    "chapter": "Cold Open",
+    "visual": "SITE: Hold on Mrs. R.'s screen. Highlight the purple line and band.",
+    "caption": "Her shadow is drawn\nwithout a continuous glucose sensor.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S003",
+    "chapter": "Cold Open",
+    "visual": "SITE: Spotlight drifts along the purple trajectory.",
+    "caption": "The purple curve is estimated glucose.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S004",
+    "chapter": "Cold Open",
+    "visual": "SITE: Spotlight highlights the purple shaded envelope.",
+    "caption": "Around it lies an eighty per cent\nuncertainty band.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S005",
+    "chapter": "Cold Open",
+    "visual": "SITE: Cursor moves to the 'Reveal the sensor' button.",
+    "caption": "Now we reveal the real sensor trace.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S006",
+    "chapter": "Cold Open",
+    "visual": "SITE: Click Reveal button. Sensor trace slides in over the shadow.",
+    "caption": "The real sensor trace slides in\nacross the estimated shadow.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S007",
+    "chapter": "Cold Open",
+    "visual": "SITE: Spotlight on trace colors: teal in range, amber above 180.",
+    "caption": "Teal marks glucose in range,\nand amber marks spikes above 180.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S008",
+    "chapter": "Cold Open",
+    "visual": "SITE: Scrubber moves across the days, showing shadow tracking sensor.",
+    "caption": "The shadow tracked the real trace\nfive days after the sensor came off.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S009",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: HOOK slide. Deep ink card, accent glow. 'Chhaya' title card.",
+    "caption": "This is Chhaya,\nHindi for shadow.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S010",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: Subtitle: 'A Type 2 diabetes digital twin that shows its work.'",
+    "caption": "A Type 2 diabetes digital twin\nthat shows its work.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S011",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: SynapseX, D.B.S Kanpur card.",
+    "caption": "Built by Team SynapseX\nat D.B.S Kanpur.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S012",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: SCOREBOARD card. 9 chips: 5 passed, 4 missed.",
+    "caption": "Here is our scoreboard plainly,\nwritten before the runs.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S013",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: Highlight the 9 preregistered bars.",
+    "caption": "Nine bars were preregistered.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S014",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: 5 passed chips glow green. Focus on P1, P2, P3, F1, F2.",
+    "caption": "Five passed,\nthough one cannot fail to pass.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S015",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: 4 missed chips glow orange. Focus on M1, M2, M3, P1.",
+    "caption": "Four missed their bars.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S016",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: Subtitle on misses: what the misses changed in the product.",
+    "caption": "Every miss changed the product\nand is reported openly.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S017",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: What changed: 'No meal alert, no probabilities.'",
+    "caption": "We show no meal alert,\nand no excursion probability.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S018",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: What changed: 'The record added nil to fusion.'",
+    "caption": "The health record prior added nothing\ndetectable to sensor data.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S019",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: What changed: 'Plain baseline used where twin tied.'",
+    "caption": "Where a plain baseline tied,\nwe use the plain baseline.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S020",
+    "chapter": "Cold Open",
+    "visual": "SLIDE: Transition to Problem slide.",
+    "caption": "Let us start with the clinical problem\nin India.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S021",
+    "chapter": "The Problem",
+    "visual": "SLIDE: BIGNUM slide. 'Rs 4,400 to 5,100' in large numerals.",
+    "caption": "In India, a continuous glucose sensor\ncosts 4400 to 5100 rupees.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S022",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Subtext: 'Cost of a single 14-day sensor wear.'",
+    "caption": "That is the cost of a single\nfourteen-day wear.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S023",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Graphic showing a patient wearing a sensor once.",
+    "caption": "Because of that cost,\na patient wears a sensor once.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S024",
+    "chapter": "The Problem",
+    "visual": "SLIDE: A single PDF report icon representing the wear report.",
+    "caption": "The clinic treats the patient\nfrom that single report for months.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S025",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Timeline showing day 14 ending. Unmeasured gap appears.",
+    "caption": "When the sensor comes off,\nnobody is measuring continuously.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S026",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Question card: 'What does the doctor have?'",
+    "caption": "What does the doctor have?",
+    "seconds": 4.5
+  },
+  {
+    "id": "S027",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Three items appear: Paper report, occasional fingersticks, meal diary.",
+    "caption": "A static paper report,\noccasional fingersticks, and a meal diary.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S028",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Card: 'The core questions for the clinic.'",
+    "caption": "The brief says medicine must be\nproactive, not reactive.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S029",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Question 1: 'How long does that sensor report stay true?'",
+    "caption": "How long does that sensor report\nstay true?",
+    "seconds": 4.0
+  },
+  {
+    "id": "S030",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Question 2: 'Which readings should you not believe?'",
+    "caption": "Which readings should you\nnot believe?",
+    "seconds": 4.0
+  },
+  {
+    "id": "S031",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Question 3: 'What keeps the shadow true?'",
+    "caption": "What keeps the estimate true?",
+    "seconds": 4.0
+  },
+  {
+    "id": "S032",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Answer reveals: 'Meal logs and fingersticks.'",
+    "caption": "Our measurements show:\nmeal logs and fingersticks do.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S033",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Question 4: 'When does the report stop being true?'",
+    "caption": "And when does the report\nstop being true?",
+    "seconds": 4.0
+  },
+  {
+    "id": "S034",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Graphic showing glucose drifting as medications change.",
+    "caption": "When medications or lifestyle change,\nglucose drifts away from the report.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S035",
+    "chapter": "The Problem",
+    "visual": "SLIDE: BUILD slide: The Reveal Protocol title card.",
+    "caption": "To answer these honestly,\nwe built the reveal protocol.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S036",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Step 1 of protocol: '1. Calibrate on k days of sensor data.'",
+    "caption": "Step one:\ncalibrate on k days of sensor data.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S037",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Step 2 of protocol: '2. Hide the remaining sensor days.'",
+    "caption": "Step two:\nhide the remaining sensor days.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S038",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Step 3 of protocol: '3. Estimate the hidden days without sensor.'",
+    "caption": "Step three:\nestimate the hidden days without sensor data.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S039",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Subtext on Step 3: 'Using only meal log and fingersticks.'",
+    "caption": "The twin uses only meals,\nactivity, and fingersticks.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S040",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Step 4 of protocol: '4. Reveal the hidden sensor on top.'",
+    "caption": "Step four:\nreveal the real sensor on top.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S041",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Card showing no simulator-on-simulator.",
+    "caption": "We never score a simulator\non its own simulated data.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S042",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Card: 'Scored once on held-out patients.'",
+    "caption": "Every claim is scored once\non held-out patients.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S043",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Card: 'Against bars written before the run.'",
+    "caption": "Against bars written beforehand\nin our preregistration.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S044",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Protocol summary recap.",
+    "caption": "Calibrate, hide, estimate, and reveal.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S045",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Diagram of sensor-off period.",
+    "caption": "The hidden window simulates real clinic practice.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S046",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Held-out patient cohort graphic.",
+    "caption": "Scored on patients the twin never saw in training.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S047",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Honest science badge.",
+    "caption": "No cherry-picked runs and no leakage.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S048",
+    "chapter": "The Problem",
+    "visual": "SLIDE: The question of clinic cost.",
+    "caption": "Saving patients repeated sensor costs in India.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S049",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Patient shadow illustration.",
+    "caption": "The shadow extends the value of one sensor wear.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S050",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Transition to browser capture.",
+    "caption": "We open the live deployment now.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S051",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Clinic economics footnote card.",
+    "caption": "Sensor costs represent a heavy recurring expense.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S052",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Transparency pledge.",
+    "caption": "Every number in this film is reproducible.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S053",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Clinic Dashboard title card.",
+    "caption": "Welcome to Chhaya in the clinic.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S054",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Ready for live walkthrough.",
+    "caption": "Let us inspect the live system in action.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S055",
+    "chapter": "The Problem",
+    "visual": "SLIDE: Interface architecture peek.",
+    "caption": "Running client-side from static assets.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S056",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Clinic list view at #clinic. Full roster visible.",
+    "caption": "We begin on the clinic view at #clinic.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S057",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight columns: Patient, Cohort, Days, Status.",
+    "caption": "The roster shows patient cohorts,\nwear duration, and staleness status.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S058",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight cohort badges: Synthetic, Supervised, Free-living.",
+    "caption": "Patients belong to synthetic,\nsupervised, or free-living cohorts.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S059",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor hovers over Mrs. R. row.",
+    "caption": "At the top is Mrs. R.,\nour synthetic demo patient.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S060",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight 'Synthetic demo' chip in table.",
+    "caption": "Her cohort is explicitly tagged\nas Synthetic demo.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S061",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click on Mrs. R. row to navigate to #p-mrs-r.",
+    "caption": "Clicking her row opens the patient screen.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S062",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Patient view opens smoothly. Top header in view.",
+    "caption": "Mrs. R.'s patient view loads at #p-mrs-r.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S063",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight on 'Synthetic demo patient' chip top right.",
+    "caption": "Notice the prominent 'Synthetic demo patient'\ntag in the header.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S064",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Tag stays fixed. Cursor highlights 'Estimated' badge on charts.",
+    "caption": "All twin curves are explicitly\nlabelled 'Estimated'.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S065",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Hold on header. Clean dark ink theme.",
+    "caption": "No synthetic estimate is ever\npresented as measured ground truth.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S066",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor moves to 'From the health record' card on left.",
+    "caption": "On the left is the 'From the health record' panel.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S067",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight Age, Gender, Diagnosis: 58 yr, Female, T2D 6 yr.",
+    "caption": "Mrs. R. is 58 years old,\nwith Type 2 diabetes for six years.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S068",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight HbA1c: 7.8 %, Fasting glucose: 142 mg/dL.",
+    "caption": "Her HbA1c is 7.8 per cent,\nand fasting glucose is 142 mg/dL.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S069",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight Metformin 1000 mg bid, BMI 28.4 kg/m2.",
+    "caption": "She takes Metformin 1000 mg twice daily,\nwith a BMI of 28.4.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S070",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight lifestyle tag: Sedentary, vegetarian diet.",
+    "caption": "The record also captures her sedentary lifestyle\nand diet notes.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S071",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor points to Kidney lab values: Creatinine 1.0, eGFR 72.",
+    "caption": "Renal function shows creatinine 1.0 mg/dL\nand eGFR 72.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S072",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor points to Lipid panel: Total Chol 188, Triglycerides 164.",
+    "caption": "Lipids show total cholesterol 188 mg/dL\nand triglycerides 164.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S073",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight note: record prior measured effect.",
+    "caption": "This record sets the twin's prior,\nwhich we will evaluate later.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S074",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Main chart area. Days 1 to 3 calibration wear.",
+    "caption": "The first three days show her calibration wear.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S075",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Days 4 to 9: sensor removed. Only purple shadow drawn.",
+    "caption": "On day four the sensor comes off,\nand the shadow begins.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S076",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight purple curve: running estimate.",
+    "caption": "The purple curve shows the running\nglucose estimate.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S077",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight shaded envelope around purple curve.",
+    "caption": "The shaded band represents an eighty per cent\nuncertainty envelope.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S078",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Meal log markers along bottom axis of chart.",
+    "caption": "Along the bottom axis are logged meals:\nbreakfast, lunch, and dinner.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S079",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Glucose rises after meal markers.",
+    "caption": "The twin simulates glycemic absorption\nfollowing each recorded meal.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S080",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor moves to '#reveal-btn' button.",
+    "caption": "To test the shadow, the doctor clicks\n'Reveal the sensor'.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S081",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click Reveal button. Animation starts.",
+    "caption": "Clicking Reveal overlays the real\nhidden sensor trace.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S082",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Sensor trace appears in full color over shadow.",
+    "caption": "Teal indicates in-range glucose,\nwhile amber marks readings above 180.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S083",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor moves to scrubber '#scrub'.",
+    "caption": "A scrubber bar appears below the chart.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S084",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Drag scrubber slowly across Day 4 and Day 5.",
+    "caption": "We can scrub forward day by day\nto inspect fidelity.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S085",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scrubber pauses on Day 5 peak.",
+    "caption": "On day five, the estimated peak closely matches\nthe revealed peak.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S086",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scrubber moves across Day 6 and Day 7.",
+    "caption": "The shadow continues to track\nthe patient's diurnal shape.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S087",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scrubber pauses on Day 8.",
+    "caption": "Even eight days out, the purple curve\nremains centered.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S088",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight live error card beside scrubber.",
+    "caption": "The error metrics card computes difference\nagainst the revealed sensor.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S089",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor points to diamond markers on the chart timeline.",
+    "caption": "Notice the diamond icons along the timeline.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S090",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight on a fingerstick diamond.",
+    "caption": "These are fingerstick blood glucose checks\ntaken by the patient.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S091",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Animation shows shadow pulling toward diamond.",
+    "caption": "Each fingerstick assimilates new evidence\ninto the twin's state.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S092",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Uncertainty band narrows after fingerstick.",
+    "caption": "The uncertainty band visibly narrows\nafter each fingerstick.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S093",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight on gap between fingersticks where band widens.",
+    "caption": "When hours pass without a check,\nthe doubt expands honestly.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S094",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor highlights Day 6 on timeline.",
+    "caption": "By day six, glucose baseline has shifted downward.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S095",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Flag icon / prompt badge appears on Day 6.",
+    "caption": "A prompt appears on day six:\n'Consider a new sensor wear'.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S096",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click prompt badge. Tooltip opens.",
+    "caption": "This prompt triggers when cumulative surprises\nexceed our threshold.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S097",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Inspect drift threshold rationale.",
+    "caption": "The threshold was chosen on development records\nto limit false prompts to ten per cent.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S098",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight tooltip text.",
+    "caption": "Notice the wording: it is a prompt,\nnot advice, and not a diagnosis.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S099",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Tooltip shows drift metric.",
+    "caption": "It informs the clinician that the old report\nmay have gone stale.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S100",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scroll down to Meal Excursions panel below chart.",
+    "caption": "Scrolling down reveals the Meal Excursions panel.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S101",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight list of meals with carb grams and rise mg/dL.",
+    "caption": "Every meal lists recorded carbs\nand observed post-meal excursion.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S102",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Hover over Breakfast: 45g carbs, rise 48 mg/dL.",
+    "caption": "Breakfast with 45 grams of carbs\nproduced a 48 mg/dL rise.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S103",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Hover over Dinner: 70g carbs, rise 68 mg/dL.",
+    "caption": "Dinner with 70 grams of carbs\nproduced a 68 mg/dL spike.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S104",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Note absence of probabilities.",
+    "caption": "Notice there are no excursion probabilities\nor risk scores here.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S105",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor moves to 'Meal What-If' simulator card.",
+    "caption": "Beside the history is the Meal What-If simulator.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S106",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Input field for carbohydrate grams: types '60'.",
+    "caption": "The clinician types in a hypothetical meal\nof 60 grams of carbs.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S107",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click Simulate button.",
+    "caption": "Clicking Simulate runs the twin's\nphysiological equations.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S108",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Simulated trajectory appears with purple dashed curve.",
+    "caption": "The simulated excursion curve appears\nin purple.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S109",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight on prominent disclaimer badge.",
+    "caption": "Look at the bold disclaimer badge:",
+    "seconds": 4.0
+  },
+  {
+    "id": "S110",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Zoom in on text: 'simulation, not a prediction, not advice'.",
+    "caption": "'Simulation, not a prediction, not advice.'",
+    "seconds": 4.0
+  },
+  {
+    "id": "S111",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Tag stays visible. Cursor indicates no meal alerts.",
+    "caption": "We show no meal alert\nand no prescription guidance.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S112",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Compare with 30g carb scenario.",
+    "caption": "Entering 30 grams simulates a lower post-meal rise.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S113",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Instant local simulation note.",
+    "caption": "The simulation updates instantly in the browser\nwithout round-trips to a server.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S114",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor clicks on patient profile link #patient.",
+    "caption": "Now we open Mrs. R.'s full health record modal.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S115",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Modal opens showing structured FHIR-shaped record.",
+    "caption": "The modal displays structured,\nFHIR-shaped patient demographics.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S116",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight lab tests: Creatinine, eGFR, Lipid profile.",
+    "caption": "Laboratory values include creatinine, lipid panel,\nand kidney metrics.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S117",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight provenance card at bottom.",
+    "caption": "The provenance card confirms this record\nis entirely synthetic.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S118",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Close modal button clicked. Return to patient view.",
+    "caption": "We close the modal and return to the dashboard.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S119",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor navigates to top nav link 'Evidence' (#evidence).",
+    "caption": "Next, we click 'Evidence' in the navigation bar.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S120",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Evidence screen loads. Tally at top: 9 bars, 5 passed, 4 missed.",
+    "caption": "The Evidence screen opens at #evidence.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S121",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Spotlight on Tally card at top.",
+    "caption": "The top tally card summarizes our score:",
+    "seconds": 4.0
+  },
+  {
+    "id": "S122",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Focus on numbers: 9 preregistered bars, 5 passed, 4 missed.",
+    "caption": "Nine bars written first: five passed,\nfour missed, and six descriptive.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S123",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scroll down through results cards.",
+    "caption": "Every single evaluation is published here\nwith its full claim.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S124",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor scrolls to Gate 3 card: 'Post-meal excursion'.",
+    "caption": "Let us open one of our misses:\nGate 3 on meal excursions.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S125",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click on Gate 3 card to expand details.",
+    "caption": "We expand the Gate 3 card.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S126",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Show RED badge: 'Missed bars: M1, M2, M3'.",
+    "caption": "Bars M1, M2, and M3 missed\ntheir preregistered targets.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S127",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Show figure comparing AUPRC across arms.",
+    "caption": "The chart compares the information ladder.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S128",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight history arm AUPRC: 0.626 vs fused twin: 0.596.",
+    "caption": "Past sensor history achieved an AUPRC of 0.626,\nwhile our twin achieved 0.596.",
+    "seconds": 5.5
+  },
+  {
+    "id": "S129",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight calibration slope: 0.482 vs target 0.8-1.2.",
+    "caption": "The calibration slope was 0.482,\nfar below the target of 0.8.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S130",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor points to consequence text in card.",
+    "caption": "Because this bar missed,\nwe show no meal alert in the product.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S131",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Card explicitly states: 'No meal alert, no probability shown'.",
+    "caption": "No alert is shown,\nand no false confidence is displayed.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S132",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Inspect second descriptive card: Expiry analysis.",
+    "caption": "We also inspect the Expiry analysis card.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S133",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Expiry card details: 47 Shanghai patients, 1.0 mg/dL drift per day.",
+    "caption": "On 47 Shanghai patients,\nmean sensor glucose drifted 1.0 mg/dL per day.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S134",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Inspect Band card: 80% band held 83.5% of readings.",
+    "caption": "The Band card shows our 80 per cent band\nheld 83.5 per cent of readings.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S135",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Cursor moves to 'Clinic' in top navigation bar.",
+    "caption": "We navigate back to the Clinic view.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S136",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Click Clinic link. Clinic roster reappears at #clinic.",
+    "caption": "The full clinic roster reappears.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S137",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Hold on clinic roster with all cohorts.",
+    "caption": "Every held-out participant can be inspected\njust like Mrs. R.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S138",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Hold on clinic view.",
+    "caption": "The interface is fast and fully client-side.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S139",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight audit provenance.",
+    "caption": "Built entirely from precomputed artifacts.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S140",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Highlight clean UI styling.",
+    "caption": "Deep ink styling with accessible contrast.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S141",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Patient view thumbnail.",
+    "caption": "Showing doctors where uncertainty lies.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S142",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Evidence screen thumbnail.",
+    "caption": "Holding our model to scientific scrutiny.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S143",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Scrubber demonstration hold.",
+    "caption": "Transparent reveal of real measurements.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S144",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: What-if panel thumbnail.",
+    "caption": "Physiological exploration without overclaiming.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S145",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Roster summary thumbnail.",
+    "caption": "Ready for clinical pilot evaluation.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S146",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Dark theme overview.",
+    "caption": "A digital twin designed for clinical clarity.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S147",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Transition out.",
+    "caption": "Now let us examine how Chhaya was built.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S148",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Wrap-up of walkthrough.",
+    "caption": "Next is the architecture and engineering.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S149",
+    "chapter": "Live Walkthrough",
+    "visual": "SITE: Final hold on clinic header.",
+    "caption": "From live product to underlying code.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S150",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Section Title: 'How It Was Made'. Accent glow.",
+    "caption": "Section three: how Chhaya was built.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S151",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: DATA slide: The Datasets overview.",
+    "caption": "We evaluated on two open datasets\nand one synthetic patient.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S152",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Card 1: ShanghaiT2DM dataset details.",
+    "caption": "ShanghaiT2DM includes 100 Type 2 diabetes patients\nacross 109 recordings.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S153",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Shanghai details: 15-min sensor, fingersticks, diet text, drugs.",
+    "caption": "It provides 15-minute sensor readings,\nfingersticks, diet logs, and labs.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S154",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Shanghai licence: CC BY 4.0.",
+    "caption": "ShanghaiT2DM is open under CC BY 4.0.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S155",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Card 2: CGMacros dataset details.",
+    "caption": "CGMacros includes 45 free-living participants\nwearing dual sensors and Fitbit.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S156",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: CGMacros licence: CC BY-NC-SA 4.0 non-commercial.",
+    "caption": "CGMacros is licensed under CC BY-NC-SA 4.0\nfor non-commercial research.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S157",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Split by patient card: 'is_dev_patient()'.",
+    "caption": "Crucially, data is split strictly by patient,\nnever by row.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S158",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Population priors on dev, evaluated on test once.",
+    "caption": "Priors are tuned on dev patients\nand evaluated once on held-out test patients.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S159",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Data hygiene: checksum verification.",
+    "caption": "All datasets are checksummed\nand verified on download.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S160",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD slide: Step 1: Raw data to Recording schema.",
+    "caption": "The architecture follows a strict\none-way pipeline.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S161",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD step 2: Recording data class.",
+    "caption": "The Recording schema is the only data structure\nthat crosses module boundaries.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S162",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD step 3: build_inputs creates JAX arrays.",
+    "caption": "Module build_inputs converts recordings\ninto clean numerical arrays.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S163",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD step 4: fit_twin optimizes parameters.",
+    "caption": "Module fit_twin optimizes patient parameters\nusing JAX x64 acceleration.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S164",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD step 5: simulate_ensemble generates trajectories.",
+    "caption": "Module simulate_ensemble simulates ODE trajectories\nand covariance envelopes.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S165",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: BUILD step 6: Precomputed JSON bundle to dashboard.",
+    "caption": "The build command writes precomputed JSON bundles\nfor the browser.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S166",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Serverless static design: zero latency inference.",
+    "caption": "The browser app computes nothing live:\nevery curve is precomputed and verified.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S167",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: TWIN slide: Extended Discrete-Event Simulator (E-DES).",
+    "caption": "The physiological core is an E-DES model\nimplemented in JAX.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S168",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: ODE equations in 1-minute steps with RK4.",
+    "caption": "Ordinary differential equations step at one minute\nusing fourth-order Runge-Kutta.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S169",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Two-compartment gut model details.",
+    "caption": "A two-compartment gut model simulates\ncarbohydrate digestion and appearance.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S170",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: JAX precision: x64 enabled.",
+    "caption": "We use 64-bit floating point precision\nin JAX to prevent numerical underflow.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S171",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Pure functional implementation.",
+    "caption": "Pure functional simulation ensures\nexact reproducibility across platforms.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S172",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: 7 personal parameters card.",
+    "caption": "The twin fits seven patient-specific parameters.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S173",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 1: absorption rate k_abs.",
+    "caption": "Absorption rate k_abs governs gut emptying\nand appearance into plasma.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S174",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 2: basal glucose Gb.",
+    "caption": "Basal glucose Gb represents steady-state\nhepatic glucose production.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S175",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 3: beta responsiveness.",
+    "caption": "Beta-cell responsiveness captures\ninsulin secretion capacity.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S176",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 4: dawn amplitude.",
+    "caption": "Dawn amplitude models early morning\ncircadian elevation in glucose.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S177",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 5: exercise sensitivity.",
+    "caption": "Exercise sensitivity scales muscle glucose uptake\nfrom physical activity.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S178",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 6: meal-logging bias.",
+    "caption": "Meal-logging bias adjusts for patient\nunderreporting of carb grams.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S179",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter 7: insulin-mediated disposal fraction.",
+    "caption": "And insulin-mediated disposal fraction\nbalances clearance.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S180",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: MAP estimation and Laplace approximation.",
+    "caption": "We fit parameters with MAP estimation\nand compute a Laplace uncertainty band.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S181",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: L-BFGS-B optimization speed.",
+    "caption": "The optimizer finds the posterior mode\nusing L-BFGS-B in seconds.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S182",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Parameter covariance from Hessian matrix.",
+    "caption": "The Hessian at the mode gives the covariance\nfor realistic uncertainty bands.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S183",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: The Blend slide: 50% physiology + 50% average day.",
+    "caption": "The estimate is an equal blend of physiology\nand the patient's average day.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S184",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Why blend works: errors are only partly correlated.",
+    "caption": "Physiology captures today's meals,\nwhile average day captures unlogged habits.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S185",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Fingerstick assimilation filter.",
+    "caption": "A Kalman-style filter assimilates fingersticks\nas sparse evidence.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S186",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Updating baseline and drift states.",
+    "caption": "Each fingerstick updates both baseline glucose\nand running drift.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S187",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Non-negotiable rules card.",
+    "caption": "We followed four non-negotiable rules.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S188",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Rule 1: No data leakage. Timestamps strictly > split.",
+    "caption": "Rule one: no data leakage.\nScored timestamps strictly follow the split.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S189",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Test assertions against sensor leakage.",
+    "caption": "Automated tests alter hidden sensor values\nand assert features do not move.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S190",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Rule 2: Bars written first in PREREGISTRATION.md.",
+    "caption": "Rule two: all pass bars were written\nbefore test runs in PREREGISTRATION.md.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S191",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Rule 3: Report what happened. Publish misses.",
+    "caption": "Rule three: report what happened.\nA miss is published, never hidden.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S192",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Rule 4: Plain baselines acknowledged.",
+    "caption": "Rule four: where a plain baseline wins,\nwe say so plainly.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S193",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Test suite: 400+ automated pytest tests.",
+    "caption": "Over 400 automated tests enforce compliance\non every commit.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S194",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Scientific integrity recap.",
+    "caption": "Truth rules take precedence over marketing.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S195",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Synthetic recovery verification.",
+    "caption": "Synthetic recordings verify that ground truth\nparameters can be recovered.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S196",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Unit test coverage summary.",
+    "caption": "Comprehensive assertions on physiological bounds.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S197",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Transition to Results section.",
+    "caption": "Now let us see what the measurements revealed.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S198",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Moving to evaluation benchmarks.",
+    "caption": "Every claim scored once on held-out patients.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S198b",
+    "chapter": "How It Was Made",
+    "visual": "SLIDE: Continuous integration pipeline.",
+    "caption": "Continuous integration tests run\non every commit.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S199",
+    "chapter": "Results",
+    "visual": "SLIDE: Results section title: 'Results at True Size'.",
+    "caption": "Section four: results at true size.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S200",
+    "chapter": "Results",
+    "visual": "SLIDE: SCORE slide: The 9 preregistered bars overview.",
+    "caption": "Nine bars were preregistered before testing.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S201",
+    "chapter": "Results",
+    "visual": "SLIDE: 5 Passed, 4 Missed, 6 Descriptive tallies.",
+    "caption": "Five passed, four missed,\nand six analyses were registered as descriptive.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S202",
+    "chapter": "Results",
+    "visual": "SLIDE: GATE 2 slide: The Reveal (Bars P1, P2, P3 Passed).",
+    "caption": "Gate 2 evaluated the reveal on 19 held-out patients.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S203",
+    "chapter": "Results",
+    "visual": "SLIDE: 1.4 mg/dL closer to hidden sensor (p = 4e-05).",
+    "caption": "Five days post-sensor, the twin was 1.4 mg/dL\ncloser to the hidden sensor.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S204",
+    "chapter": "Results",
+    "visual": "SLIDE: Wilcoxon signed-rank test.",
+    "caption": "A one-sided Wilcoxon signed-rank test\ngave p = 4e-05.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S205",
+    "chapter": "Results",
+    "visual": "SLIDE: Percent gain: 6% gain over patient's average day.",
+    "caption": "That is a six per cent gain\nover the patient's average day.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S206",
+    "chapter": "Results",
+    "visual": "SLIDE: 0.35 mg/dL closer than control with no meals (p = 0.04).",
+    "caption": "And 0.35 mg/dL closer\nthan a control using no meals.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S206b",
+    "chapter": "Results",
+    "visual": "SLIDE: Wilcoxon signed-rank test on no-meal control.",
+    "caption": "The Wilcoxon test against the no-meal control\ngave p = 0.04.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S207",
+    "chapter": "Results",
+    "visual": "SLIDE: Honest assessment: gain comes from meal log and is small.",
+    "caption": "The gain comes from the meal log,\nand it is modest.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S208",
+    "chapter": "Results",
+    "visual": "SLIDE: Does not fade over first 7 days: 0.4 to 2.0 mg/dL advantage.",
+    "caption": "The advantage did not fade over seven days,\nfavoring the twin by 0.4 to 2.0 mg/dL.",
+    "seconds": 5.5
+  },
+  {
+    "id": "S209",
+    "chapter": "Results",
+    "visual": "SLIDE: Subgroup analysis: gate2-by-group.png.",
+    "caption": "Performance was consistent across age,\ngender, and BMI subgroups.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S210",
+    "chapter": "Results",
+    "visual": "SLIDE: Subgroup details: under 65 vs over 65.",
+    "caption": "In patients under 65, the twin was 1.5 mg/dL\ncloser to the hidden sensor.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S210b",
+    "chapter": "Results",
+    "visual": "SLIDE: BMI subgroup analysis: under 25 vs 25+.",
+    "caption": "In participants with BMI under 25,\nthe twin was 1.3 mg/dL closer.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S211",
+    "chapter": "Results",
+    "visual": "SLIDE: Note on P2: passed because bar cannot discriminate.",
+    "caption": "Bar P2 passed only because\ntime in range cannot discriminate.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S212",
+    "chapter": "Results",
+    "visual": "SLIDE: FINGERSTICKS slide: Bars F1 and F2 Passed.",
+    "caption": "Fingersticks brought the report\nsignificantly closer.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S213",
+    "chapter": "Results",
+    "visual": "SLIDE: On 29 Shanghai patients, 2.8 mg/dL closer live (p = 4e-06).",
+    "caption": "On 29 held-out patients, fingersticks brought\nthe live estimate 2.8 mg/dL closer.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S214",
+    "chapter": "Results",
+    "visual": "SLIDE: 95% interval: 1.6 to 4.7 mg/dL; 86% of patients.",
+    "caption": "With a 95 per cent interval of 1.6 to 4.7,\nimproving 86 per cent of patients.",
+    "seconds": 5.5
+  },
+  {
+    "id": "S215",
+    "chapter": "Results",
+    "visual": "SLIDE: In hindsight: 9.5 mg/dL closer (interval 4.6 to 12.1).",
+    "caption": "In hindsight, fingersticks brought the estimate\n9.5 mg/dL closer.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S216",
+    "chapter": "Results",
+    "visual": "SLIDE: With 1 stick/day: 0.3 mg/dL gain.",
+    "caption": "Even a single fingerstick a day\nproduced a 0.3 mg/dL running gain.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S216b",
+    "chapter": "Results",
+    "visual": "SLIDE: Six fingersticks per day analysis.",
+    "caption": "With six fingersticks a day,\nthe hindsight gain reached 9.5 mg/dL.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S217",
+    "chapter": "Results",
+    "visual": "SLIDE: MARD reality check: estimate is ~22% off next fingerstick.",
+    "caption": "Yet the estimate remains 22 per cent off\nwhere a real sensor is 12 per cent.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S218",
+    "chapter": "Results",
+    "visual": "SLIDE: RECORD PRIOR slide: Bar P1 Missed.",
+    "caption": "Next, the health record as prior:\nBar P1 missed.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S219",
+    "chapter": "Results",
+    "visual": "SLIDE: On 20 CGMacros patients: 0.02 mg/dL change (p = 0.16).",
+    "caption": "On 20 held-out patients with one sensor day,\nthe record changed error by only 0.02 mg/dL.",
+    "seconds": 5.5
+  },
+  {
+    "id": "S220",
+    "chapter": "Results",
+    "visual": "SLIDE: Wilcoxon p-value 0.16.",
+    "caption": "The Wilcoxon test gave p = 0.16,\nshowing no significant difference.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S221",
+    "chapter": "Results",
+    "visual": "SLIDE: With 3+ days: nothing measurable.",
+    "caption": "With three or more sensor days,\nthe record added nothing measurable.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S222",
+    "chapter": "Results",
+    "visual": "SLIDE: Verdict: Record is not worth any sensor days.",
+    "caption": "The health record is not worth any sensor days.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S223",
+    "chapter": "Results",
+    "visual": "SLIDE: Fusion is built and measured: it is not a gain.",
+    "caption": "Fusion was built and measured:\nit is not a gain.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S223b",
+    "chapter": "Results",
+    "visual": "SLIDE: Bayesian fusion parameter prior details.",
+    "caption": "Prior was placed on basal glucose Gb\nderived from fasting glucose.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S224",
+    "chapter": "Results",
+    "visual": "SLIDE: LADDER slide: Gate 3 Information Ladder.",
+    "caption": "Gate 3 tested post-meal excursions:\nall three bars missed.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S225",
+    "chapter": "Results",
+    "visual": "SLIDE: Meal excursion prevalence.",
+    "caption": "Prevalence of meal spikes was 39.2 per cent\nacross 1205 meals in 47 patients.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S226",
+    "chapter": "Results",
+    "visual": "SLIDE: Table of AUPRC values across arms.",
+    "caption": "Here is the information ladder for AUPRC.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S227",
+    "chapter": "Results",
+    "visual": "SLIDE: Record arm: 0.566. Sensor history: 0.626.",
+    "caption": "The health record achieved 0.566.\nSensor history alone reached 0.626.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S228",
+    "chapter": "Results",
+    "visual": "SLIDE: Fingersticks: 0.642. Fused twin: 0.596.",
+    "caption": "Fingersticks alone reached 0.642.\nOur fused twin reached only 0.596.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S229",
+    "chapter": "Results",
+    "visual": "SLIDE: Sensor history alone beats the twin.",
+    "caption": "Raw sensor history beats the twin\nat classifying meal excursions.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S230",
+    "chapter": "Results",
+    "visual": "SLIDE: Calibration slope: 0.482 vs target 0.8-1.2.",
+    "caption": "Calibration slope was 0.482,\nagainst a target of 0.8 to 1.2.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S231",
+    "chapter": "Results",
+    "visual": "SLIDE: Calibration intercept: -0.338.",
+    "caption": "Calibration intercept was -0.338,\nrevealing consistent miscalibration.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S231b",
+    "chapter": "Results",
+    "visual": "SLIDE: Excursion prevalence in dev cohort.",
+    "caption": "Development recordings showed identical\nspike prevalence of 39 per cent.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S232",
+    "chapter": "Results",
+    "visual": "SLIDE: BASELINE slide: Where Plain Baselines Win.",
+    "caption": "Where plain baselines tied or won,\nwe report it clearly.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S233",
+    "chapter": "Results",
+    "visual": "SLIDE: Converted fingerstick average missed sensor mean by 6.4 mg/dL.",
+    "caption": "At report level, a converted fingerstick average\nmissed the sensor mean by 6.4 mg/dL.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S234",
+    "chapter": "Results",
+    "visual": "SLIDE: Twin rebuilt in hindsight missed by 8.9 mg/dL.",
+    "caption": "While our twin in hindsight missed by 8.9.\nThe plain average won.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S235",
+    "chapter": "Results",
+    "visual": "SLIDE: Staleness prompt: AUROC 0.82 vs 0.82 for plain comparison.",
+    "caption": "On staleness drift,\nour cumulative sum had AUROC 0.82.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S236",
+    "chapter": "Results",
+    "visual": "SLIDE: Plain baseline comparison AUROC.",
+    "caption": "Plain baseline achieved identical AUROC 0.82\nwith interval 0.61 to 0.97.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S236b",
+    "chapter": "Results",
+    "visual": "SLIDE: Decision record reference: 2026-10-08-staleness.md.",
+    "caption": "Every staleness finding is documented in\ndecision record staleness.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S237",
+    "chapter": "Results",
+    "visual": "SLIDE: Gate 1 Label audit summary.",
+    "caption": "In Gate 1, we audited all timestamps,\nunits, and meal logs.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S238",
+    "chapter": "Results",
+    "visual": "SLIDE: Expiry analysis details.",
+    "caption": "On 47 Shanghai patients,\nmean glucose drifted 1.0 mg/dL per day.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S239",
+    "chapter": "Results",
+    "visual": "SLIDE: Free-living drift: 0.1 mg/dL per day.",
+    "caption": "On 19 free-living participants,\nno drift growth was detected over seven days.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S240",
+    "chapter": "Results",
+    "visual": "SLIDE: Band calibration check.",
+    "caption": "Recalibrating the band factor on dev (0.78)\nmade test coverage worse, so was discarded.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S241",
+    "chapter": "Results",
+    "visual": "SLIDE: Scientific rigor summary.",
+    "caption": "Empirical truth without exaggeration.",
+    "seconds": 4.0
+  },
+  {
+    "id": "S242",
+    "chapter": "Results",
+    "visual": "SLIDE: Transition to Limits.",
+    "caption": "Now let us examine the boundaries\nof what Chhaya is.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S243",
+    "chapter": "Results",
+    "visual": "SLIDE: Final results recap.",
+    "caption": "Held-out test results published without omissions.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S244",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: LIMITS slide: What Chhaya Is Not.",
+    "caption": "Section five: limits and what Chhaya is not.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S245",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Limit 1: No Indian dataset.",
+    "caption": "First: there is no Indian patient dataset\nin our evaluation.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S246",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Limit 2: Supervised inpatient care.",
+    "caption": "Second: Shanghai data was inpatient care\nwith adjusted medication.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S247",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Limit 3: Hidden windows at most 11 days.",
+    "caption": "Third: hidden windows are at most eleven days,\nnot giving a fixed expiry day.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S248",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Observation on inpatient drift rate.",
+    "caption": "We observed about 1 mg/dL per day downward\ndrift in supervised inpatient care.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S249",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Observation on free-living drift rate.",
+    "caption": "In free-living participants, no significant\ndrift was detected over a week.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S250",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Case series of 8 re-recorded patients.",
+    "caption": "Eight patients were re-recorded up to 168 days\nlater as an observational case series.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S251",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Limit 4: Physiology effect is ~2%.",
+    "caption": "Fourth: the physiological model effect\nis approximately two per cent.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S252",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Limit 5: No exogenous insulin kinetics in ODE.",
+    "caption": "Fifth: no exogenous insulin kinetics\nor drug dynamics in the ODE.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S253",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Clinical boundary card.",
+    "caption": "Chhaya is an investigative tool,\nnot an autonomous clinical decision system.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S254",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: SUMMARY slide: What the Misses Changed.",
+    "caption": "What did these misses change in the product?",
+    "seconds": 4.5
+  },
+  {
+    "id": "S255",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Miss consequence 1: No meal alerts or probabilities.",
+    "caption": "We display no meal alert\nand no excursion probabilities.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S256",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Miss consequence 2: Record shown as context, not gain.",
+    "caption": "The health record is presented as context,\nnot as predictive power.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S257",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Miss consequence 3: Converted fingerstick average used.",
+    "caption": "Patient summary figures use the plain converted\nfingerstick average.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S258",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Miss consequence 4: Staleness prompt is descriptive only.",
+    "caption": "The staleness prompt is purely descriptive,\nnever clinical advice.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S259",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Not for Type 1 diabetes or acute dosing.",
+    "caption": "Chhaya is not for acute hypoglycemia\nor insulin dosing.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S260",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Why negative results matter.",
+    "caption": "Publishing negative results prevents\nrepetition of flawed approaches.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S260b",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Full transparency in digital health.",
+    "caption": "Honest science is the foundation of\nsafe clinical medicine.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S261",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: CLOSE slide: Live demo URL.",
+    "caption": "Explore the live demo yourself\nat chhaya-digital-twin.vercel.app.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S262",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: GitHub repository card.",
+    "caption": "The full codebase, tests, and decision records\nare public on GitHub.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S263",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Client-side web architecture.",
+    "caption": "The web demo runs client-side with no tracking\nand open MIT licensing.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S264",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Single command reproducibility.",
+    "caption": "All evaluations can be regenerated with a single\ncommand from the repository.",
+    "seconds": 5.0
+  },
+  {
+    "id": "S265",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Team SynapseX, D.B.S Kanpur card.",
+    "caption": "Chhaya. Built by Team SynapseX\nat D.B.S Kanpur.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S266",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Final closing frame with logo.",
+    "caption": "Thank you.",
+    "seconds": 4.5
+  },
+  {
+    "id": "S267",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Hold to black.",
+    "caption": "",
+    "seconds": 4.0
+  },
+  {
+    "id": "S268",
+    "chapter": "Limits and Close",
+    "visual": "SLIDE: Final fade out.",
+    "caption": "",
+    "seconds": 4.0
+  }
+]

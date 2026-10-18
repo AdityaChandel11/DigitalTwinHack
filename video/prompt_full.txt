@@ -1,0 +1,197 @@
+<USER_REQUEST>
+listen i have limited to opus tokens so the main work flash is gonna do im giving uh a prompt uh have to lay on outline so even an inferior model like flash 3.8 (high) becomes a beast at task ive pasted a ss of what the pannel expects -
+Read AGENTS.md first and obey it. This task builds a video pipeline in a NEW folder video/. Do not touch src/, results/,
+
+tests/, docs/decisions/ or README.md. Do not run git write commands. Scratch files go in the system temp directory.
+
+Do ONLY the phase I name. At the end of a phase, STOP and wait.
+
+
+
+GOAL
+
+One 21-minute, 1920x1080, 30 fps, silent MP4 with burned-in captions. It must feel like a project film, not a slide dump:
+
+(a) the live website being used, (b) a short, sharp, designed deck, (c) how it was made, what the data is, what we measured.
+
+I will record the voice-over myself later by reading the captions, so every caption is a sentence I will say out loud.
+
+Live site, for ALL walkthrough capture: https://chhaya-digital-twin.vercel.app/
+
+Fallback only if it is down: `uv run python -m chhaya.dashboard --no-open` on http://127.0.0.1:8765
+
+
+
+TRUTH RULES (a single wrong claim costs more than a boring slide)
+
+1. Claims come from docs/SPOKEN_CLAIMS.md if it exists. If not: the "claim to quote" lines in docs/decisions/*.md plus
+
+   src/chhaya/dashboard/demo/evidence.json and results/. Every number on screen or in a caption is copied from those.
+
+   If you need a number that is not there, write [NEEDS SOURCE] and move on. Never round up.
+
+2. docs/Chhaya_Phase1_Presentation.pdf (67 slides) and src/chhaya/dashboard/static/slides.json are UNTRUSTED. They contain
+
+   wrong wording, for example "FHIR-compliant" (the record is FHIR-shaped, not validated against any profile). Use them
+
+   only to find topics. Never copy a sentence or a number. Do NOT imitate that deck: 67 slides at ~116 words is the opposite
+
+   of what I want.
+
+3. Never write: breakthrough, clinically validated, clinical validation, ABDM or ABHA compatible/compliant, "predictive
+
+   digital twin", "alert" (except "no alert"), any dose or diet advice, any price not in the README footnotes.
+
+4. Mrs. R. is synthetic. A visible "Synthetic patient" tag stays on screen in every demo segment. Estimates are always
+
+   called "estimated". Never show a probability for meals.
+
+5. Within the first two minutes say the scoreboard plainly: nine bars written before the runs, five passed (one of them
+
+   cannot fail), four missed; then what the misses changed in the product (README section "What the misses changed in the product").
+
+
+
+STORY (budget in minutes, total 20.5 to 22)
+
+ 0:00-1:30  Cold open on the live site: Mrs. R.'s shadow, then the real sensor sliding over it. Title card. The scoreboard sentence.
+
+ 1:30-4:00  The problem in India (README numbers and footnotes only), the question, the reveal protocol: calibrate, hide, estimate, reveal.
+
+ 4:00-11:00 LIVE WEBSITE WALKTHROUGH (7 min), order: clinic list; open Mrs. R.; synthetic and estimated tags; the "From the health
+
+            record" panel; the shadow before the reveal; reveal button and scrubber; fingerstick diamonds; the band and the day-6
+
+            prompt; meal excursion history; the meal what-if with its "simulation, not a prediction, not advice" label; the record
+
+            modal; the Evidence screen top to bottom, opening one miss with its figure; back to the clinic list.
+
+ 11:00-15:00 HOW IT WAS MADE: the data (ShanghaiT2DM, CGMacros, one synthetic patient, licences, split by patient); the architecture
+
+            built up step by step; the twin (E-DES in JAX, seven parameters, MAP fit with a Laplace band, the blend, the fingerstick
+
+            filter); the rules (bars first, no leakage, misses published).
+
+ 15:00-19:00 RESULTS AT TRUE SIZE: the scoreboard; the reveal; fingersticks; the record prior; the information ladder; where a plain
+
+            baseline ties or wins; the label audit.
+
+ 19:00-21:00 Limits (what Chhaya is not), what the misses changed, close on the live URL and the repo.
+
+
+
+LOOK (this is what stops it feeling AI-made)
+
+- Study docs/architecture_diagram.html and docs/Chhaya_Architecture_Diagram.pdf for tone: deep-ink hero card with a soft accent
+
+  glow, rounded cards, mono chips (PASS / MISS), big numerals, a thin gradient bar on top. Reuse the real tokens from
+
+  src/chhaya/dashboard/static/app.css (ink #15141f, accent #4a3aa7 / #9085e9, teal #0e9aa7 / #0fa7b8, amber #c98500 / #e0720f,
+
+  miss #b3311f / #ff927f, line #272733) and the fonts in src/chhaya/dashboard/static/fonts (Source Sans 3 for text, Source Serif 4
+
+  for big statements, Source Code for chips and numbers), loaded with @font-face from file paths. One theme throughout, the
+
+  same for slides and for the site capture (use the site's dark theme if it has one).
+
+- About 24 slides, 1 to 4 reveal states each. At most 25 words per slide apart from figures. One idea per slide. Text never
+
+  below 36 px. Keep the bottom 170 px free: captions live there.
+
+- Slide kinds: HOOK (real site screenshot, one line), BIGNUM (one huge number and one line), BUILD (the real architecture,
+
+  revealed step by step), LADDER (information-ladder bars drawn from results/gate3/shanghai/summary.json), SCORE (nine chips:
+
+  passed, missed, descriptive), FIGURE (docs/images/gate2-by-group.png), LIMIT, CLOSE.
+
+- Forbidden: stock blue or purple gradients, "blue screen" backgrounds, centered bullet lists, clip art, shadows everywhere,
+
+  more than two typefaces plus the mono one, any slide that is a wall of text.
+
+- Motion: 0.35 s cross-fades only, reveal states, and at most a 3 % slow push-in on stills. No spins, zooms or bounces.
+
+
+
+WEBSITE CAPTURE (Playwright, Chromium, 1920x1080)
+
+- Show the site inside a clean rounded window about 1700 px wide on the ink background, with a slim address bar showing the
+
+  real URL. That keeps the caption zone clear of the UI.
+
+- Read app.js first and confirm the routes and controls before scripting: #clinic, #p-<id>, #patient (record modal),
+
+  #evidence, #reveal-btn, #scrub, #reveal-range.
+
+- Human behaviour: a visible ring cursor, eased mouse moves of 600 to 900 ms, click ripples, 0.5 to 1 s pauses, smooth scrolling.
+
+  A spotlight that dims everything except the target, with a numbered pin and a label of at most 6 words.
+
+- One clip per segment, so any single segment can be re-captured: `python video/capture.py --segment S07`. If a clip is shorter
+
+  than its segment, hold the last frame; if longer, ease playback up to 1.25x; never loop.
+
+- At capture time assert that the text "Synthetic" is visible on every Mrs. R. screen; fail the segment if not.
+
+
+
+CAPTIONS
+
+- storyboard.json is the single source of truth: a list of {id, chapter, visual, caption, seconds}. Seconds = words / 2.15
+
+  + 0.5, minimum 4 (130 words a minute). A cue is at most 2 lines of 52 characters and lasts 2.5 to 6 s.
+
+- Burn them in at bottom centre: Source Sans 3 SemiBold 46 px, white on a 72 % ink rounded bar. Render them so no system font
+
+  or Windows path problem can break them (HTML to transparent PNG with Chromium, or an ASS file with relative paths and
+
+  fontsdir; test it).
+
+- Also write out/captions.srt (UTF-8) and out/voiceover_script.md with start and end times per segment.
+
+
+
+TOOLING
+
+`uv run --with playwright --with pillow --with imageio-ffmpeg --no-project ...`; run `playwright install chromium` once.
+
+Use the ffmpeg binary from imageio-ffmpeg (no system install). H.264, yuv420p, crf 18, 30 fps, plus a silent stereo audio track.
+
+Do not edit pyproject.toml or uv.lock.
+
+
+
+PHASE 1 (no code). Read the sources. Write video/storyboard.json and video/STORYBOARD.md: a chapter table (start, end, minutes)
+
+ and every segment with its visual, full caption and seconds. Total must be 20:30 to 22:00. List every [NEEDS SOURCE]. STOP.
+
+PHASE 2 (design gate). Build video/slides/theme.css and FIVE sample slides: HOOK, BIGNUM, BUILD (two states), SCORE, and one
+
+ site frame using docs/images/dashboard-patient.png. Render them to video/out/samples/ at 1920x1080 with a sample caption
+
+ bar on each. Print the paths. STOP. I approve the look before anything else is built.
+
+PHASE 3. All slides, video/capture.py, and a 60-second sample MP4 of the cold open with captions. STOP.
+
+PHASE 4. Full render and QA. Outputs in video/out/: chhaya_silent_captioned.mp4, chhaya_silent_nocaptions.mp4, captions.srt,
+
+ voiceover_script.md, chapters.txt (YouTube chapters), slides/*.png, Chhaya_Presentation.pdf (one page per slide's final state),
+
+ contact_sheet.png (24 frames). QA report: (1) duration at least 20:30; (2) no cue over 2 lines or 52 characters, no segment
+
+ under 4 s; (3) every number in captions and slides found in SPOKEN_CLAIMS.md or the cited record, misses listed; (4) the
+
+ forbidden words absent; (5) "Synthetic" visible in every demo segment. Fix what fails, report what you could not.
+</USER_REQUEST>
+<ADDITIONAL_METADATA>
+The current local time is: 2026-10-17T19:48:32+05:30.
+
+The user's current state is as follows:
+Active Document: c:\Users\prath\OneDrive\Desktop\Adityaa\Digital Twin Hack\docs\VIDEO_SCRIPT.md (LANGUAGE_MARKDOWN)
+Cursor is on line: 1
+Other open documents:
+- c:\Users\prath\OneDrive\Desktop\Adityaa\Digital Twin Hack\docs\VIDEO_SCRIPT.md (LANGUAGE_MARKDOWN)
+- c:\Users\prath\OneDrive\Desktop\Adityaa\Digital Twin Hack\docs\PROJECT_GUIDE.md (LANGUAGE_MARKDOWN)
+</ADDITIONAL_METADATA>
+<USER_SETTINGS_CHANGE>
+The user changed setting `Model Selection` from None to Claude Opus 4.6 (Thinking). No need to comment on this change if the user doesn't ask about it. If reporting what model you are, please use a human readable name instead of the exact string.
+</USER_SETTINGS_CHANGE>

@@ -246,7 +246,7 @@ def create_title_slide(slide, s: dict, width: Inches, height: Inches):
     # Team Info & Badges
     ib = slide.shapes.add_textbox(Inches(1.4), Inches(5.3), Inches(10.5), Inches(0.6))
     p = ib.text_frame.paragraphs[0]
-    p.text = "Team SynapseX  •  IIT Kanpur  •  Folder: SynapseX_IITK  •  MIT Licensed Open Source"
+    p.text = "Team SynapseX  •  D.B.S Kanpur  •  Folder: SynapseX_D.B.S Kanpur  •  MIT Licensed Open Source"
     p.font.size = Pt(14)
     p.font.bold = True
     p.font.color.rgb = ACCENT_GREEN
