@@ -6,6 +6,7 @@ __pycache__/
 .pytest_cache/
 .ruff_cache/
 .env
+/dist/
 results/**/*.npz
 
 # design-mock fonts are copied locally from the environment; the build vendors them with their licence

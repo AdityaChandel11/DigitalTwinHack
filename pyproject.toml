@@ -52,3 +52,6 @@ ignore = ["E501", "B008"]
 [tool.ruff.lint.per-file-ignores]
 # analysis scripts print many formatted lines; percent formatting is fine there
 "scripts/**" = ["UP031"]
+
+[tool.vercel]
+entrypoint = "src.chhaya.dashboard.__main__:Handler"

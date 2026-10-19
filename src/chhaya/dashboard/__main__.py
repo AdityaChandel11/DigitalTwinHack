@@ -25,8 +25,8 @@ LOCAL = Path(__file__).resolve().parents[3] / "artifacts"
 class Handler(SimpleHTTPRequestHandler):
     """`/data/...` comes from the bundle, everything else from the static folder; nothing outside either."""
 
-    def __init__(self, *args, bundle: Path, **kwargs):
-        self.bundle = bundle
+    def __init__(self, *args, bundle: Path | None = None, **kwargs):
+        self.bundle = pick_bundle(bundle)
         super().__init__(*args, directory=str(STATIC), **kwargs)
 
     def translate_path(self, path: str) -> str:
@@ -59,10 +59,12 @@ def make_server(bundle: Path, port: int = 0) -> ThreadingHTTPServer:
     return ThreadingHTTPServer(("127.0.0.1", port), partial(Handler, bundle=bundle))
 
 
-def export(out: Path) -> None:
+def export(out: Path, force: bool = False) -> None:
     """The page and the demo bundle as plain files in one folder."""
     if out.exists():
-        raise SystemExit(f"{out} exists: choose a new folder")
+        if not force:
+            raise SystemExit(f"{out} exists: choose a new folder")
+        shutil.rmtree(out)
     shutil.copytree(STATIC, out)
     shutil.copytree(DEMO, out / "data")
 
@@ -75,9 +77,12 @@ def main() -> None:
     ap.add_argument(
         "--export", type=Path, default=None, help="write the page and the demo bundle to a folder"
     )
+    ap.add_argument(
+        "--force", action="store_true", help="overwrite destination folder if it already exists"
+    )
     args = ap.parse_args()
     if args.export:
-        export(args.export)
+        export(args.export, force=args.force)
         print(f"static site written to {args.export} (demo bundle only)")
         return
     bundle = pick_bundle(args.bundle)
