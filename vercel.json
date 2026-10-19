@@ -1,5 +1,4 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "python src/chhaya/dashboard/__main__.py --export dist --force",
-  "outputDirectory": "dist"
+  "outputDirectory": "public"
 }

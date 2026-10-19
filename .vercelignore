@@ -1,0 +1,11 @@
+pyproject.toml
+src/
+tests/
+scripts/
+video/
+docs/
+artifacts/
+results/
+*.py
+*.pyc
+__pycache__/
