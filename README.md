@@ -17,7 +17,7 @@
 
 Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
-**Start here:** [Live demo](https://chhaya-digital-twin.vercel.app/) · [Slides (PDF)](docs/Chhaya_Phase1_Presentation.pdf) · [Architecture (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
+**Start here:** [Live demo](https://digital-twin-hack.vercel.app/) · [Slides (PDF)](docs/Chhaya_Phase1_Presentation.pdf) · [Architecture (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
 [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Reproduce](#reproduce-everything) · [Deliverables](#submission-deliverables)
 
@@ -37,7 +37,7 @@ Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX*
 | **Adverse events predicted** | **1. Post-meal glucose excursion** (two consecutive readings above 180 mg/dL within 2 hours of a meal, the brief's own spike example), predicted at meal time on 47 held-out patients and 1,205 meals (39 % positive): AUROC 0.82 and AUPRC 0.76 with the live sensor, AUROC 0.71 and AUPRC 0.60 with the sensor off. A research model, not an alert: calibration and alert burden missed the bar. **2. A sensor report that has drifted** (mean glucose more than 20 mg/dL away): AUROC 0.82 (95 % interval 0.63 to 0.98) on 32 held-out recordings, surfaced only as a prompt to consider a new sensor wear. |
 | **What we found about fusion** | Built two ways and measured both. Once a week of sensor data exists, the record added nothing detectable. The meal log and fingersticks are what add value; the fingerstick result was measured at about six a day in supervised care, and at one a day the running gain was 0.3 mg/dL. Reported as measured. |
 | **Proof standard** | Nine bars were written before the runs: 5 passed, 4 missed, and the misses are published (one pass, P2, is flagged on screen as uninformative because its bar cannot discriminate). Every result was scored once on held-out patients (a half of each cohort that no setting was tuned on), with 400+ tests guarding against leakage. |
-| **Run it** | Try the [live demo](https://chhaya-digital-twin.vercel.app/) directly in the browser, or run locally: `uv sync`, then `uv run python -m chhaya.dashboard` (opens http://127.0.0.1:8765). No datasets needed. |
+| **Run it** | Try the [live demo](https://digital-twin-hack.vercel.app/) directly in the browser, or run locally: `uv sync`, then `uv run python -m chhaya.dashboard` (opens http://127.0.0.1:8765). No datasets needed. |
 
 **Reading paths.** 60 seconds: this summary and the compliance matrix. 5 minutes: [adverse-event prediction](#adverse-event-prediction) and the [dashboard](#the-clinician-dashboard). Full audit: [verify it yourself](#verify-it-yourself-in-five-minutes).
 
@@ -316,7 +316,7 @@ uv run python -m chhaya.dashboard                            # the dashboard
 | Public GitHub repository | This repository |
 | Architecture diagram (PDF) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
 | Presentation with project details and outcome (PDF) | [`docs/Chhaya_Phase1_Presentation.pdf`](docs/Chhaya_Phase1_Presentation.pdf) |
-| Hosted offline demo (static export of the dashboard) | [https://chhaya-digital-twin.vercel.app/](https://chhaya-digital-twin.vercel.app/) |
+| Hosted offline demo (static export of the dashboard) | [https://digital-twin-hack.vercel.app/](https://digital-twin-hack.vercel.app/) |
 | Licence | [`LICENSE`](LICENSE) |
 | Submission folder name | `SynapseX_D.B.S Kanpur` |
 
