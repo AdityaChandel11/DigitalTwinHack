@@ -328,7 +328,6 @@ uv run python -m chhaya.dashboard                            # the dashboard
 | **15–20 min Demo Video** | Unlisted YouTube Walkthrough | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
 | **Architecture Diagram** | PDF (3 pages, complete model card) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
 | **Presentation Deck (PDF)** | Vector PDF (10 slides, high density) | [`docs/Chhaya_Final_Presentation.pdf`](docs/Chhaya_Final_Presentation.pdf) |
-| **Presentation Deck (PPTX)** | 16:9 Widescreen PowerPoint | [`docs/Chhaya_Final_Presentation.pptx`](docs/Chhaya_Final_Presentation.pptx) |
 | **Live Interactive Clinician Demo** | Next.js 14 Web Application | [https://digital-twin-hack.vercel.app/](https://digital-twin-hack.vercel.app/) |
 | **Open-Source Licence** | MIT License | [`LICENSE`](LICENSE) |
 | **Submission Folder Name** | Required naming format | `SynapseX_D.B.S Kanpur` |
