@@ -17,7 +17,7 @@
 
 Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
-**Start here:** [Problem Statement & Healthcare Use Case (PDF)](docs/Chhaya_Problem_and_Use_Case.pdf) · [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Presentation (PPTX)](docs/Chhaya_Final_Presentation.pptx) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
+**Start here:** [Problem Statement & Healthcare Use Case (PDF)](docs/Chhaya_Problem_and_Use_Case.pdf) · [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
 [Problem & Use Case](#problem-statement) · [Demo Video](#demo-video) · [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Technical Stack](#technical-stack) · [Deliverables](#submission-deliverables)
 
@@ -26,6 +26,32 @@ Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX*
 <p align="center"><img src="docs/images/dashboard-patient.png" alt="The Chhaya patient screen for a synthetic patient: the estimated glucose and its 80 % band in purple, the real sensor revealed on top in teal and amber, fingersticks as diamonds" width="920"></p>
 
 <p align="center"><sub><b>Mrs. R., a synthetic patient, on day 2 after her sensor came off.</b> Purple: Chhaya's estimate and its 80 % band, drawn without the sensor. Teal and amber: the real sensor, revealed on top. By day 6, after a change of treatment, the band holds 4 % of her readings and the dashboard raises a prompt to consider a new sensor wear. Both are in the demo; she is simulated and labelled so on screen.</sub></p>
+
+## Problem Statement
+
+About 101 million people in India live with diabetes (ICMR-INDIAB, 2023). Continuous glucose monitoring could guide their care, but one 14-day sensor costs roughly Rs 4,400 to 5,100. Wearing sensors all year would take about 26 of them, over Rs 1.1 lakh. So for many patients a sensor is worn once, a report is made, and the doctor treats from that report for months. Nobody tells the doctor how old the report has become, which of its readings not to believe, or what the patient’s glucose probably did after the sensor came off.
+
+Given a health record and one sensor wear, Chhaya:
+1. **Estimates the patient’s glucose after the sensor is removed**, with an honest uncertainty band;
+2. **Labels sensor lows** that a fingerstick did not confirm;
+3. **Prompts when the report has probably stopped describing the patient**; and
+4. **Proves every claim on patients the model never saw**.
+
+## Healthcare Use Case
+
+The setting is outpatient follow-up of Type 2 diabetes, where the doctor holds a one-time sensor report and occasional fingersticks. The user is the treating clinician. The decision supported is whether the existing sensor report can still be relied on, or whether to consider a new sensor wear.
+
+This is “proactive, not reactive” scoped to what we measured. On the dashboard the doctor sees:
+- **The patient’s shadow**: an estimate with an 80 % band drawn without the sensor, with the real sensor revealed on top;
+- **Fingerstick-updated estimates** and the health record that sets the twin’s prior;
+- **The patient’s own meal-excursion history**;
+- **Every result beside the bar written before it was run**.
+
+Chhaya gives no dose advice, no low-glucose estimate and no alarm.
+
+**What it does today:** Scored once on held-out patients against bars written beforehand, the estimate was 1.4 mg/dL closer to the hidden sensor than the patient’s own average day, five days after the sensor came off (19 CGMacros participants, 7 with type 2 diabetes, p = 4e-05). Fingersticks brought it 2.8 mg/dL closer (29 Shanghai patients in supervised care, about six fingersticks a day). Of nine pre-registered bars, five passed and four missed, and all nine are published. The evidence comes from a Chinese and a US cohort; no Indian patient data was used. This is a research prototype, not for dosing.
+
+> 📄 **Standalone Deliverable:** A publication-ready 1-page executive summary PDF is available at [`docs/Chhaya_Problem_and_Use_Case.pdf`](docs/Chhaya_Problem_and_Use_Case.pdf).
 
 ## 60-Second Summary
 
