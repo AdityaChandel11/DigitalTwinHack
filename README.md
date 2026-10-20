@@ -17,9 +17,9 @@
 
 Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
-**Start here:** [Live demo](https://digital-twin-hack.vercel.app/) · [Slides (PDF)](docs/Chhaya_Phase1_Presentation.pdf) · [Architecture (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
+**Start here:** [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Presentation (PPTX)](docs/Chhaya_Final_Presentation.pptx) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
-[Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Reproduce](#reproduce-everything) · [Deliverables](#submission-deliverables)
+[Demo Video](#demo-video) · [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Technical Stack](#technical-stack) · [AI/ML Details](#aiml-model-details) · [Deliverables](#submission-deliverables)
 
 </div>
 
@@ -41,6 +41,16 @@ Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX*
 
 **Reading paths.** 60 seconds: this summary and the compliance matrix. 5 minutes: [adverse-event prediction](#adverse-event-prediction) and the [dashboard](#the-clinician-dashboard). Full audit: [verify it yourself](#verify-it-yourself-in-five-minutes).
 
+## Demo Video
+
+**Full 15–20 Minute Walkthrough (Unlisted YouTube):** [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8)
+
+A comprehensive clinical and engineering walkthrough for the final evaluation jury of the Happiest Health Digital Twin Challenge 2026:
+- **00:00 – 04:15** · *The Indian Clinical Reality:* The 351-day unmeasured blind spot, ₹1.1L/yr economic barrier, and high-carb glycemic volatility.
+- **04:15 – 10:30** · *Live Clinician Dashboard Walkthrough:* Cohort triage queue, synthetic patient shadow infill, interactive carbohydrate what-if simulator, and evidence ledger.
+- **10:30 – 15:45** · *Mathematical & Algorithmic Foundation:* JAX float64 two-compartment ODE, Bayesian MAP parameter identification, Laplace 200-member ensemble for the 80% credible band, and 1D Kalman innovation filter on sparse fingersticks.
+- **15:45 – 20:00** · *Scientific Integrity Scoreboard:* 4-lock protocol, 5 passed bars, 4 missed bars, and responsible alert suppression under CDSCO Class B SaMD boundary.
+
 ## Challenge Compliance Matrix
 
 Every requirement of the challenge brief, and where it is met.
@@ -54,12 +64,13 @@ Every requirement of the challenge brief, and where it is met.
 | Predicts an adverse event | Post-meal glucose excursion and drifted sensor report, with numbers | [Adverse-event prediction](#adverse-event-prediction) |
 | Conceptual UI dashboard showing how a doctor interacts with the virtual patient | Three screens: clinic list, the patient (health record, shadow, fingersticks, meal excursion history) and every result beside its bar. Offline, with a labelled meal what-if on the synthetic patient | [Dashboard](#the-clinician-dashboard) |
 | Anonymised, open-source or synthetic data only | ShanghaiT2DM (CC BY 4.0), CGMacros (CC BY-NC-SA 4.0) and one synthetic patient. No credentialed data (for example MIMIC) is used. Datasets are fetched by checksum-verified script and never redistributed | [Data](#data-licences-and-governance) |
-| Public GitHub repository | This repository | |
+| Public GitHub repository | This repository | [github.com/AdityaChandel11/DigitalTwinHack](https://github.com/AdityaChandel11/DigitalTwinHack) |
 | README: team and college, title, problem and use case, stack, AI/ML details | [Team](#team-details), title above, [problem](#problem-statement), [use case](#healthcare-use-case), [stack](#technical-stack), [model](#aiml-model-details) | |
-| Video, 20 minutes or more | Submitted directly on the challenge submission platform as required | Challenge submission portal |
-| Architecture diagram (PDF/PPT) | Diagram in the Architecture section and as PDF | [Architecture](#architecture), [Deliverables](#submission-deliverables) |
-| Presentation (PDF/PPT) with project details and outcome | Deck as PDF | [Deliverables](#submission-deliverables) |
+| 15-20 minute Demo Video is uploaded as an Unlisted YouTube video and the link is added to the README | 20-minute video walkthrough covering clinical context, live dashboard, JAX math, pre-registration rigor, and outcomes | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
+| Architecture diagram (PDF/PPT format) | 3-page comprehensive technical architecture & AI/ML model card | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
+| Presentation in PDF/PPT format covering project details and outcomes | 10-slide high-density technical and clinical presentation | [PDF](docs/Chhaya_Final_Presentation.pdf) · [PPTX](docs/Chhaya_Final_Presentation.pptx) |
 | Open-source licence details | MIT for code; dataset and font licences listed | [Licence](#open-source-licence) |
+| All files and links publicly accessible without permissions | Public repository, unlisted video, live Vercel demo | [Deliverables](#submission-deliverables) |
 | Folder name: Team Name_College Name | `SynapseX_D.B.S Kanpur` | [Deliverables](#submission-deliverables) |
 
 ## Problem Statement
@@ -311,14 +322,18 @@ uv run python -m chhaya.dashboard                            # the dashboard
 
 ## Submission Deliverables
 
-| Deliverable | Where |
-|---|---|
-| Public GitHub repository | This repository |
-| Architecture diagram (PDF) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
-| Presentation with project details and outcome (PDF) | [`docs/Chhaya_Phase1_Presentation.pdf`](docs/Chhaya_Phase1_Presentation.pdf) |
-| Hosted offline demo (static export of the dashboard) | [https://digital-twin-hack.vercel.app/](https://digital-twin-hack.vercel.app/) |
-| Licence | [`LICENSE`](LICENSE) |
-| Submission folder name | `SynapseX_D.B.S Kanpur` |
+| Deliverable | Format / Resource | Where to find |
+|---|---|---|
+| **Public GitHub Repository** | Source code & documentation | [github.com/AdityaChandel11/DigitalTwinHack](https://github.com/AdityaChandel11/DigitalTwinHack) |
+| **15–20 min Demo Video** | Unlisted YouTube Walkthrough | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
+| **Architecture Diagram** | PDF (3 pages, complete model card) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
+| **Presentation Deck (PDF)** | Vector PDF (10 slides, high density) | [`docs/Chhaya_Final_Presentation.pdf`](docs/Chhaya_Final_Presentation.pdf) |
+| **Presentation Deck (PPTX)** | 16:9 Widescreen PowerPoint | [`docs/Chhaya_Final_Presentation.pptx`](docs/Chhaya_Final_Presentation.pptx) |
+| **Live Interactive Clinician Demo** | Next.js 14 Web Application | [https://digital-twin-hack.vercel.app/](https://digital-twin-hack.vercel.app/) |
+| **Open-Source Licence** | MIT License | [`LICENSE`](LICENSE) |
+| **Submission Folder Name** | Required naming format | `SynapseX_D.B.S Kanpur` |
+| **College / Institution** | Academic affiliation | D.B.S. College, Kanpur |
+| **Team Name & Lead** | Solo Entry | Team SynapseX (Aditya Singh Chandel) |
 
 The hosted demo is a static export (`python -m chhaya.dashboard --export DIR`). Only the synthetic demo bundle is ever exported.
 
