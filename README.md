@@ -17,9 +17,9 @@
 
 Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
-**Start here:** [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Presentation (PPTX)](docs/Chhaya_Final_Presentation.pptx) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
+**Start here:** [Problem Statement & Healthcare Use Case (PDF)](docs/Chhaya_Problem_and_Use_Case.pdf) · [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Presentation (PPTX)](docs/Chhaya_Final_Presentation.pptx) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
-[Demo Video](#demo-video) · [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Technical Stack](#technical-stack) · [AI/ML Details](#aiml-model-details) · [Deliverables](#submission-deliverables)
+[Problem & Use Case](#problem-statement) · [Demo Video](#demo-video) · [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Technical Stack](#technical-stack) · [Deliverables](#submission-deliverables)
 
 </div>
 
@@ -325,6 +325,7 @@ uv run python -m chhaya.dashboard                            # the dashboard
 | Deliverable | Format / Resource | Where to find |
 |---|---|---|
 | **Public GitHub Repository** | Source code & documentation | [github.com/AdityaChandel11/DigitalTwinHack](https://github.com/AdityaChandel11/DigitalTwinHack) |
+| **Problem Statement & Use Case** | Executive Brief (PDF, 1 page) | [`docs/Chhaya_Problem_and_Use_Case.pdf`](docs/Chhaya_Problem_and_Use_Case.pdf) |
 | **15–20 min Demo Video** | Unlisted YouTube Walkthrough | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
 | **Architecture Diagram** | PDF (3 pages, complete model card) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
 | **Presentation Deck (PDF)** | Vector PDF (10 slides, high density) | [`docs/Chhaya_Final_Presentation.pdf`](docs/Chhaya_Final_Presentation.pdf) |
