@@ -1,7 +1,7 @@
 """
 Compile the 10 slide PNGs into a 16:9 widescreen PowerPoint deck.
 Outputs to:
-  - docs/Chhaya_Final_Presentation.pptx
+  - docs/Chhaya_Phase1_Presentation.pptx
   - docs/Chhaya_Phase1_Presentation.pptx
 """
 import sys
@@ -12,7 +12,7 @@ from pptx.util import Inches
 def build_pptx():
     BASE_DIR = Path(__file__).resolve().parent
     PNG_DIR = BASE_DIR / "slides_png"
-    OUT_PPTX_FINAL = BASE_DIR / "Chhaya_Final_Presentation.pptx"
+    OUT_PPTX_FINAL = BASE_DIR / "Chhaya_Phase1_Presentation.pptx"
     OUT_PPTX_P1 = BASE_DIR / "Chhaya_Phase1_Presentation.pptx"
     
     prs = Presentation()

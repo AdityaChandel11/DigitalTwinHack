@@ -17,7 +17,7 @@
 
 Entry to the **Happiest Health Digital Twin Challenge 2026** · Team **SynapseX** · D.B.S Kanpur · submission folder `SynapseX_D.B.S Kanpur`
 
-**Start here:** [Problem Statement & Healthcare Use Case (PDF)](docs/Chhaya_Problem_and_Use_Case.pdf) · [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Final_Presentation.pdf) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
+**Start here:** [Problem Statement & Healthcare Use Case (PDF)](docs/Chhaya_Problem_and_Use_Case.pdf) · [Demo Video (YouTube Walkthrough)](https://youtu.be/TOn2xY_z5L8) · [Live Interactive Demo](https://digital-twin-hack.vercel.app/) · [Presentation Deck (PDF)](docs/Chhaya_Phase1_Presentation.pdf) · [Architecture Diagram (PDF)](docs/Chhaya_Architecture_Diagram.pdf)
 
 [Problem & Use Case](#problem-statement) · [Demo Video](#demo-video) · [Compliance matrix](#challenge-compliance-matrix) · [Adverse events](#adverse-event-prediction) · [Results](#results-scoreboard) · [Dashboard](#the-clinician-dashboard) · [Architecture](#architecture) · [Technical Stack](#technical-stack) · [Deliverables](#submission-deliverables)
 
@@ -94,7 +94,7 @@ Every requirement of the challenge brief, and where it is met.
 | README: team and college, title, problem and use case, stack, AI/ML details | [Team](#team-details), title above, [problem](#problem-statement), [use case](#healthcare-use-case), [stack](#technical-stack), [model](#aiml-model-details) | |
 | 15-20 minute Demo Video is uploaded as an Unlisted YouTube video and the link is added to the README | 20-minute video walkthrough covering clinical context, live dashboard, JAX math, pre-registration rigor, and outcomes | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
 | Architecture diagram (PDF/PPT format) | 3-page comprehensive technical architecture & AI/ML model card | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
-| Presentation in PDF/PPT format covering project details and outcomes | 10-slide high-density technical and clinical presentation | [PDF](docs/Chhaya_Final_Presentation.pdf) · [PPTX](docs/Chhaya_Final_Presentation.pptx) |
+| Presentation in PDF/PPT format covering project details and outcomes | 10-slide high-density technical and clinical presentation | [PDF](docs/Chhaya_Phase1_Presentation.pdf) · [PPTX](docs/Chhaya_Phase1_Presentation.pptx) |
 | Open-source licence details | MIT for code; dataset and font licences listed | [Licence](#open-source-licence) |
 | All files and links publicly accessible without permissions | Public repository, unlisted video, live Vercel demo | [Deliverables](#submission-deliverables) |
 | Folder name: Team Name_College Name | `SynapseX_D.B.S Kanpur` | [Deliverables](#submission-deliverables) |
@@ -354,7 +354,7 @@ uv run python -m chhaya.dashboard                            # the dashboard
 | **Problem Statement & Use Case** | Executive Brief (PDF, 1 page) | [`docs/Chhaya_Problem_and_Use_Case.pdf`](docs/Chhaya_Problem_and_Use_Case.pdf) |
 | **15–20 min Demo Video** | Unlisted YouTube Walkthrough | [https://youtu.be/TOn2xY_z5L8](https://youtu.be/TOn2xY_z5L8) |
 | **Architecture Diagram** | PDF (3 pages, complete model card) | [`docs/Chhaya_Architecture_Diagram.pdf`](docs/Chhaya_Architecture_Diagram.pdf) |
-| **Presentation Deck (PDF)** | Vector PDF (10 slides, high density) | [`docs/Chhaya_Final_Presentation.pdf`](docs/Chhaya_Final_Presentation.pdf) |
+| **Presentation Deck (PDF)** | Vector PDF (10 slides, high density) | [`docs/Chhaya_Phase1_Presentation.pdf`](docs/Chhaya_Phase1_Presentation.pdf) |
 | **Live Interactive Clinician Demo** | Next.js 14 Web Application | [https://digital-twin-hack.vercel.app/](https://digital-twin-hack.vercel.app/) |
 | **Open-Source Licence** | MIT License | [`LICENSE`](LICENSE) |
 | **Submission Folder Name** | Required naming format | `SynapseX_D.B.S Kanpur` |

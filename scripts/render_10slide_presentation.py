@@ -1,6 +1,6 @@
 """
 Render the 10-slide presentation from docs/Chhaya_Final_Deck.html
-to PNGs (1920x1080) in docs/slides_png/ and compile to docs/Chhaya_Final_Presentation.pdf
+to PNGs (1920x1080) in docs/slides_png/ and compile to docs/Chhaya_Phase1_Presentation.pdf
 """
 import os
 import asyncio
@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent
 HTML_PATH = BASE_DIR / "Chhaya_Final_Deck.html"
 OUT_PNG_DIR = BASE_DIR / "slides_png"
 OUT_PNG_DIR.mkdir(parents=True, exist_ok=True)
-OUT_PDF_PATH = BASE_DIR / "Chhaya_Final_Presentation.pdf"
+OUT_PDF_PATH = BASE_DIR / "Chhaya_Phase1_Presentation.pdf"
 
 async def render():
     print(f"Loading {HTML_PATH.as_uri()} in Playwright headless Chromium...")
